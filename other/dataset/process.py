@@ -3,7 +3,6 @@ import json
 import requests
 from tqdm import tqdm
 import time
-import sys
 
 
 def get_book(ISBN):
@@ -20,7 +19,7 @@ def get_book(ISBN):
         publisher = book_data['publisher']
         published_date = book_data['publishedDate']
         description = book_data['description']
-        ISBN13 = ISBN
+        ISBN13 = book_data['industryIdentifiers'][1]['identifier']
         categories = book_data['categories']
         google_rating = book_data['averageRating']
         google_ratings_count = book_data['ratingsCount']
@@ -46,13 +45,13 @@ if __name__ == '__main__':
                'description', 'ISBN13', 'categories', 'google_rating',
                'google_ratings_count', 'book_cover_url', 'language']
     book_df = pd.DataFrame(columns=columns)
-    with open(sys.argv[1], 'r') as f:
+    with open('isbn3.txt', 'r') as f:
         isbn_list = f.read().split('\n')
     index = 0
     for i in tqdm(range(0, len(isbn_list))):
         if insert_to_df(book_df, index, get_book(isbn_list[i])):
             index = index + 1
-    book_df.to_csv(sys.argv[1].replace('.txt', '') + '.csv')
+    book_df.to_csv('books_1.csv')
 
 
 
