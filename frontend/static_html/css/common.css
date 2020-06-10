@@ -8,6 +8,16 @@ body {
 	font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+
+body{
+	background-color: #444444;
+}
+
+.root{
+	background-color: white;
+	box-shadow: 0px 2px 5px black;
+}
+
 header {
 	background: #ad5389;
 	/* fallback for old browsers */
