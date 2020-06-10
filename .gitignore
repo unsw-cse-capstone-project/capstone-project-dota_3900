@@ -1,0 +1,5 @@
+**/.idea
+**/__pycache__
+backend/venv
+.DS_store
+**/.DS_store
