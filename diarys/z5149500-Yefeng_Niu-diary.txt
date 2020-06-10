@@ -1,0 +1,27 @@
+Week1:
+We decided to focus on Read Recommendation Pro project.
+Create a GitHub repository.
+
+- Backend: 
+Tuesday: Wrote some starting codes based on python flask-restplus framework.
+Thursday: Finished token based authentication part.
+
+- Frontend:
+Start working on webpage design and static HTML files.
+Program language using so far: HTML/CSS, JavaScript
+Friday: Book-detail static HTML page(draft) finished.
+Saturday: Book-reviews static HTML page(draft) finished.
+
+- Other:
+Friday: Wrote a dataset generate script to generate the dataset we need.
+Reference: Google books API - https://www.googleapis.com/books/v1/volumes?q=isbn:[isbn]
+We got about 5600 book details from the Google books API (Thanks Google)
+
+
+Week2:
+Switched to the GitHub-class repository provided by CSE.
+
+- Frontend:
+Start working on user-dashboard HTML pages, which include user collection, reading goals, user reviews, account operation etc.
+Tuesday: user-dashboard-collection static page(draft) finished.
+
