@@ -1,0 +1,6 @@
+Wk1
+1. Choose a topic, the group formed and deciding programming language.
+2. I set up Jira accounts and wrote a draft of the user story section of the proposal. 
+3. Draw a prototype of user interface on paper and discussed with the developer to ensure front-end HTML design
+matched with a user story.
+4. I planned to finished proposal next week, post everything to Jira and assign the task to developers.
