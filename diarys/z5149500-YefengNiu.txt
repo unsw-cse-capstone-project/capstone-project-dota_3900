@@ -23,5 +23,6 @@ Switched to the GitHub-class repository provided by CSE.
 
 - Frontend:
 Start working on user-dashboard HTML pages, which include user collection, reading goals, user reviews, account operation etc.
-Tuesday: user-dashboard-collection static page(draft) finished.
+Wednesday: user-dashboard-collection static page(draft) finished.
+Thursday: user-dashboard-my_reviews static page(draft) finished.
 
