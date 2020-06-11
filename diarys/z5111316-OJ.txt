@@ -1,0 +1,5 @@
+3900 weekly diary
+wk1
+project choose, proposal, db tools(mysql) and language(python) selection, 
+wk2
+er diagram(draw.io), sql schema, search for dataset(kaggle), db init(mysql workbench) 
