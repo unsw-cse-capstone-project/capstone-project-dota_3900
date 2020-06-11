@@ -3,6 +3,7 @@ from pandas import read_sql
 from lib.sql_linker import connect_sys_db, mysql
 from config import SECRET_KEY
 
+
 class Account:
     def __init__(self, username):
         self._username = username
@@ -20,11 +21,11 @@ class Account:
     # Update account's password
     def update_password(self, new_password):
         conn = connect_sys_db()
-        query = 'UPDATE users SET password = HEX(AES_ENCRYPT(\'{new_password}\', \'{key}\')) WHERE username = \'{username}\''\
+        query = 'UPDATE users SET password = HEX(AES_ENCRYPT(\'{new_password}\', \'{key}\')) WHERE username = \'{username}\'' \
             .format(
-            username = self._username,
+            username=self._username,
             new_password=new_password,
-            key = SECRET_KEY
+            key=SECRET_KEY
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
@@ -39,8 +40,8 @@ class Account:
         db_result = read_sql(sql=query, con=conn)
         id = db_result.iloc[0].users_num
 
-        query = 'INSERT INTO users VALUES(\'{id}\', \'{username}\','\
-            'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\')' \
+        query = 'INSERT INTO users VALUES(\'{id}\', \'{username}\',' \
+                'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\')' \
             .format(
             id=id,
             username=username,
@@ -53,7 +54,6 @@ class Account:
         return True, ''
 
 
-
 def is_user_exists(username):
     conn = connect_sys_db()
     query = 'SELECT username FROM users Where username = \'{username}\''.format(
@@ -63,4 +63,3 @@ def is_user_exists(username):
         cursor.execute(query)
         info = cursor.fetchone()
     return info is not None
-

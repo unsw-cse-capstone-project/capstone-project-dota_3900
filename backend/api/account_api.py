@@ -2,6 +2,7 @@ import json
 from flask_restplus import Resource, Namespace, reqparse, fields
 
 from cls.admin import Admin
+from cls.user import User
 from lib.validation_decorator import requires_login
 from config import SECRET_KEY
 from flask import request
@@ -94,17 +95,17 @@ class AccountUsername(Resource):
     @api.doc(description="Rename the current account")
     @api.expect(account_username_model, validate=True)
     @requires_login
-    # AccountChangeUsernae
+    # AccountChangeUsername
     def post(self):
         info = request.json
         new_username = info['username']
 
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
-        toekn_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
 
         # Get user object from username
-        username = toekn_info['username']
+        username = token_info['username']
         account = Account(username)
         try:
             account.update_username(new_username)
@@ -129,3 +130,5 @@ class AccountRole(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         admin = token_info['admin']
         return {'admin': admin}, 200
+
+
