@@ -25,11 +25,12 @@ def requires_admin(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.headers.get('AUTH-TOKEN')
+        # print(auth.validate_token(token))
         if not token:
             abort(401, 'Authenticate Failed')
         try:
             info = auth.validate_token(token)
-            if info['role'] != 'admin':
+            if info['admin'] != 1:
                 abort(403, 'Requires admin account')
         except Exception as e:
             print(e)
