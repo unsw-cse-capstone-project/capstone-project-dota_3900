@@ -1,4 +1,5 @@
-# capstone-project-dota_3900
+# Group: DOTA_3900
+# Project: Read Recommendation PRO
 
 ## Group members:
 ##### Haiyan XU - z5135077
