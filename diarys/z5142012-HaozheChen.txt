@@ -1,0 +1,9 @@
+Working Diary
+
+------------WK01-----------
+1. Decide the topic √
+2. Decide the language, backend and frontend framework √
+3. Finished basic flask-restplus backend framework √
+------------WK02-----------
+1. UML diagram √
+2. Basic api for both user and admin √
