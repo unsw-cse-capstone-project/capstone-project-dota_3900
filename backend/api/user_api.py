@@ -8,25 +8,25 @@ from config import SECRET_KEY
 from flask import request
 import jwt
 import pymysql
-from cls.account import Account
 
-api = Namespace('account', description='Account setting')
-account_password_model = api.model('account_password_model', {'password': fields.String})
-account_username_model = api.model('account_username_model', {'username': fields.String})
-account_register_model = api.model('account_register_model', {
+
+api = Namespace('user', description='User account setting')
+user_password_model = api.model('user_password_model', {'password': fields.String})
+user_username_model = api.model('user_username_model', {'username': fields.String})
+user_register_model = api.model('user_register_model', {
     'username': fields.String,
     'password': fields.String
 })
 
 
 @api.route('')
-class AccountRegister(Resource):
+class UserRegister(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Register a new account.")
-    @api.expect(account_register_model, validate=True)
+    @api.doc(description="Register a new user account.")
+    @api.expect(user_register_model, validate=True)
     # Register a new user account
     def post(self):
         info = request.json
@@ -34,7 +34,7 @@ class AccountRegister(Resource):
         password = info['password']
         admin = 0
         try:
-            success, errmsg = Account.register_account(username, password, 0)
+            success, errmsg = User.register_account(username, password, 0)
             if not success:
                 return {'message': errmsg}, 402
         except pymysql.Error as e:
@@ -44,13 +44,13 @@ class AccountRegister(Resource):
 
 # API for user to change password
 @api.route('/password')
-class AccountPassword(Resource):
+class UserPassword(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Change account password ")
-    @api.expect(account_password_model, validate=True)
+    @api.doc(description="Change user account password ")
+    @api.expect(user_password_model, validate=True)
     @requires_login
     # AccountChangePassword
     def post(self):
@@ -63,7 +63,7 @@ class AccountPassword(Resource):
 
         # Get user object from username
         username = tokn_info['username']
-        account = Account(username)
+        account = User(username)
         try:
             account.update_password(new_password)
         except pymysql.Error as e:
@@ -73,12 +73,12 @@ class AccountPassword(Resource):
 
 # API to get user's username and rename
 @api.route('/username')
-class AccountUsername(Resource):
+class UserUsername(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Get account username")
+    @api.doc(description="Get user account username")
     @requires_login
     # AccountGetUsername
     def get(self):
@@ -92,8 +92,8 @@ class AccountUsername(Resource):
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Rename the current account")
-    @api.expect(account_username_model, validate=True)
+    @api.doc(description="Rename the account")
+    @api.expect(user_username_model, validate=True)
     @requires_login
     # AccountChangeUsername
     def post(self):
@@ -106,7 +106,7 @@ class AccountUsername(Resource):
 
         # Get user object from username
         username = token_info['username']
-        account = Account(username)
+        account = User(username)
         try:
             account.update_username(new_username)
         except pymysql.Error as e:

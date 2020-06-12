@@ -1,18 +1,18 @@
-from cls.account import Account, is_user_exists
+from cls.user import User, is_user_exists
 from lib.sql_linker import connect_sys_db, mysql
 from config import SECRET_KEY
 from pandas import read_sql
 import json
 
 
-class Admin(Account):
+class Admin(User):
     def __init__(self, username):
-        Account.__init__(self, username)
+        User.__init__(self, username)
 
     @staticmethod
     # Admin can add new user or admin account
     def add_new_account(username, password, admin):
-        return Account.register_account(username, password, admin)
+        return User.register_account(username, password, admin)
 
     @staticmethod
     # Admin can delete certain user account

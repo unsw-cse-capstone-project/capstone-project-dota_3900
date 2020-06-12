@@ -4,7 +4,7 @@ from flask import Flask
 from flask_restplus import Api
 from flask_cors import CORS
 from api.token_api import api as token
-from api.account_api import api as account
+from api.user_api import api as user
 from api.admin_api import api as admin
 
 # create flask app
@@ -32,7 +32,7 @@ api = Api(app, authorizations={
 # api namespaces
 # TODO: finish all api
 api.add_namespace(token)
-api.add_namespace(account)
+api.add_namespace(user)
 api.add_namespace(admin)
 
 if __name__ == '__main__':

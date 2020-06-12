@@ -175,7 +175,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int NOT NULL,
   `username` varchar(64) NOT NULL,
-  `pasword` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `admin` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
