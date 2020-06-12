@@ -1,0 +1,180 @@
+.user-dashboard .content .right .monthly-goal .info-list{
+	width: 45rem;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 1.25rem;
+	margin-left: 1rem;
+}
+
+.user-dashboard .content .right .monthly-goal .info-list .info-box{
+	width: 12.375rem;
+	height: 3.5rem;
+	border: 1px #f2f2f2 solid;
+	border-radius: 1rem;
+	box-shadow: 0px 3px 7px #eeeeee;
+	padding: 1rem;
+	overflow: hidden;
+}
+
+.user-dashboard .content .right .monthly-goal .info-list .info-box .title{
+	font-size: 0.875rem;
+	font-weight: 200;
+	font-style: italic;
+}
+
+.user-dashboard .content .right .monthly-goal .info-list .info-box .content{
+	height: 3rem;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.user-dashboard .content .right .monthly-goal .info-list .info-box .content img{
+	width: 2.125rem;
+	margin-left: 0.25rem;
+}
+
+.user-dashboard .content .right .monthly-goal .info-list .info-box .content span{
+	font-size: 0.875rem;
+}
+
+.user-dashboard .content .right .monthly-goal .info-list .info-box .content span:first-child{
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-right: 0.125rem;
+}
+
+.user-dashboard .content .right .monthly-goal ul{
+	padding: 0;
+	margin: 0;
+}
+
+.user-dashboard .content .right .monthly-goal ul li{
+	width: 37rem;
+	border-top: 1px #f2f2f2 solid;
+	list-style: none;
+	background-color: white;
+	display: flex;
+	position: relative;
+	left: 4rem;
+	min-height: 2.5rem;
+	padding-top: 1rem;
+	padding-left: 3rem;
+	padding-right: 0rem;
+	border-left: 4px coral dotted;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .year-month{
+	width: 4rem;
+	height: 4rem;
+	border: 1px #f2f2f2 solid;
+	border-radius: 0.125rem;
+	box-shadow: 0px 3px 7px #eeeeee;
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	position: absolute;
+	left: -2.125rem;
+	padding: 0;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .num_books{
+	width: 4rem;
+	height: 2rem;
+	border: 1px #f2f2f2 solid;
+	border-radius: 0.75rem;
+	box-shadow: 0px 3px 7px #eeeeee;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	top: 6rem;
+	left: -2.125rem;
+	padding: 0;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .year-month .year{
+	padding: 0.125rem 0;
+	width: 100%;
+	background-color: mediumvioletred;
+	color: white;
+	font-size: 0.75rem;
+	text-align: center;
+	font-weight: bold;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .year-month .month{
+	text-align: center;
+	padding: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: bold;
+	color: #333333;
+	height: 3rem;
+	font-size: 1.25rem;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .num_books img{
+	width: 0.875rem;
+	margin-right: 0.5rem;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .num_books span{
+	font-size: 0.875rem;
+	font-weight: bold;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .books{
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .books .book{
+	width: 7.5rem;
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+	border: 1px white solid;
+	margin-bottom: 1rem;
+	margin-right: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: border-color 0.3s;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .books .book:hover{
+	border: 1px purple solid;
+	transition: border-color 0.3s;
+	cursor: pointer;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .books .book img{
+	width: 6rem;
+	padding: 0.5rem;
+	box-shadow: 0px 3px 7px #eeeeee;
+	margin-bottom: 0.5rem;
+	background-color: white;
+}
+
+.user-dashboard .content .right .monthly-goal ul li .books .book span{
+	font-size: 0.8125rem;
+	text-align: center;
+	margin-bottom: 0.125rem;
+	color: #333333;
+}
+
+
+
+
+
+
+
+

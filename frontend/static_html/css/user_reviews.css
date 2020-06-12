@@ -51,7 +51,7 @@
 .user-dashboard .content .right .review-list ul li .content span:first-child{
 	font-weight: bold;
 	font-size: 1rem;
-	color: steelblue;
+	color: purple;
 }
 
 .user-dashboard .content .right .review-list ul li .content .rating-bar{
@@ -63,7 +63,7 @@
 
 .user-dashboard .content .right .review-list ul li .content .rating-bar span{
 	font-weight: bold;
-	color: cadetblue;
+	color: palevioletred;
 }
 
 .user-dashboard .content .right .review-list ul li .content .rating-bar img{

@@ -7,7 +7,7 @@
 		<title>RRP</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" media="screen" href="css/dashboard_common.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="css/user_reviews.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="css/user_monthly_goal.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="css/common.css" />
 	</head>
 
@@ -47,7 +47,7 @@
 									<span>Collections</span>
 									<div>2</div>
 								</li>
-								<li onclick="window.location.replace('user_monthly_goal.html')">
+								<li class="selected" onclick="window.location.replace('user_monthly_goal.html')">
 									<img src="img/icon/goal.png">
 									<span>Monthly Goal</span>
 									<div>0</div>
@@ -55,9 +55,9 @@
 								<li onclick="window.location.replace('user_already_read.html')">
 									<img src="img/icon/already-read.png">
 									<span>Already Read</span>
-									<div>4</div>
+									<div>11</div>
 								</li>
-								<li class="selected" onclick="window.location.replace('user_reviews.html')">
+								<li onclick="window.location.replace('user_reviews.html')">
 									<img src="img/icon/my-reviews.png">
 									<span>My Reviews</span>
 									<div>2</div>
@@ -74,59 +74,72 @@
 								</li>
 							</ul>
 						</div>
+						
 						<div class="right animation-fadein-top delay_02s">
-							<div class="review-list">
+							<div class="monthly-goal">
+								<div class="info-list">
+									<div class="info-box">
+										<div class="title">
+												In all monthly goals, there are...
+										</div>
+										<div class="content">
+											<img src="img/icon/books.png" >
+											<div class="number">
+												<span>10</span>
+												<span>Book(s)</span>
+											</div>
+										</div>
+									</div>
+									
+									<div class="info-box">
+										<div class="title">
+												This month, I want to read...
+										</div>
+										<div class="content">
+											<img src="img/icon/target.png" >
+											<div class="number">
+												<span>3</span>
+												<span>Book(s)</span>
+											</div>
+										</div>
+									</div>
+									
+									<div class="info-box">
+										<div class="title">
+												I have reached monthly goal for...
+										</div>
+										<div class="content">
+											<img src="img/icon/success.png" >
+											<div class="number">
+												<span>2</span>
+												<span>Time(s)</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								
 								<ul>
-									
 									<li>
-										<div>
-											<img src="img/s33646692.jpg" >
+										<div class="year-month">
+											<div class="year">
+												2020
+											</div>
+											<div class="month">
+												Jul
+											</div>
 										</div>
-										<div class="content">
-											<div class="title-operation">
-												<span>Attack on Titan: Volume 13</span>
-												<div class="operation">
-													<img src="img/icon/edit.png" >
-													<img src="img/icon/delete.png" >
-												</div>
+										<div class="num_books">
+											<img src="img/icon/copy.png" >
+											<span>4</span>
+										</div>	
+										<div class="books">
+											<div class="book">
+												<img src="img/s33646692.jpg" >
+												<span><b>Attack on Titan - Volume 14</b></span>
 											</div>
-											<div class="rating-bar">
-												<img src="img/icon/star.png" >
-												<img src="img/icon/star.png" >
-												<img src="img/icon/star.png" >
-												<img src="img/icon/star.png" >
-												<img src="img/icon/no-star.png" >
-												<span>Good</span>
-											</div>
-											<span><b>Review date: </b>2020-06-20</span>
-											<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti officiis aliquam laborum doloribus ratione dolorem est earum cupiditate dignissimos autem sapiente similique nulla praesentium suscipit quod eaque ipsum accusamus vero!Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus doloremque rem veritatis itaque magnam. Soluta rerum fuga distinctio molestias tenetur eveniet voluptate repudiandae eaque provident repellat dicta commodi magni minima!</span>
 										</div>
 									</li>
 									
-									<li>
-										<div>
-											<img src="img/s33646692.jpg" >
-										</div>
-										<div class="content">
-											<div class="title-operation">
-												<span>Attack on Titan: Volume 14</span>
-												<div class="operation">
-													<img src="img/icon/edit.png" >
-													<img src="img/icon/delete.png" >
-												</div>
-											</div>
-											<div class="rating-bar">
-												<img src="img/icon/star.png" >
-												<img src="img/icon/star.png" >
-												<img src="img/icon/star.png" >
-												<img src="img/icon/star.png" >
-												<img src="img/icon/star.png" >
-												<span>Masterpiece</span>
-											</div>
-											<span><b>Review date: </b>2020-06-20</span>
-											<span>No comment.</span>
-										</div>
-									</li>
 									
 								</ul>
 							</div>
