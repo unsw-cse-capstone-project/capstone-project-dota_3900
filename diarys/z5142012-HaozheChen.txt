@@ -7,3 +7,4 @@ Working Diary
 ------------WK02-----------
 1. UML diagram √
 2. Basic api for both user and admin √
+3. Code refactor √
