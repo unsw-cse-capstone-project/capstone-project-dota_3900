@@ -6,8 +6,8 @@ import json
 
 
 class Admin(User):
-    def __init__(self, username):
-        User.__init__(self, username)
+    def __init__(self, id):
+        User.__init__(self, id)
 
     @staticmethod
     # Admin can add new user or admin account
@@ -51,9 +51,7 @@ class Admin(User):
         conn = connect_sys_db()
         sql = 'select id, username, admin from users'
         users = read_sql(con=conn, sql=sql)
-        print(users)
         json_str = users.to_json(orient='index')
-        print(json_str)
         ds = json.loads(json_str)
         result = []
         for index in ds:

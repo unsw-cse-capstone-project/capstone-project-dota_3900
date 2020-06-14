@@ -6,6 +6,7 @@ from flask_cors import CORS
 from api.token_api import api as token
 from api.user_api import api as user
 from api.admin_api import api as admin
+from api.book_api import api as book
 
 # create flask app
 
@@ -16,7 +17,7 @@ app = Flask(__name__)
 CORS(app, resources={r"*": {"origins": "*"}})
 
 # create flask api and set token based authorization as authorization method
-api = Api(app, authorizations={
+api = Api(app, version='1.2', authorizations={
     'API-KEY': {
         'type': 'apiKey',
         'in': 'header',
@@ -34,6 +35,7 @@ api = Api(app, authorizations={
 api.add_namespace(token)
 api.add_namespace(user)
 api.add_namespace(admin)
+api.add_namespace(book)
 
 if __name__ == '__main__':
     # app.run(debug=True, host='localhost', port=[some_port_number])

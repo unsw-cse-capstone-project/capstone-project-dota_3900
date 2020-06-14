@@ -1,7 +1,4 @@
-import json
 from flask_restplus import Resource, Namespace, reqparse, fields
-
-from cls.admin import Admin
 from cls.user import User
 from lib.validation_decorator import requires_login
 from config import SECRET_KEY
@@ -62,8 +59,8 @@ class UserPassword(Resource):
         tokn_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
 
         # Get user object from username
-        username = tokn_info['username']
-        account = User(username)
+        id = tokn_info['id']
+        account = User(id)
         try:
             account.update_password(new_password)
         except pymysql.Error as e:
@@ -105,8 +102,8 @@ class UserUsername(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
 
         # Get user object from username
-        username = token_info['username']
-        account = User(username)
+        id = token_info['id']
+        account = User(id)
         try:
             account.update_username(new_username)
         except pymysql.Error as e:

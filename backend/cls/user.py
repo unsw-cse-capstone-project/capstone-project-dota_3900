@@ -5,14 +5,14 @@ from config import SECRET_KEY
 
 
 class User:
-    def __init__(self, username):
-        self._username = username
+    def __init__(self, id):
+        self._id = id
 
     # Update account's username
     def update_username(self, new_username):
         conn = connect_sys_db()
-        query = 'UPDATE users SET username = \'{new_username}\' WHERE username = \'{username}\''.format(
-            username=self._username,
+        query = 'UPDATE users SET username = \'{new_username}\' WHERE id = \'{id}\''.format(
+            id=self._id,
             new_username=new_username
         )
         with mysql(conn) as cursor:
@@ -21,9 +21,9 @@ class User:
     # Update account's password
     def update_password(self, new_password):
         conn = connect_sys_db()
-        query = 'UPDATE users SET password = HEX(AES_ENCRYPT(\'{new_password}\', \'{key}\')) WHERE username = \'{username}\'' \
+        query = 'UPDATE users SET password = HEX(AES_ENCRYPT(\'{new_password}\', \'{key}\')) WHERE id = \'{id}\'' \
             .format(
-            username=self._username,
+            id=self._id,
             new_password=new_password,
             key=SECRET_KEY
         )
@@ -63,3 +63,15 @@ def is_user_exists(username):
         cursor.execute(query)
         info = cursor.fetchone()
     return info is not None
+
+
+def get_id_by_username(username):
+    if not is_user_exists(username):
+        return False
+    conn = connect_sys_db()
+    query = 'SELECT id FROM users WHERE username = \'{username}\''.format(
+        username=username
+    )
+    db_result = read_sql(sql=query, con=conn)
+    id = db_result.iloc[0].id
+    return id
