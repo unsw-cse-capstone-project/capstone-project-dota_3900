@@ -11,6 +11,7 @@ class User:
     # Update account's username
     def update_username(self, new_username):
         conn = connect_sys_db()
+        # SQL
         query = 'UPDATE users SET username = \'{new_username}\' WHERE id = \'{id}\''.format(
             id=self._id,
             new_username=new_username
@@ -21,6 +22,7 @@ class User:
     # Update account's password
     def update_password(self, new_password):
         conn = connect_sys_db()
+        # SQL
         query = 'UPDATE users SET password = HEX(AES_ENCRYPT(\'{new_password}\', \'{key}\')) WHERE id = \'{id}\'' \
             .format(
             id=self._id,
@@ -34,12 +36,11 @@ class User:
     @staticmethod
     def register_account(username, password, admin):
         conn = connect_sys_db()
-
-        # Get current user number
+        # Get number of user
         query = "SELECT count(*) as users_num from users"
         db_result = read_sql(sql=query, con=conn)
         id = db_result.iloc[0].users_num
-
+        # SQL
         query = 'INSERT INTO users VALUES(\'{id}\', \'{username}\',' \
                 'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\')' \
             .format(
@@ -53,9 +54,26 @@ class User:
             cursor.execute(query)
         return True, ''
 
+    @staticmethod
+    def get_info_by_id(id):
+        conn = connect_sys_db()
+        # SQL
+        query = "SELECT username, admin FROM users WHERE id = \'{id}\'".format(
+            id=id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            # If ID not existed
+            return None
+        else:
+            info = db_result.iloc[0]
+            return info
+
+
 
 def is_user_exists(username):
     conn = connect_sys_db()
+    # SQL
     query = 'SELECT username FROM users Where username = \'{username}\''.format(
         username=username
     )
@@ -64,14 +82,14 @@ def is_user_exists(username):
         info = cursor.fetchone()
     return info is not None
 
-
-def get_id_by_username(username):
-    if not is_user_exists(username):
-        return False
-    conn = connect_sys_db()
-    query = 'SELECT id FROM users WHERE username = \'{username}\''.format(
-        username=username
-    )
-    db_result = read_sql(sql=query, con=conn)
-    id = db_result.iloc[0].id
-    return id
+#
+# def get_id_by_username(username):
+#     if not is_user_exists(username):
+#         return False
+#     conn = connect_sys_db()
+#     query = 'SELECT id FROM users WHERE username = \'{username}\''.format(
+#         username=username
+#     )
+#     db_result = read_sql(sql=query, con=conn)
+#     id = db_result.iloc[0].id
+#     return id

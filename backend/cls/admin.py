@@ -9,29 +9,31 @@ class Admin(User):
     def __init__(self, id):
         User.__init__(self, id)
 
+    # Admin adds new account (User/Admin)
     @staticmethod
-    # Admin can add new user or admin account
     def add_new_account(username, password, admin):
         return User.register_account(username, password, admin)
 
+    # Admin deletes user account
     @staticmethod
-    # Admin can delete certain user account
     def delete_user(username):
         if not is_user_exists(username):
             return False
         conn = connect_sys_db()
+        # SQL
         query = 'DELETE FROM users WHERE username = \'{username}\' AND admin = \'{admin}\'' \
             .format(username=username, admin=0)
         with mysql(conn) as cursor:
             cursor.execute(query)
         return True
 
+    # Admin updates certain user account's password
     @staticmethod
-    # Admin can update certain user account's password without old password
     def update_user_password(username, new_password):
         if not is_user_exists(username):
             return False
         conn = connect_sys_db()
+        # SQL
         query = 'UPDATE users SET password = HEX(AES_ENCRYPT(\'{new_password}\', \'{key}\'))' \
                 ' WHERE username = \'{username}\' AND' \
                 ' admin = \'{admin}\'' \
@@ -45,8 +47,8 @@ class Admin(User):
             cursor.execute(query)
         return True
 
+    # Admin gets all users list
     @staticmethod
-    # Admin can get all users' list
     def get_user_list():
         conn = connect_sys_db()
         sql = 'select id, username, admin from users'

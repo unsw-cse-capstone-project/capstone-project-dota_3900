@@ -33,15 +33,12 @@ class AuthenticationToken:
         # Get token info by decode the given token
         try:
             info = jwt.decode(token, self._secret_key, algorithms='HS256')
-            # print(info)
         except (jwt.ExpiredSignatureError, jwt.DecodeError, jwt.InvalidTokenError):
             raise BadSignature("Invalid Token.")
-
+        # If token is expired
         if self.is_token_expired(info):
             print("expired")
             raise SignatureExpired('Token expired.')
-
-        # Return user's role
         return info
 
 # create AUTH

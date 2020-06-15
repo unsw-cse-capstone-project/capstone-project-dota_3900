@@ -15,7 +15,7 @@ user_register_model = api.model('user_register_model', {
     'password': fields.String
 })
 
-
+# Api: Register a new user account
 @api.route('')
 class UserRegister(Resource):
     @api.response(200, 'Success')
@@ -24,7 +24,6 @@ class UserRegister(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Register a new user account.")
     @api.expect(user_register_model, validate=True)
-    # Register a new user account
     def post(self):
         info = request.json
         username = info['username']
@@ -39,9 +38,9 @@ class UserRegister(Resource):
         return {'message': 'Register new user account success'}, 200
 
 
-# API for user to change password
+# Api: Update user's password
 @api.route('/password')
-class UserPassword(Resource):
+class UserupdatePassword(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -49,7 +48,6 @@ class UserPassword(Resource):
     @api.doc(description="Change user account password ")
     @api.expect(user_password_model, validate=True)
     @requires_login
-    # AccountChangePassword
     def post(self):
         info = request.json
         new_password = info['password']
@@ -58,7 +56,7 @@ class UserPassword(Resource):
         token = request.headers.get('AUTH-TOKEN')
         tokn_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
 
-        # Get user object from username
+        # Get user object
         id = tokn_info['id']
         account = User(id)
         try:
@@ -68,23 +66,9 @@ class UserPassword(Resource):
         return {'message': 'Change password success'}, 200
 
 
-# API to get user's username and rename
+# Api: Update user's username
 @api.route('/username')
-class UserUsername(Resource):
-    @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
-    @api.response(500, 'Internal server error')
-    @api.doc(description="Get user account username")
-    @requires_login
-    # AccountGetUsername
-    def get(self):
-        # get user's detail from token
-        token = request.headers.get('AUTH-TOKEN')
-        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        username = token_info['username']
-        return {'uesrname': username}, 200
-
+class UserUpdateUsername(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -92,7 +76,6 @@ class UserUsername(Resource):
     @api.doc(description="Rename the account")
     @api.expect(user_username_model, validate=True)
     @requires_login
-    # AccountChangeUsername
     def post(self):
         info = request.json
         new_username = info['username']
@@ -101,7 +84,7 @@ class UserUsername(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
 
-        # Get user object from username
+        # Get user object
         id = token_info['id']
         account = User(id)
         try:
@@ -110,22 +93,52 @@ class UserUsername(Resource):
             return {'message': e.args[1]}, 500
         return {'message': 'Change username success'}, 200
 
-
-# API to get user's role
-@api.route('/role')
-class AccountRole(Resource):
+# Api: Get username by ID
+@api.route('/username/<int:user_id>')
+class UserGetUsername(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Get account role")
+    @api.doc(description="Get user's username by ID")
+    def get(self, user_id):
+        info = User.get_info_by_id(user_id)
+        if info is None:
+            return {'message': "Resource not found"}, 404
+        else:
+            return {'username': info.username}, 200
+
+
+# Api: Get user's role by ID
+@api.route('/role/<int:user_id>')
+class UserGetRole(Resource):
+    @api.response(200, 'Success')
+    @api.response(400, 'Illegal user')
+    @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's role by ID")
+    def get(self, user_id):
+        info = User.get_info_by_id(user_id)
+        if info is None:
+            return {'message': "Resource not found"}, 404
+        else:
+            return {'admin': int(info.admin)}, 200
+
+# Api: Get current user's ID
+@api.route('/id')
+class UserGetRole(Resource):
+    @api.response(200, 'Success')
+    @api.response(400, 'Illegal user')
+    @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's ID")
     @requires_login
-    # AccountGetRole
     def get(self):
-        # get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        admin = token_info['admin']
-        return {'admin': admin}, 200
+        return {'id': token_info['id']}
 
 

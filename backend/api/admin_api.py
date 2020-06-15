@@ -1,10 +1,6 @@
-import json
 from flask_restplus import Resource, Namespace, reqparse, fields
-
 from lib.validation_decorator import requires_admin, requires_login
-from config import SECRET_KEY
 from flask import request
-import jwt
 import pymysql
 from cls.admin import Admin
 
@@ -20,6 +16,7 @@ admin_update_user_model = api.model('admin_update_user_model', {
     'new_password': fields.String,
 })
 
+# Api: Get all users list
 @api.route('/users')
 class AdminUsersList(Resource):
     @api.response(200, 'Success')
@@ -28,13 +25,13 @@ class AdminUsersList(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get all users' list")
     @requires_admin
-    # Get all users list
     def get(self):
         try:
             return Admin.get_user_list(), 200
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
 
+# Api: Delete or Create a new user account
 @api.route('/user')
 class AdminUser(Resource):
     @api.response(200, 'Success')
@@ -44,7 +41,6 @@ class AdminUser(Resource):
     @api.doc(description="Create a new user account")
     @api.expect(admin_add_user_model, validate=True)
     @requires_admin
-    # Create a new user account
     def post(self):
         info = request.json
         username = info['username']
@@ -65,7 +61,6 @@ class AdminUser(Resource):
     @api.doc(description="Delete certain user account")
     @api.expect(admin_delete_user_model, validate=True)
     @requires_admin
-    # Delete certain user account
     def delete(self):
         info = request.json
         username = info['username']
@@ -76,6 +71,7 @@ class AdminUser(Resource):
             return {'message': e.args[1]}, 500
         return {'message': 'Delete user account success'}, 200
 
+# Api: Update certain user's password
 @api.route('/user/password')
 class AdminPassword(Resource):
     @api.response(200, 'Success')
@@ -85,7 +81,6 @@ class AdminPassword(Resource):
     @api.doc(description="Update certain user's password")
     @api.expect(admin_update_user_model, validate=True)
     @requires_admin
-    # Update certain user's password
     def post(self):
         info = request.json
         username = info['username']
