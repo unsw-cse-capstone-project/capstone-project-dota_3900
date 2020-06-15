@@ -1,5 +1,8 @@
 3900 weekly diary
 wk1
-project choose, proposal, db tools(mysql) and language(python) selection, 
+project choose, proposal, db tools(mysql) and language(python) selection with group,.
 wk2
-er diagram(draw.io), sql schema, search for dataset(kaggle), db init(mysql workbench) 
+draw er diagram by myself, create sql schema by myself, search for dataset(kaggle) with Max, db init by myself.
+wk3
+schema modified to ensure consistency.
+create trigger for create new user, when user instance been created, automatically create default and read collection for them.
