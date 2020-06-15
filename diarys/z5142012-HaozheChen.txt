@@ -1,10 +1,24 @@
 Working Diary
 
 ------------WK01-----------
-1. Decide the topic √
-2. Decide the language, backend and frontend framework √
-3. Finished basic flask-restplus backend framework √
+Other:
+    1. Decide the topic √
+    2. Decide the language, backend and frontend framework √
+Coding:
+    1. Finished basic flask-restplus backend framework √
 ------------WK02-----------
-1. UML diagram √
-2. Basic api for both user and admin √
-3. Code refactor √
+Other:
+    1. UML diagram √
+    2. User story √
+Coding:
+    1. User Api √
+    2. Admin Api √
+    3. Code refactor √
+------------WK03-----------
+Other:
+    1. Proposal
+Coding:
+    1. Book Api √
+    2. Review Api √
+    3. Rating Api
+    4. Code format and comment
