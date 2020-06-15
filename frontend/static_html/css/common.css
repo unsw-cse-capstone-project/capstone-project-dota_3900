@@ -172,6 +172,12 @@ footer span {
 	color: green;
 }
 
+.btn-style-orange {
+	background-color: white;
+	border-color: orangered;
+	color: orangered;
+}
+
 
 
 .animation-fadein-top {

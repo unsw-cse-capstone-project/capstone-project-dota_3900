@@ -136,6 +136,18 @@
 	flex-wrap: wrap;
 }
 
+
+.user-dashboard .content .right .monthly-goal ul li .no-book{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 1rem;
+	font-size: 1rem;
+	font-weight: 300;
+	color: #333333;
+}
+
+
 .user-dashboard .content .right .monthly-goal ul li .books .book{
 	width: 7.5rem;
 	padding: 0.5rem;
@@ -170,6 +182,17 @@
 	margin-bottom: 0.125rem;
 	color: #333333;
 }
+
+.user-dashboard .content .right .monthly-goal ul li .books .book span:first-child{
+	color: purple;
+	font-weight: 300;
+}
+.bias-right-6rem{
+	position: relative;
+	right: -2rem;
+}
+
+
 
 
 

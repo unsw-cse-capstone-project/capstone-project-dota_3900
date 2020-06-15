@@ -1,3 +1,71 @@
+.user-dashboard .content .right .collection-list .recently-added-list{
+	margin-top: 2rem;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .title{
+	padding-left: 1rem;
+	font-weight: 300;
+	margin-bottom: 0.5rem;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books{
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	padding-left: 0.375rem;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .no-book{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 1rem;
+	font-size: 1rem;
+	font-weight: 300;
+	color: #333333;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book{
+	width: 7rem;
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+	border: 1px white solid;
+	margin-bottom: 1rem;
+	margin-right: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: border-color 0.3s;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book:hover{
+	border: 1px purple solid;
+	transition: border-color 0.3s;
+	cursor: pointer;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book img{
+	width: 6rem;
+	padding: 0.5rem;
+	box-shadow: 0px 3px 7px #eeeeee;
+	margin-bottom: 0.5rem;
+	background-color: white;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book span{
+	font-size: 0.8125rem;
+	text-align: center;
+	margin-bottom: 0.125rem;
+	color: #333333;
+}
+
+
+
+
+
+
 .user-dashboard .content .right .collection-list ul{
 	padding: 0;
 	margin: 0;
