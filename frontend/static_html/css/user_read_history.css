@@ -16,6 +16,7 @@
 	padding-left: 3rem;
 	padding-right: 0rem;
 	border-left: 4px coral dotted;
+	min-height: 8rem;
 }
 
 .user-dashboard .content .right .already-read-list ul li .year-month{
@@ -34,8 +35,21 @@
 	padding: 0;
 }
 
+.user-dashboard .content .right .already-read-list ul li .finish-goal{
+	position: absolute;
+	left: -1.25rem;
+	top: 9rem;
+	padding: 0;
+	border: 2px white solid;
+}
+
+.user-dashboard .content .right .already-read-list ul li .finish-goal img{
+	width: 2rem;
+	background-color: white;
+}
+
 .user-dashboard .content .right .already-read-list ul li .num_books{
-	width: 4rem;
+	width: 5rem;
 	height: 2rem;
 	border: 1px #f2f2f2 solid;
 	border-radius: 0.75rem;
@@ -46,7 +60,7 @@
 	align-items: center;
 	position: absolute;
 	top: 6rem;
-	left: -2.125rem;
+	left: -2.625rem;
 	padding: 0;
 }
 
@@ -80,13 +94,25 @@
 .user-dashboard .content .right .already-read-list ul li .num_books span{
 	font-size: 0.875rem;
 	font-weight: bold;
+	color: #29323C;
 }
+
 
 .user-dashboard .content .right .already-read-list ul li .books{
 	display: flex;
 	justify-content: flex-start;
 	align-items: flex-start;
 	flex-wrap: wrap;
+}
+
+.user-dashboard .content .right .already-read-list ul li .no-book{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 1rem;
+	font-size: 1rem;
+	font-weight: 300;
+	color: #333333;
 }
 
 .user-dashboard .content .right .already-read-list ul li .books .book{
@@ -149,7 +175,6 @@
 	font-size: 0.875rem;
 	color: white;
 	font-weight: bold;
-	
 }
 
 
