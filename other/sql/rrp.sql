@@ -64,15 +64,14 @@ DROP TABLE IF EXISTS `collections`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `collections` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,
   `name` varchar(45) NOT NULL,
   `creation_time` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `user_id_idx` (`user_id`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `collection_user_fk_idx` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,6 +80,7 @@ CREATE TABLE `collections` (
 
 LOCK TABLES `collections` WRITE;
 /*!40000 ALTER TABLE `collections` DISABLE KEYS */;
+INSERT INTO `collections` VALUES (3,2,'default','2020-06-15 12:43:07'),(4,2,'read','2020-06-15 12:43:07'),(5,1,'default','2020-06-15 12:49:10'),(6,1,'read','2020-06-15 12:49:10');
 /*!40000 ALTER TABLE `collections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,12 +92,13 @@ DROP TABLE IF EXISTS `collects`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `collects` (
-  `collection_id` int NOT NULL,
   `book_id` int NOT NULL,
-  PRIMARY KEY (`collection_id`,`book_id`),
-  KEY `book_id_idx` (`book_id`),
-  CONSTRAINT `book_id` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
-  CONSTRAINT `collection_id` FOREIGN KEY (`collection_id`) REFERENCES `collections` (`id`)
+  `collection_id` int NOT NULL,
+  `collect_time` datetime NOT NULL,
+  PRIMARY KEY (`book_id`,`collection_id`),
+  KEY `collect_collection_id_idx` (`collection_id`),
+  CONSTRAINT `collect_book_id` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
+  CONSTRAINT `collect_collection_id` FOREIGN KEY (`collection_id`) REFERENCES `collections` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -107,62 +108,37 @@ CREATE TABLE `collects` (
 
 LOCK TABLES `collects` WRITE;
 /*!40000 ALTER TABLE `collects` DISABLE KEYS */;
+INSERT INTO `collects` VALUES (1,3,'2020-06-15 12:46:21');
 /*!40000 ALTER TABLE `collects` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ratings`
+-- Table structure for table `review/rate`
 --
 
-DROP TABLE IF EXISTS `ratings`;
+DROP TABLE IF EXISTS `review/rate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ratings` (
-  `user_id` int NOT NULL,
+CREATE TABLE `review/rate` (
   `book_id` int NOT NULL,
+  `user_id` int NOT NULL,
   `rating` int NOT NULL,
-  KEY `rating_user_fk_idx` (`user_id`),
-  KEY `rating_book_fk_idx` (`book_id`),
-  CONSTRAINT `rating_book_fk` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
-  CONSTRAINT `rating_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ratings`
---
-
-LOCK TABLES `ratings` WRITE;
-/*!40000 ALTER TABLE `ratings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `reviews`
---
-
-DROP TABLE IF EXISTS `reviews`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reviews` (
-  `user_id` int NOT NULL,
-  `book_id` int NOT NULL,
   `review_content` text NOT NULL,
   `review_time` datetime NOT NULL,
-  KEY `user_id_idx` (`user_id`),
   KEY `book_id_idx` (`book_id`),
+  KEY `reviews_user_fk_idx` (`user_id`),
   CONSTRAINT `reviews_book_fk` FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
   CONSTRAINT `reviews_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `reviews`
+-- Dumping data for table `review/rate`
 --
 
-LOCK TABLES `reviews` WRITE;
-/*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
+LOCK TABLES `review/rate` WRITE;
+/*!40000 ALTER TABLE `review/rate` DISABLE KEYS */;
+/*!40000 ALTER TABLE `review/rate` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -173,14 +149,16 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `id` int NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(64) NOT NULL,
   `password` varchar(255) NOT NULL,
   `admin` tinyint(1) NOT NULL,
+  `email` varchar(64) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,8 +167,29 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'oj14','123',0,'oj14@foxmail.com'),(2,'oj13','123',0,'oj13@foxmail.com');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `users_AFTER_INSERT` AFTER INSERT ON `users` FOR EACH ROW BEGIN
+	insert into collections(user_id, name, creation_time)
+    values(new.id,"default",now());
+    insert into collections(user_id, name, creation_time)
+    values(new.id,"read",now());
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -201,4 +200,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-11 23:46:07
+-- Dump completed on 2020-06-15 13:00:53
