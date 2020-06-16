@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-import datetime
 
 import jwt
 from itsdangerous import SignatureExpired, BadSignature
@@ -12,12 +11,13 @@ class AuthenticationToken:
         self._secret_key = secret_key
         self._expires_in = expires_in
 
-    def generate_token(self, id, username, password_encrypted, admin):
+    def generate_token(self, id, username, password_encrypted, admin, email):
         info = {
             'id': id,
             'username': username,
             'password': password_encrypted,
             'admin': admin,
+            'email': email,
             'creation_time': time()
         }
         return jwt.encode(info, self._secret_key, algorithm='HS256')

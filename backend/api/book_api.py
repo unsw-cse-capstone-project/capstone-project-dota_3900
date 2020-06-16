@@ -109,7 +109,7 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.ISBN13}, 200
+            return {'publisher': int(info.ISBN13)}, 200
 
 # Api: Get book's categories by book_id
 @api.route('/categories/<int:id>')

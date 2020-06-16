@@ -12,7 +12,8 @@ user_password_model = api.model('user_password_model', {'password': fields.Strin
 user_username_model = api.model('user_username_model', {'username': fields.String})
 user_register_model = api.model('user_register_model', {
     'username': fields.String,
-    'password': fields.String
+    'password': fields.String,
+    'email': fields.String,
 })
 
 # Api: Register a new user account
@@ -28,9 +29,10 @@ class UserRegister(Resource):
         info = request.json
         username = info['username']
         password = info['password']
+        email = info['email']
         admin = 0
         try:
-            success, errmsg = User.register_account(username, password, 0)
+            success, errmsg = User.register_account(username, password, 0, email)
             if not success:
                 return {'message': errmsg}, 402
         except pymysql.Error as e:
@@ -125,6 +127,22 @@ class UserGetRole(Resource):
             return {'message': "Resource not found"}, 404
         else:
             return {'admin': int(info.admin)}, 200
+
+# Api: Get user's role by ID
+@api.route('/email/<int:user_id>')
+class UserGetRole(Resource):
+    @api.response(200, 'Success')
+    @api.response(400, 'Illegal user')
+    @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's role by ID")
+    def get(self, user_id):
+        info = User.get_info_by_id(user_id)
+        if info is None:
+            return {'message': "Resource not found"}, 404
+        else:
+            return {'email': info.email}, 200
 
 # Api: Get current user's ID
 @api.route('/id')
