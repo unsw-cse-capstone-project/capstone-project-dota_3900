@@ -26,3 +26,9 @@ Start working on user-dashboard HTML pages, which include user collection, readi
 Wednesday: user-dashboard-collection static page(draft) finished.
 Thursday: user-dashboard-my_reviews static page(draft) finished.
 
+Week3:
+Since we have some modifications about user story, so some parts of dashboard page need to be updated.
+
+Monday: Update dashboard pages to satisfy new requirements
+Monday: Search static html page finished
+
