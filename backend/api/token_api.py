@@ -57,7 +57,7 @@ class Token(Resource):
                         }
             else:
                 # User token
-                return {'token': auth.generate_token(account_id, username, password_encrypt, 0).decode(),
+                return {'token': auth.generate_token(account_id, username, password_encrypt, 0, email).decode(),
                         'id': account_id,
                         'username': username,
                         'email': email,

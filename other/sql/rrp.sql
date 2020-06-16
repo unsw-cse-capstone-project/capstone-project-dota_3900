@@ -116,10 +116,10 @@ UNLOCK TABLES;
 -- Table structure for table `review/rate`
 --
 
-DROP TABLE IF EXISTS `review/rate`;
+DROP TABLE IF EXISTS `review_rate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `review/rate` (
+CREATE TABLE `review_rate` (
   `book_id` int NOT NULL,
   `user_id` int NOT NULL,
   `rating` int NOT NULL,
@@ -136,9 +136,9 @@ CREATE TABLE `review/rate` (
 -- Dumping data for table `review/rate`
 --
 
-LOCK TABLES `review/rate` WRITE;
-/*!40000 ALTER TABLE `review/rate` DISABLE KEYS */;
-/*!40000 ALTER TABLE `review/rate` ENABLE KEYS */;
+LOCK TABLES `review__rate` WRITE;
+/*!40000 ALTER TABLE `review_rate` DISABLE KEYS */;
+/*!40000 ALTER TABLE `review_rate` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

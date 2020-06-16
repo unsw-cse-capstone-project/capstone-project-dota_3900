@@ -10,13 +10,13 @@ class Review_Rating:
     def new_review_rating(user_id, book_id, rating, content):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT * FROM 'review/rate' WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(
+        query = "SELECT * FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(
             user_id=user_id,
             book_id=book_id
         )
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
-            query = "INSERT INTO 'review/rate' VALUES(\'{user_id}\',\'{book_id}\',\'{rating}\',\'{content}\',\'{time}\')".format(
+            query = "INSERT INTO review_rate VALUES(\'{book_id}\',\'{user_id}\',\'{rating}\',\'{content}\',\'{time}\')".format(
                 user_id=user_id,
                 book_id=book_id,
                 rating=rating,
@@ -34,13 +34,13 @@ class Review_Rating:
     def edit_review_rating(user_id, book_id, rating, content):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT * FROM 'review/rate' WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(
+        query = "SELECT * FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(
             user_id=user_id,
             book_id=book_id
         )
         db_result = read_sql(sql=query, con=conn)
         if not db_result.empty:
-            query = 'UPDATE review/rate SET rating = \'{rating}\', review_content = \'{review_content}\', review_time = \'{review_time}\' WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')'.format(
+            query = 'UPDATE review_rate SET rating = \'{rating}\', review_content = \'{review_content}\', review_time = \'{review_time}\' WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')'.format(
                 rating = rating,
                 review_content=content,
                 review_time=datetime.datetime.now(),
@@ -58,7 +58,7 @@ class Review_Rating:
     def get_user_all_review_rating(user_id):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT user_id, book_id, rating, review_content, review_time FROM 'review/rate' WHERE user_id = \'{user_id}\'".format(
+        query = "SELECT user_id, book_id, rating, review_content, review_time FROM review_rate WHERE user_id = \'{user_id}\'".format(
             user_id=user_id
         )
         # Query result -> json
@@ -75,7 +75,7 @@ class Review_Rating:
     def get_book_all_review_rating(book_id):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT user_id, book_id, rating, review_content, review_time FROM 'review/rate' WHERE book_id = \'{book_id}\'".format(
+        query = "SELECT user_id, book_id, rating, review_content, review_time FROM review_rate WHERE book_id = \'{book_id}\'".format(
             book_id=book_id
         )
         # Query result -> json
@@ -92,7 +92,7 @@ class Review_Rating:
     def get_book_user_all_review_rating(user_id, book_id):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT user_id, book_id, rating, review_content, review_time FROM 'review/rate' WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(
+        query = "SELECT user_id, book_id, rating, review_content, review_time FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(
             user_id=user_id,
             book_id=book_id
         )
