@@ -1,0 +1,302 @@
+cat,count
+['Fiction'],2528
+"['Juvenile Fiction']",522
+"['Biography & Autobiography']",382
+['History'],214
+['Philosophy'],132
+['Religion'],112
+"['Comics & Graphic Novels']",110
+['Drama'],103
+"['Literary Criticism']",96
+"['Business & Economics']",80
+"['Juvenile Nonfiction']",79
+['Science'],74
+"['Literary Collections']",73
+['Poetry'],72
+"['Social Science']",52
+"['Performing Arts']",40
+['Humor'],38
+['Psychology'],36
+['Self-Help'],35
+['Cooking'],34
+['Art'],34
+"['Health & Fitness']",32
+"['Body, Mind & Spirit']",32
+['Computers'],31
+"['Language Arts & Disciplines']",28
+['Travel'],26
+"['Family & Relationships']",26
+['Nature'],24
+"['Political Science']",23
+['Education'],19
+['Music'],17
+['Medical'],15
+"['Sports & Recreation']",14
+"['English fiction']",12
+['Reference'],12
+"[Children's stories]",11
+"['Adventure stories']",10
+['Mathematics'],9
+['Pets'],9
+"['Young Adult Fiction']",9
+"['True Crime']",8
+['Law'],8
+"['American fiction']",8
+"['Foreign Language Study']",7
+"['Domestic fiction']",7
+['England'],6
+"['Fantasy fiction']",6
+"['Crafts & Hobbies']",5
+"['Games & Activities']",5
+['Families'],5
+"['Discworld (Imaginary place)']",5
+"['Detective and mystery stories']",5
+['Americans'],4
+"['American literature']",4
+"['Life on other planets']",4
+"['House & Home']",4
+['Gardening'],4
+"['Classical fiction']",4
+['Architecture'],4
+['Geishas'],3
+['Brothers'],3
+['Canada'],3
+['Games'],3
+"['Vietnam War, 1961-1975']",3
+['Clergy'],3
+"['Conduct of life']",3
+['China'],3
+['Fantasy'],3
+"['Authors, American']",2
+['Bible'],2
+"['English drama']",2
+['Alcoholics'],2
+['Australia'],2
+"[Asperger's syndrome]",2
+['Christmas'],2
+['Dystopias'],2
+"['Baggins, Bilbo (Fictitious character)']",2
+"['Australian fiction']",2
+"['Authors, English']",2
+"['Alienation (Social psychology)']",2
+"['American poetry']",2
+"['Experimental fiction']",2
+['Animals'],2
+"['Humorous stories']",2
+"['New York (N.Y.)']",2
+['Authors'],2
+"['Horror tales']",2
+"['City and town life']",2
+"['Boston (Mass.)']",2
+['Photography'],2
+['Arithmetic'],2
+"['Great Britain']",2
+"['Country life']",2
+"['Study Aids']",2
+"['Crime investigation']",2
+"['Comic books, strips, etc']",2
+"['African Americans']",2
+['Crusades'],2
+"['Short stories']",2
+['Adultery'],2
+"['Antiques & Collectibles']",2
+['Design'],2
+"['Horror tales, American']",2
+"['London (England)']",2
+['British'],2
+"['Dublin (Ireland)']",2
+['Apartheid'],1
+"['Science fiction.']",1
+"['Technology & Engineering']",1
+"['Capitalists and financiers']",1
+['Agriculture'],1
+"['Mythology, Greek']",1
+"['Cyclopes (Greek mythology)']",1
+['Consciousness'],1
+['Sex'],1
+"['Family life']",1
+"['Finance, Personal']",1
+"['Computer programmers']",1
+['Adolescence'],1
+['Pigeons'],1
+"['Bosnia and Herzegovina']",1
+"['Novelists, Canadian']",1
+['Ballet'],1
+"['Aged women']",1
+['Angels'],1
+['Depressions'],1
+"['People with social disabilities']",1
+"['Animal sounds']",1
+"['Absentee fathers']",1
+['Anger'],1
+"['Boats and boating']",1
+"['Banks and banking, British']",1
+"['Bond, James (Fictitious character)']",1
+"[Children's stories, English]",1
+"['Occult fiction']",1
+"['Auschwitz (Poland : Concentration camp)']",1
+"['Christian life']",1
+"['Literary Criticism & Collections']",1
+['Misogyny'],1
+"['Cooking, Mexican']",1
+['Beowulf'],1
+['Europe'],1
+['Antisemitism'],1
+"['Cities and towns']",1
+"['Graphic novels']",1
+['Czechoslovakia'],1
+"['Autobiographical fiction, American']",1
+['Feminism'],1
+"['Dent, Arthur (Fictitious character)']",1
+"['Short stories, English']",1
+"['Dallas, Eve (Fictitious character)']",1
+['Capitalism'],1
+"['Antiquarian booksellers']",1
+['Aesthetics'],1
+['Japan'],1
+['Businesswomen'],1
+['Atonement'],1
+"['Chicago (Ill.)']",1
+"['Middle-aged men']",1
+['Friendship'],1
+"['Body size']",1
+"['African American women']",1
+"['African American plantation owners']",1
+['Euthanasia'],1
+"['Slave insurrections']",1
+['Magic'],1
+"['Human behavior']",1
+"['Ballet dancers']",1
+['Dreams'],1
+['Bullying'],1
+"['Self-actualization (Psychology)']",1
+['Apprentices'],1
+"['Depressed persons']",1
+['Iceland'],1
+"['Cape Breton Island (N.S.)']",1
+"['Humorous stories, English']",1
+['Death'],1
+"['Bumppo, Natty (Fictitious character)']",1
+"['Brown, Encyclopedia (Fictitious character)']",1
+"['Suspense fiction']",1
+['Bereavement'],1
+"['Film producers and directors']",1
+"['Psycho (Motion picture : 1960)']",1
+['Brewing'],1
+"['Aircraft accidents']",1
+"['Children of Holocaust survivors']",1
+['Algiers'],1
+['Existentialism'],1
+['Epidemics'],1
+"['Catholic women']",1
+"['Ebola virus disease']",1
+"['Poirot, Hercule (Fictitious character)']",1
+"['Detective and mystery stories, English']",1
+"['African American men']",1
+['Cosmology'],1
+['Physicists'],1
+"['Adventure fiction']",1
+"['Burgeroorlogen / gtt']",1
+['Astronomers'],1
+['Money'],1
+"['Science fiction, American']",1
+"['Information behavior']",1
+['Christianity'],1
+"['Epic literature']",1
+"['Drenai (Imaginary place)']",1
+['France'],1
+"['United States']",1
+['Kenya'],1
+['Illinois'],1
+"['Human cloning']",1
+"['Horror stories.']",1
+['Bracelets'],1
+"['Zero (The number)']",1
+"['Persian Gulf War, 1991']",1
+"[Alzheimer's disease]",1
+"['Curiosities and wonders']",1
+"['Dysfunctional families']",1
+"['Divorced women']",1
+"['Amis, Kingsley']",1
+['Essays'],1
+"['Dating (Social customs)']",1
+"['Fairy tales, English']",1
+"['Fantasy fiction, English']",1
+"['Art and music']",1
+"[Children's plays, English]",1
+"['Caricatures and cartoons']",1
+['English'],1
+"['Actors and actresses']",1
+"['Fathers and sons']",1
+['Books'],1
+['Cancer'],1
+['Blind'],1
+"['Authors, German']",1
+"['Erotic stories']",1
+"['Books and reading']",1
+"['English poetry']",1
+"['Latin America']",1
+"['Cambridge (Mass.)']",1
+"['Married people']",1
+['Divorce'],1
+['Disasters'],1
+['Aeronautics'],1
+"['College teachers']",1
+['Fairies'],1
+"['Amour - Ouvrages avant 1800']",1
+"['Large type books']",1
+['Widows'],1
+"['Lost highway (Motion picture)']",1
+"['Bosnia and Hercegovina']",1
+['Demonology'],1
+"['Dangerously mentally ill']",1
+"['KAFKA, FRANZ, 1883-1924']",1
+"['Ryan, Jack (Fictitious character)']",1
+['Businesspeople'],1
+"['Abused wives']",1
+"['Authors, Cuban']",1
+['Confucianism'],1
+"['Fantasy fiction, American']",1
+['Espionage'],1
+"['Organized Crime']",1
+"['Chinese American families']",1
+"['Hospital care']",1
+['Girls'],1
+"['Political leadership']",1
+['Teenagers'],1
+"['Africa, East']",1
+['Apologetics'],1
+"['Dramatists, English']",1
+"['Chick lit']",1
+"['Authors, Scottish']",1
+"['Castle Rock (Me. : Imaginary place)']",1
+"['Rock musicians']",1
+"['Chinese Americans']",1
+"['Cider house rules. (Motion picture)']",1
+"['Holt, Max (Fictitious character)']",1
+"['Bail bond agents']",1
+"['Mars (Planet)']",1
+"['European fiction']",1
+"['Mothers and sons']",1
+"['Amerikaanse fiksie']",1
+"['Human-alien encounters']",1
+['Conspiracies'],1
+"['Anti-globalization movement']",1
+"['Cabrillo, Juan (Fictitious character)']",1
+"['Science fiction']",1
+"['Bus travel']",1
+"['College attendance']",1
+['Comedy'],1
+"['Bryson, Bill, 1951']",1
+"['Cocaine industry']",1
+"['Experimental fiction, American']",1
+['Photographers'],1
+"['Cypher, Richard (Fictitious character)']",1
+"['Fairy tales']",1
+['Blacks'],1
+"['Aeneas (Legendary character)']",1
+"['Political fiction']",1
+['Artists'],1
+"['Motion picture actors and actresses']",1
+['Arkansas'],1
+"['Art teachers']",1
