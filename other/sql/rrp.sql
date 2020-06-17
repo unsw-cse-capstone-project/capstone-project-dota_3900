@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `rrp` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `rrp`;
 -- MySQL dump 10.13  Distrib 8.0.20, for macos10.15 (x86_64)
 --
 -- Host: localhost    Database: rrp
@@ -113,7 +111,7 @@ INSERT INTO `collects` VALUES (1,3,'2020-06-15 12:46:21');
 UNLOCK TABLES;
 
 --
--- Table structure for table `review/rate`
+-- Table structure for table `review_rate`
 --
 
 DROP TABLE IF EXISTS `review_rate`;
@@ -133,10 +131,10 @@ CREATE TABLE `review_rate` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `review/rate`
+-- Dumping data for table `review_rate`
 --
 
-LOCK TABLES `review__rate` WRITE;
+LOCK TABLES `review_rate` WRITE;
 /*!40000 ALTER TABLE `review_rate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `review_rate` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -200,4 +198,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-15 13:00:53
+-- Dump completed on 2020-06-17 14:33:15
