@@ -80,16 +80,37 @@
 
 .search-results-list ul li .info .book-detail .title-operation .operation img{
 	width: 1rem;
+}
+
+.search-results-list ul li .info .book-detail .title-operation .operation span{
+	margin: 0 0.5rem;
+	font-size: 0.875rem;
+	font-weight: bold;
 	margin-right: 1rem;
+}
+
+
+.search-results-list .pages-bar{
+	margin-top: 1.25rem;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	padding: 1.25rem 0;
+}
+
+.search-results-list .pages-bar li{
+	list-style: none;
+	border: 1px lightblue solid;
+	margin-right: 0.625rem;
+	padding: 0.1875rem 0.5rem;
+	background-color: aliceblue;
+	font-size: 0.875rem;
+	color: #485563;
 	cursor: pointer;
 }
 
-.search-results-list ul li .info .book-detail .title-operation .operation img:hover{
-	opacity: 0.5;
-	transition: opacity 0.3s;
-}
-
-.search-results-list ul li .info .book-detail .title-operation .operation img:hover{
-	opacity: 0.5;
-	transition: opacity 0.3s;
+.search-results-list .pages-bar span{
+	font-size: 0.875rem;
+	margin-right: 0.625rem;
 }

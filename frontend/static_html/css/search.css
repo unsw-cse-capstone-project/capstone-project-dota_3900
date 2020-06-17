@@ -120,6 +120,7 @@ background: linear-gradient(to bottom, #434343, #000000); /* W3C, IE 10+/ Edge, 
 
 .search-mainpage .categories-list .categories {
 	margin-top: 2rem;
+	margin-bottom: 4rem;
 }
 
 .search-mainpage .categories-list .categories ul {

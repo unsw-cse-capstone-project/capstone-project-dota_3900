@@ -6,6 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title>RRP</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/form.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="css/common.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="css/search.css" />
 	</head>
@@ -20,9 +21,9 @@
 					</div>
 				</div>
 				<div class="right">
-					<span>Yefeng Niu</span>
+					<span id="login">Login</span>
 					|
-					<span>Logout</span>
+					<span>Register</span>
 				</div>
 			</header>
 
@@ -39,6 +40,26 @@
 							<div class="popular-books">
 								<div class="title">The Most Popular Books</div>
 								<ul>
+									<li>
+										<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" >
+										<span><b>Attack on Titan - Volume 14</b></span>
+									</li>
+									<li>
+										<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" >
+										<span><b>Attack on Titan - Volume 14</b></span>
+									</li>
+									<li>
+										<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" >
+										<span><b>Attack on Titan - Volume 14</b></span>
+									</li>
+									<li>
+										<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" >
+										<span><b>Attack on Titan - Volume 14</b></span>
+									</li>
+									<li>
+										<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" >
+										<span><b>Attack on Titan - Volume 14</b></span>
+									</li>
 									<li>
 										<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api" >
 										<span><b>Attack on Titan - Volume 14</b></span>
@@ -79,8 +100,6 @@
 									<li>Business & Economics - 80</li>
 									<li>Juvenile Nonfiction - 74</li>
 									<li>Science - 80</li>
-<!-- 									<li>Literary Collections - 73</li>
-									<li>Poetry - 72</li> -->
 								</ul>
 							</div>
 						</div>
@@ -91,6 +110,59 @@
 				<span>Created by Team DOTA-3900: Haiyan Xu, Haozhe Chen, Siyao Jiang, Yefeng Niu </span>
 				<span>Read Recommendation Pro</span>
 			</footer>
+			
+			<div class="modal hidden" id="login-form">
+			  <form class="modal-content animation-fadein-top">
+			    <div class="container1">
+			      <div class="title">
+			        Login
+			      </div>
+			      <div class="row">
+			          <span>Username:</span>
+			          <input type="text" placeholder="username">
+			      </div>
+			      <div class="row">
+			          <span>Password:</span>
+			          <input type="password" placeholder="password">
+			      </div>
+			      <div class="row">
+			          <span>Confirm Password:</span>
+			          <input type="password" placeholder="re-enter password">
+			      </div>
+						<div class="row">
+						  <span>Option bar1：</span>
+						  <select>
+						    <option value="">--</option>
+						    <option>111</option>
+								<option>222</option>
+						  </select>
+						  <span>Status：</span>
+						  <select>
+						    <option value="true">Enable</option>
+						    <option value="false">Disable</option>
+						  </select>
+						</div>
+			    </div>
+			
+			    <div class="container2">
+			      <button type="button" class="loginbtn">Login</button>
+			      <button type="button" class="cancelbtn" id="close-form">Cancel</button>
+			    </div>
+					<script>
+						let login = document.getElementById('login')
+						let closeForm = document.getElementById('close-form');
+						let loginForm = document.getElementById('login-form');
+						login.onclick = function(){
+							loginForm.style.display = "block"
+						}
+						closeForm.onclick = function(){
+							loginForm.style.display = "none"
+						}
+					</script>
+			  </form>
+			</div>
+			
+			
 		</div>
 	</body>
 
