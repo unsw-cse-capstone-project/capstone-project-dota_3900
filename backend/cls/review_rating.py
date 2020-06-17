@@ -104,3 +104,23 @@ class Review_Rating:
         for index in ds:
             result.append(ds[index])
         return result
+
+    @staticmethod
+    def get_book_average_rating(book_id):
+        conn = connect_sys_db()
+        # SQL
+        query = "SELECT rating FROM review_rate WHERE (book_id = \'{book_id}\')".format(
+            book_id=book_id
+        )
+        # Query result -> result
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            result.append(ds[index])
+        print(result)
+        sum = 0
+        for i in result:
+            sum = sum + i['rating'];
+        return float(sum/len(result))

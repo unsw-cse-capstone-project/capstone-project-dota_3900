@@ -119,3 +119,14 @@ class AllBookUserReviewRating(Resource):
         # Get review
         result = Review_Rating.get_book_user_all_review_rating(user_id, book_id)
         return {'list': result}, 200
+
+@api.route('/average_rating/book/<int:book_id>')
+class BookAverageRating(Resource):
+    @api.response(200, 'Success')
+    @api.response(400, 'Illegal user')
+    @api.response(401, 'Failed login')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get all reviews and rating of certain book")
+    def get(self, book_id):
+        avg_rating = Review_Rating.get_book_average_rating(book_id)
+        return {'average_rating': avg_rating}, 200
