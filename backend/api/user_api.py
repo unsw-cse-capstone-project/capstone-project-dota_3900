@@ -1,4 +1,6 @@
 from flask_restplus import Resource, Namespace, reqparse, fields
+
+from cls.review import Review
 from cls.user import User
 from lib.validation_decorator import requires_login
 from config import SECRET_KEY
@@ -41,7 +43,7 @@ class UserRegister(Resource):
 
 
 # Api: Update user's password
-@api.route('/password')
+@api.route('/password/update')
 class UserupdatePassword(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
@@ -69,7 +71,7 @@ class UserupdatePassword(Resource):
 
 
 # Api: Update user's username
-@api.route('/username')
+@api.route('/username/update')
 class UserUpdateUsername(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
@@ -96,7 +98,7 @@ class UserUpdateUsername(Resource):
         return {'message': 'Change username success'}, 200
 
 # Api: Get username by ID
-@api.route('/username/<int:user_id>')
+@api.route('/user_id:<int:id>/detail')
 class UserGetUsername(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
@@ -104,48 +106,20 @@ class UserGetUsername(Resource):
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's username by ID")
-    def get(self, user_id):
-        info = User.get_info_by_id(user_id)
+    @requires_login
+    def get(self, id):
+        info = User.get_info_by_id(id)
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'username': info.username}, 200
-
-
-# Api: Get user's role by ID
-@api.route('/role/<int:user_id>')
-class UserGetRole(Resource):
-    @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
-    @api.response(404, 'Resource not found')
-    @api.response(500, 'Internal server error')
-    @api.doc(description="Get user's role by ID")
-    def get(self, user_id):
-        info = User.get_info_by_id(user_id)
-        if info is None:
-            return {'message': "Resource not found"}, 404
-        else:
-            return {'admin': int(info.admin)}, 200
-
-# Api: Get user's role by ID
-@api.route('/email/<int:user_id>')
-class UserGetRole(Resource):
-    @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
-    @api.response(404, 'Resource not found')
-    @api.response(500, 'Internal server error')
-    @api.doc(description="Get user's role by ID")
-    def get(self, user_id):
-        info = User.get_info_by_id(user_id)
-        if info is None:
-            return {'message': "Resource not found"}, 404
-        else:
-            return {'email': info.email}, 200
+            return {'user_id': int(id),
+                    'username': info.username,
+                    'email': info.email,
+                    'admin': int(info.admin),
+                    }, 200
 
 # Api: Get current user's ID
-@api.route('/id')
+@api.route('/my_user_id')
 class UserGetRole(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
@@ -158,5 +132,19 @@ class UserGetRole(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         return {'id': token_info['id']}
+
+@api.route('/user_id:<int:id>/reviews')
+class AllUserReviewRating(Resource):
+    @api.response(200, 'Success')
+    @api.response(400, 'Illegal user')
+    @api.response(401, 'Failed login')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get all reviews and rating posted by user")
+    @requires_login
+    def get(self, id):
+        # Get review
+        result = Review.get_user_all_reviews(id)
+        return {'list': result}, 200
+
 
 
