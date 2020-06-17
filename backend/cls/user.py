@@ -34,7 +34,7 @@ class User:
 
     # Register a new user or admin account
     @staticmethod
-    def register_account(username, password, admin):
+    def register_account(username, password, admin, email):
         conn = connect_sys_db()
         # Get number of user
         query = "SELECT count(*) as users_num from users"
@@ -42,12 +42,13 @@ class User:
         id = db_result.iloc[0].users_num
         # SQL
         query = 'INSERT INTO users VALUES(\'{id}\', \'{username}\',' \
-                'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\')' \
+                'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\', \'{email}\')' \
             .format(
             id=id,
             username=username,
             password=password,
             admin=admin,
+            email=email,
             key=SECRET_KEY
         )
         with mysql(conn) as cursor:
@@ -58,7 +59,7 @@ class User:
     def get_info_by_id(id):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT username, admin FROM users WHERE id = \'{id}\'".format(
+        query = "SELECT username, admin, email FROM users WHERE id = \'{id}\'".format(
             id=id
         )
         db_result = read_sql(sql=query, con=conn)

@@ -32,7 +32,7 @@ class Token(Resource):
         admin = login_info['admin']
 
         # validate account
-        query = 'SELECT id, username, password FROM users WHERE username = \'{username}\' AND' \
+        query = 'SELECT id, username, password, email FROM users WHERE username = \'{username}\' AND' \
                 ' password = HEX(AES_ENCRYPT(\'{password}\', \'{key}\')) AND admin = \'{admin}\'' \
             .format(
             username=username,
@@ -45,21 +45,23 @@ class Token(Resource):
         if db_result.shape[0]:
             password_encrypt = db_result.iloc[0].password
             account_id = int(db_result.iloc[0].id)
+            email = db_result.iloc[0].email
             # return different token depends on different role
             if admin == 1:
                 # Admin token
-                return {'token': auth.generate_token(account_id, username, password_encrypt, 1).decode(),
+                return {'token': auth.generate_token(account_id, username, password_encrypt, 1, email).decode(),
                         'id': account_id,
                         'username': username,
+                        'email': email,
                         'admin': 1,
                         }
             else:
                 # User token
-                return {'token': auth.generate_token(account_id, username, password_encrypt, 0).decode(),
+                return {'token': auth.generate_token(account_id, username, password_encrypt, 0, email).decode(),
                         'id': account_id,
                         'username': username,
+                        'email': email,
                         'admin': 0,
                         }
-
         conn.close()
         return {'message': 'Uesless login info'}, 401

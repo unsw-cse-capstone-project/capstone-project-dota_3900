@@ -33,7 +33,7 @@ class BookTitle(Resource):
 
 # Api: Get book's author by book_id
 @api.route('/authors/<int:id>')
-class BookTitle(Resource):
+class BookAuthors(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -49,7 +49,7 @@ class BookTitle(Resource):
 
 # Api: Get book's publisher by book_id
 @api.route('/publisher/<int:id>')
-class BookTitle(Resource):
+class BookPublisher(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -65,7 +65,7 @@ class BookTitle(Resource):
 
 # Api: Get book's published_date by book_id
 @api.route('/published_date/<int:id>')
-class BookTitle(Resource):
+class BookPublishedDate(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -77,11 +77,11 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.published_date}, 200
+            return {'published_date': info.published_date}, 200
 
 # Api: Get book's description by book_id
 @api.route('/description/<int:id>')
-class BookTitle(Resource):
+class BookDescription(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -93,11 +93,11 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.description}, 200
+            return {'description': info.description}, 200
 
 # Api: Get book's ISBN13 by book_id
 @api.route('/ISBN13/<int:id>')
-class BookTitle(Resource):
+class BookISBN13(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -109,11 +109,11 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.ISBN13}, 200
+            return {'ISBN13': int(info.ISBN13)}, 200
 
 # Api: Get book's categories by book_id
 @api.route('/categories/<int:id>')
-class BookTitle(Resource):
+class BookCategories(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -125,11 +125,11 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.categories}, 200
+            return {'categories': info.categories}, 200
 
 # Api: Get book's google_rating by book_id
 @api.route('/google_rating/<int:id>')
-class BookTitle(Resource):
+class BookGoogleRating(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -141,11 +141,11 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.google_rating}, 200
+            return {'google_rating': info.google_rating}, 200
 
 # Api: Get book's google_rating_count by book_id
 @api.route('/google_ratings_count/<int:id>')
-class BookTitle(Resource):
+class BookGoogleRatingsCount(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -157,11 +157,11 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.google_ratings_count}, 200
+            return {'google_rating_count': int(info.google_ratings_count)}, 200
 
 # Api: Get book's book_cover_url by book_id
 @api.route('/book_cover_url/<int:id>')
-class BookTitle(Resource):
+class BookCoverUrl(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -173,11 +173,11 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.book_cover_url}, 200
+            return {'book_cover_url': info.book_cover_url}, 200
 
 # Api: Get book's language by book_id
 @api.route('/language/<int:id>')
-class BookTitle(Resource):
+class BookLanguage(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -189,4 +189,4 @@ class BookTitle(Resource):
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'publisher': info.language}, 200
+            return {'language': info.language}, 200
