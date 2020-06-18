@@ -20,5 +20,6 @@ Other:
 Coding:
     1. Book Api √
     2. Review Api √
-    3. Rating Api
-    4. Code format and comment
+    3. Rating Api √
+    4. Code format and comment √
+    5. Compare frontend requirement with backend Api √
