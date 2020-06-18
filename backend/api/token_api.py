@@ -14,7 +14,6 @@ api = Namespace('token', description='Get a token by username and password')
 login_model = api.model('account username-password model', {
     'username': fields.String(required=True),
     'password': fields.String(required=True),
-    'admin': fields.Integer(required=True)
 })
 
 
@@ -29,7 +28,10 @@ class Token(Resource):
         login_info = request.json
         username = login_info['username']
         password = login_info['password']
-        admin = login_info['admin']
+        if username == "admin" and password == "admin":
+            admin = 1
+        else:
+            admin = 0
 
         # validate account
         query = 'SELECT id, username, password, email FROM users WHERE username = \'{username}\' AND' \

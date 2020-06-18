@@ -43,8 +43,8 @@ class UserRegister(Resource):
 
 
 # Api: Update user's password
-@api.route('/password/update')
-class UserupdatePassword(Resource):
+@api.route('/password')
+class UserUpdatePassword(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
@@ -52,7 +52,7 @@ class UserupdatePassword(Resource):
     @api.doc(description="Change user account password ")
     @api.expect(user_password_model, validate=True)
     @requires_login
-    def post(self):
+    def put(self):
         info = request.json
         new_password = info['password']
 
@@ -71,7 +71,7 @@ class UserupdatePassword(Resource):
 
 
 # Api: Update user's username
-@api.route('/username/update')
+@api.route('/username')
 class UserUpdateUsername(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
@@ -80,7 +80,7 @@ class UserUpdateUsername(Resource):
     @api.doc(description="Rename the account")
     @api.expect(user_username_model, validate=True)
     @requires_login
-    def post(self):
+    def put(self):
         info = request.json
         new_username = info['username']
 
@@ -98,7 +98,7 @@ class UserUpdateUsername(Resource):
         return {'message': 'Change username success'}, 200
 
 # Api: Get username by ID
-@api.route('/user_id:<int:id>/detail')
+@api.route('/<int:user_id>/detail')
 class UserGetUsername(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
@@ -107,12 +107,12 @@ class UserGetUsername(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's username by ID")
     @requires_login
-    def get(self, id):
-        info = User.get_info_by_id(id)
+    def get(self, user_id):
+        info = User.get_info_by_id(user_id)
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
-            return {'user_id': int(id),
+            return {'user_id': int(user_id),
                     'username': info.username,
                     'email': info.email,
                     'admin': int(info.admin),
@@ -133,7 +133,7 @@ class UserGetRole(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         return {'id': token_info['id']}
 
-@api.route('/user_id:<int:id>/reviews')
+@api.route('/<int:user_id>/reviews')
 class AllUserReviewRating(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
@@ -141,9 +141,9 @@ class AllUserReviewRating(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get all reviews and rating posted by user")
     @requires_login
-    def get(self, id):
+    def get(self, user_id):
         # Get review
-        result = Review.get_user_all_reviews(id)
+        result = Review.get_user_all_reviews(user_id)
         return {'list': result}, 200
 
 
