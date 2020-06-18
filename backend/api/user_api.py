@@ -8,7 +8,6 @@ from flask import request
 import jwt
 import pymysql
 
-
 api = Namespace('user', description='User account setting')
 user_password_model = api.model('user_password_model', {'password': fields.String})
 user_username_model = api.model('user_username_model', {'username': fields.String})
@@ -17,6 +16,7 @@ user_register_model = api.model('user_register_model', {
     'password': fields.String,
     'email': fields.String,
 })
+
 
 # Api: Register a new user account
 @api.route('')
@@ -97,6 +97,7 @@ class UserUpdateUsername(Resource):
             return {'message': e.args[1]}, 500
         return {'message': 'Change username success'}, 200
 
+
 # Api: Get username by ID
 @api.route('/<int:user_id>/detail')
 class UserGetUsername(Resource):
@@ -118,6 +119,7 @@ class UserGetUsername(Resource):
                     'admin': int(info.admin),
                     }, 200
 
+
 # Api: Get current user's ID
 @api.route('/my_user_id')
 class UserGetRole(Resource):
@@ -133,6 +135,7 @@ class UserGetRole(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         return {'id': token_info['id']}
 
+
 @api.route('/<int:user_id>/reviews')
 class AllUserReviewRating(Resource):
     @api.response(200, 'Success')
@@ -143,8 +146,5 @@ class AllUserReviewRating(Resource):
     @requires_login
     def get(self, user_id):
         # Get review
-        result = Review.get_user_all_reviews(user_id)
+        result = Review.get_user_reviews(user_id)
         return {'list': result}, 200
-
-
-

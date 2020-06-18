@@ -14,9 +14,6 @@ review_content_model = api.model('review_content_model', {
     'content': fields.String
 })
 
-# review_parser = reqparse.RequestParser()
-# review_parser.add_argument('book_id', type=int, required=True)
-# review_parser.add_argument('user_id', type=int, required=True)
 
 search_parser = reqparse.RequestParser()
 search_parser.add_argument('search_content', required=True)
@@ -25,6 +22,13 @@ review_parser = reqparse.RequestParser()
 review_parser.add_argument('book_id', type=int)
 review_parser.add_argument('user_id', type=int)
 
+delete_parser = reqparse.RequestParser()
+delete_parser.add_argument('book_id', type=int, required=True)
+delete_parser.add_argument('user_id', type=int, required=True)
+
+review_page_parser = reqparse.RequestParser()
+review_page_parser.add_argument('book_id', type=int, required=True)
+review_page_parser.add_argument('page', type=int, required=True)
 
 # Api: Get search result
 @api.route('/search_result')
@@ -40,6 +44,7 @@ class BookSearch(Resource):
         result = Book.book_search(args.get('search_content'))
         return {'list': result}, 200
 
+
 # Api: Get search result
 @api.route('/<int:book_id>/detail')
 class BookDetail(Resource):
@@ -53,6 +58,9 @@ class BookDetail(Resource):
         if detail is None:
             return {'message': 'Resource not found'}, 404
         else:
+            avg_rating = Review.get_book_average_rating(book_id)
+            review_preview = Review.get_book_review_from_to(book_id,0,2)
+            num_rated = Review.get_book_num_rating(book_id)
             return {'book_id': int(detail.id),
                     'title': detail.title,
                     'authors': detail.authors,
@@ -64,63 +72,59 @@ class BookDetail(Resource):
                     'google_rating': float(detail.google_rating),
                     'google_ratings_count': int(detail.google_ratings_count),
                     'book_cover_url': detail.book_cover_url,
-                    'language': detail.language
-                }
+                    'language': detail.language,
+                    'avg_rating': avg_rating,
+                    'num_rated': num_rated,
+                    'review_preview': review_preview
+                    }
 
-@api.route('/<int:book_id>/reviews')
-class BookReviews(Resource):
+@api.route('/review_page')
+class ReviewApi(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
+    @api.response(400, 'Illegal input')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Get all reviews of this book")
-    @requires_login
-    def get(self, book_id):
-        # Get review
-        result = Review.get_book_all_review(book_id)
-        return {'reviews': result}, 200
+    @api.doc(description="Get review page")
+    @api.expect(review_page_parser, validate=True)
+    # @requires_login
+    def get(self):
+        args = review_page_parser.parse_args()
+        page = args.get('page')
+        book_id = args.get('book_id')
+        page_num, last_page_num = Review.get_book_review_page_num(book_id, 10)
+        if(page <= 0 or page > page_num):
+            return {'message': 'Resource not found'}, 404
+        result = Review.get_book_review_page(book_id, 10, page)
+        return {'total_page_num': page_num,
+                'current_page': page,
+                'reviews': result
+                }, 200
 
-@api.route('/<int:book_id>/avg_rating')
-class BookAverageRating(Resource):
+@api.route('/review')
+class ReviewApi(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
-    @api.response(500, 'Internal server error')
-    @api.doc(description="Get all reviews of this book")
-    @requires_login
-    def get(self, book_id):
-        # Get review
-        result = Review.get_book_average_rating(book_id)
-        return {'avg_rating': result}, 200
-
-@api.route('/<int:book_id>/<int:user_id>/review')
-class BookUserReview(Resource):
-    @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
+    @api.response(400, 'Illegal input')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get review of certain book posted by certain user")
+    @api.expect(review_parser, validate=True)
     @requires_login
-    def get(self, book_id, user_id):
-        # Get review
-        result = Review.get_book_user_all_review(user_id, book_id)
-        return {'Reviews': result}, 200
+    def get(self):
+        args = review_parser.parse_args()
+        book_id = args.get('book_id')
+        user_id = args.get('user_id')
+        if (book_id == None and user_id != None):
+            result = Review.get_user_reviews(user_id)
+            return {'reviews': result}, 200
+        elif (book_id != None and user_id == None):
+            result = Review.get_book_review(book_id)
+            return {'reviews': result}, 200
+        elif (book_id != None and user_id != None):
+            result = Review.get_book_user_review(user_id, book_id)
+            return {'reviews': result}, 200
+        elif (book_id == None and user_id == None):
+            return {'message': 'book_id and user_id cannot be both empty'}, 400
 
-# @api.route('/review')
-# class BookUserReview(Resource):
-#     @api.response(200, 'Success')
-#     @api.response(400, 'Illegal user')
-#     @api.response(401, 'Failed login')
-#     @api.response(500, 'Internal server error')
-#     @api.doc(description="Get review of certain book posted by certain user")
-#     @api.expect(review_parser, validate=True)
-#     # @requires_login
-#     def get(self):
-#         args = review_parser.parse_args()
-
-
-@api.route('/review')
-class ReviewPost(Resource):
     @api.response(200, 'Success')
     @api.response(200, 'Failed, review already existed')
     @api.response(400, 'Illegal user')
@@ -173,22 +177,21 @@ class ReviewPost(Resource):
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
 
-
-@api.route('/<int:book_id>/review')
-class ReviewDelete(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
     @api.doc(description="Delete certain user account")
+    @api.expect(delete_parser, validate=True)
     @requires_login
-    def delete(self, book_id):
-        token = request.headers.get('AUTH-TOKEN')
-        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        user_id = token_info['id']
+    def delete(self):
+        args = delete_parser.parse_args()
+        book_id = args.get('book_id')
+        user_id = args.get('user_id')
         try:
             if not Review.delete_review(user_id, book_id):
                 return {'message': 'Delete review failed, this review does not exist'}, 402
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Delete review success'}, 200
+
