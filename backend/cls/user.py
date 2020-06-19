@@ -69,6 +69,15 @@ class User:
             info = db_result.iloc[0]
             return info
 
+    @staticmethod
+    def get_username_by_id(id):
+        conn = connect_sys_db()
+        # SQL
+        query = "Select username FROM users WHERE id = \'{id}\'".format(
+            id = id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        return db_result.iloc[0].username
 
 
 def is_user_exists(username):

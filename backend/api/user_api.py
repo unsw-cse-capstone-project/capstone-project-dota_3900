@@ -12,9 +12,9 @@ api = Namespace('user', description='User account setting')
 user_password_model = api.model('user_password_model', {'password': fields.String})
 user_username_model = api.model('user_username_model', {'username': fields.String})
 user_register_model = api.model('user_register_model', {
-    'username': fields.String,
-    'password': fields.String,
-    'email': fields.String,
+    'username': fields.String(required=True),
+    'password': fields.String(required=True),
+    'email': fields.String(required=True),
 })
 
 

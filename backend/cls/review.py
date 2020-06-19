@@ -1,6 +1,8 @@
 import datetime
 import json
 from pandas import read_sql
+
+from cls.user import User
 from lib.sql_linker import connect_sys_db, mysql
 
 
@@ -8,6 +10,7 @@ class Review:
     # Post new review
     @staticmethod
     def new_review(user_id, book_id, rating, content):
+        username = User.get_username_by_id(user_id)
         conn = connect_sys_db()
         # SQL
         query = "SELECT * FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(
@@ -16,9 +19,10 @@ class Review:
         )
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
-            query = "INSERT INTO review_rate VALUES(\'{book_id}\',\'{user_id}\',\'{rating}\',\'{content}\',\'{time}\')".format(
+            query = "INSERT INTO review_rate VALUES(\'{book_id}\',\'{user_id}\',\'{username}\',\'{rating}\',\'{content}\',\'{time}\')".format(
                 user_id=user_id,
                 book_id=book_id,
+                username=username,
                 rating=rating,
                 content=content,
                 time=datetime.datetime.now()
@@ -74,7 +78,7 @@ class Review:
     def get_user_reviews(user_id):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT user_id, book_id, rating, review_content, review_time FROM review_rate WHERE user_id = \'{user_id}\' ORDER BY review_time DESC".format(
+        query = "SELECT user_id, username, book_id, rating, review_content, review_time FROM review_rate WHERE user_id = \'{user_id}\' ORDER BY review_time DESC".format(
             user_id=user_id
         )
         # Query result -> json
@@ -91,7 +95,7 @@ class Review:
     def get_book_review(book_id):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT user_id, book_id, rating, review_content, review_time FROM review_rate WHERE book_id = \'{book_id}\' ORDER BY review_time DESC".format(
+        query = "SELECT user_id, username, book_id, rating, review_content, review_time FROM review_rate WHERE book_id = \'{book_id}\' ORDER BY review_time DESC".format(
             book_id=book_id
         )
         # Query result -> json
@@ -108,7 +112,7 @@ class Review:
     def get_book_user_review(user_id, book_id):
         conn = connect_sys_db()
         # SQL
-        query = "SELECT user_id, book_id, rating, review_content, review_time FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\') ORDER BY review_time DESC".format(
+        query = "SELECT user_id, username, book_id, rating, review_content, review_time FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\') ORDER BY review_time DESC".format(
             user_id=user_id,
             book_id=book_id
         )
