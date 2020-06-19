@@ -100,15 +100,39 @@ class UserUpdateUsername(Resource):
 
 # Api: Get username by ID
 @api.route('/<int:user_id>/detail')
-class UserGetUsername(Resource):
+class UserGetDetail(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Get user's username by ID")
+    @api.doc(description="Get user's detail by ID")
     @requires_login
     def get(self, user_id):
+        info = User.get_info_by_id(user_id)
+        if info is None:
+            return {'message': "Resource not found"}, 404
+        else:
+            return {'user_id': int(user_id),
+                    'username': info.username,
+                    'email': info.email,
+                    'admin': int(info.admin),
+                    }, 200
+
+# Api: Get username by ID
+@api.route('/detail')
+class UserGetCurrDetail(Resource):
+    @api.response(200, 'Success')
+    @api.response(400, 'Illegal user')
+    @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get current user's detail by ID")
+    @requires_login
+    def get(self):
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        user_id = token_info['id']
         info = User.get_info_by_id(user_id)
         if info is None:
             return {'message': "Resource not found"}, 404
@@ -122,7 +146,7 @@ class UserGetUsername(Resource):
 
 # Api: Get current user's ID
 @api.route('/my_user_id')
-class UserGetRole(Resource):
+class UserGetCurrID(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
