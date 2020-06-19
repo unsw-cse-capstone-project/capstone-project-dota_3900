@@ -1,0 +1,219 @@
+.book-bar{
+	padding-top: 1.25rem;
+	display: flex;
+	padding-bottom: 1.875rem;
+	border-bottom: 1px #f1f1f1 solid;
+}
+
+.book-bar .left{
+	margin: 0 2rem;
+}
+
+.book-bar .left img{
+	width: 8rem;
+	box-shadow: 0px 3px 5px #dddddd;
+}
+
+.book-bar .right{
+	border-left: 1px #f1f1f1 solid;
+	padding: 0 2rem;
+}
+
+.book-bar .right h2{
+	padding: 0;
+	margin: 0;
+	margin-bottom: 1.25rem;
+}
+
+.book-bar .right h6{
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	color: grey;
+	margin-bottom: 0.625rem;
+}
+
+.book-bar .right ul {
+	padding: 0;
+}
+
+.book-bar .right ul li{
+	margin-top: 15px;
+	list-style: none;
+	max-width: 43.75rem;
+}
+
+.book-bar .right ul li span{
+	color: #333333;
+	font-size: 0.875rem;
+}
+
+.book-bar .right ul li span:nth-child(1){
+	font-weight: bold;
+}
+
+
+.book-bar .right .rating-bar{
+	margin-top: 1.875rem;
+	display: flex;
+	align-items: center;
+}
+
+.book-bar .right .rating-bar span{
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+	margin-right: 0.625rem;
+}
+
+.book-bar .right .rating-bar img{
+	width: 1.25rem;
+	cursor: pointer;
+}
+
+.book-bar .right .rating-bar .star-bar{
+	display: flex;
+	align-items: center;
+	margin-right: 6.25rem;
+}
+
+.book-bar .right .rating-bar .star-bar span{
+	font-size: 15px;
+	color: #333333;
+	margin-left: 0.625rem;
+	font-weight: 400;
+}
+
+.book-bar .right .operation-bar{
+	margin-top: 2rem;
+}
+
+
+.content-bar{
+	padding-top: 1.25rem;
+	padding-bottom: 0.625rem;
+}
+
+.content-bar .title{
+	margin-left: 2rem;
+	font-style: italic;
+	font-weight: bold;
+	color: #444444;
+}
+
+.content-bar .book_list{
+	display: flex;
+	justify-content: space-between;
+	align-items: auto;
+	padding: 0 2rem;
+}
+
+.content-bar .book_list li{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0.625rem;
+	border: 1px white solid;
+}
+
+.content-bar .book_list li:hover{
+	border: 1px lightblue solid;
+	background-color: aliceblue;
+	transition: border 0.7s;
+	transition: background-color 0.7s;
+	cursor: pointer;
+}
+
+
+.content-bar .book_list li img{
+	width: 7.5rem;
+	margin-bottom: 0.625rem;
+}
+
+.content-bar .book_list li span{
+	text-align: center;
+	font-size: 0.75rem;
+	width: 7.5rem;
+	max-height: 2.5rem;
+	overflow: hidden;
+	color: #444444;
+}
+
+.content-bar .book_list li .rating{
+	margin-top: 0.375rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.content-bar .book_list li .rating img{
+	width: 0.75rem;
+	margin: 0;
+}
+
+.content-bar .book_list li .rating span{
+	color: orange;
+	font-size: 0.75rem;
+	width: auto;
+	margin-left: 0.3125rem;
+}
+
+.comment-list ul{
+	padding: 0 2rem;
+}
+
+.comment-list ul li{
+	list-style: none;
+	border-bottom: 1px #f1f1f1 solid;
+	padding-bottom:0.75rem;
+	margin-bottom: 0.75rem;
+}
+
+
+.comment-list ul li .user-info{
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.625rem;
+}
+
+.comment-list ul li .user-info .ratings{
+	margin-left: 0.625rem;
+	display: flex;
+	justify-content: center;
+	margin-right: 0.625rem;
+}
+
+.comment-list ul li .user-info span{
+	font-size: 0.875rem;
+	color: steelblue;
+}
+
+.comment-list ul li .user-info .ratings img{
+	width: 0.75rem;
+	height: 0.75rem;
+}
+
+.comment-list ul li .user-info .comment-datetime{
+	font-size: 0.75rem;
+	color: #666666;
+}
+
+.comment-list ul li .comment{
+	font-size: 0.875rem;
+	color: #333333;
+	line-height: 1.125rem;
+}
+
+.comment-list .show-more{
+	margin-right: 2.5rem;
+	font-size: 0.875rem;
+	text-align: right;
+	color: steelblue;
+	margin-bottom: 0.75rem;
+	cursor: pointer;
+}
+
+
+
+
+

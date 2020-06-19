@@ -1,0 +1,123 @@
+.book-reviews-container{
+	width: 62.5rem;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 0.625rem;
+}
+
+.book-reviews-container .left{
+	width: 75%;
+	min-height: 25rem;
+	padding: 0 2rem;
+}
+
+.book-reviews-container .left h3{
+	font-weight: bold;
+}
+
+.book-reviews-container .left ul{
+	padding: 0;
+	margin-top: 1.875rem;
+}
+
+.book-reviews-container .left ul li{
+	list-style: none;
+	border-bottom: 1px #f1f1f1 solid;
+	padding-bottom:0.75rem;
+	margin-bottom: 0.75rem;
+}
+
+
+.book-reviews-container .left ul li .user-info{
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.625rem;
+}
+
+.book-reviews-container .left ul li .user-info .ratings{
+	margin-left: 0.625rem;
+	display: flex;
+	justify-content: center;
+	margin-right: 0.625rem;
+}
+
+.book-reviews-container .left ul li .user-info span{
+	font-size: 0.875rem;
+	color: steelblue;
+}
+
+.book-reviews-container .left ul li .user-info .ratings img{
+	width: 0.75rem;
+	height: 0.75rem;
+}
+
+.book-reviews-container .left ul li .user-info .comment-datetime{
+	font-size: 0.75rem;
+	color: #666666;
+}
+
+.book-reviews-container .left ul li .comment{
+	font-size: 0.875rem;
+	color: #333333;
+	line-height: 1.125rem;
+}
+
+.book-reviews-container .left .pages-bar{
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	padding: 1.25rem 0;
+}
+
+.book-reviews-container .left .pages-bar li{
+	list-style: none;
+	border: 1px lightblue solid;
+	margin-right: 0.625rem;
+	padding: 0.1875rem 0.5rem;
+	background-color: aliceblue;
+	font-size: 0.875rem;
+	color: #485563;
+	cursor: pointer;
+}
+
+.book-reviews-container .left .pages-bar span{
+	font-size: 0.875rem;
+	margin-right: 0.625rem;
+}
+
+
+.book-reviews-container .right{
+	padding-top: 2rem;
+	width: 24%;
+	min-height: 25rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.book-reviews-container .right img{
+	width: 8rem;
+}
+
+.book-reviews-container .right .book-title{
+	margin-top: 0.625rem;
+	font-size: 0.875rem;
+	font-weight: bold;
+	color: steelblue;
+}
+
+.book-reviews-container .right li{
+	list-style: none;
+	font-size: 0.75rem;
+	margin-top: 0.625rem;
+	color: #333333;
+	line-height: 1.25rem;
+}
+
+.book-reviews-container .right li span:nth-child(1){
+	font-weight: bold;
+}
+
+.book-reviews-container .right .operation-bar{
+	margin-top: 1.875rem
+}

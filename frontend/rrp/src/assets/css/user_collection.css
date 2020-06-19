@@ -1,0 +1,261 @@
+.user-dashboard .content .right .collection-list .recently-added-list{
+	margin-top: 2rem;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .title{
+	padding-left: 1rem;
+	font-weight: 300;
+	margin-bottom: 0.5rem;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books{
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	padding-left: 0.375rem;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .no-book{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 1rem;
+	font-size: 1rem;
+	font-weight: 300;
+	color: #333333;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book{
+	width: 7rem;
+	padding: 0.5rem;
+	border-radius: 0.25rem;
+	border: 1px white solid;
+	margin-bottom: 1rem;
+	margin-right: 0.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: border-color 0.3s;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book:hover{
+	border: 1px purple solid;
+	transition: border-color 0.3s;
+	cursor: pointer;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book img{
+	width: 6rem;
+	padding: 0.5rem;
+	box-shadow: 0px 3px 7px #eeeeee;
+	margin-bottom: 0.5rem;
+	background-color: white;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book span{
+	font-size: 0.8125rem;
+	text-align: center;
+	margin-bottom: 0.125rem;
+	color: #333333;
+}
+
+
+
+
+
+
+.user-dashboard .content .right .collection-list ul{
+	padding: 0;
+	margin: 0;
+}
+
+.user-dashboard .content .right .collection-list ul li{
+	width: 40.5rem;
+	border: 1px #f2f2f2 solid;
+	border-radius: 0.125rem;
+	box-shadow: 0px 3px 7px #f1f1f1;
+	list-style: none;
+	padding: 1.5rem;
+	margin-bottom: 0.9375rem;
+	background-color: white;
+}
+
+.user-dashboard .content .right .collection-list ul li .head{
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info{
+	flex-direction: column;
+	display: flex;
+	width: 26.5rem;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info span{
+	font-weight: bold;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info .status{
+	font-size: 0.875rem;
+	margin-top: 0.625rem;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info .status span{
+	margin-right: 0.9375rem;
+	font-weight: 300;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info .status span:nth-child(1){
+	color: orangered;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info .status span:nth-child(2){
+	color: green;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info .status span:nth-child(3){
+	color: purple;
+}
+
+
+.user-dashboard .content .right .collection-list ul li .head .operation{
+	width: 13rem;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .operation img{
+	width: 1.5625rem;
+	margin-right: 1.25rem;
+	cursor: pointer;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .operation img:hover{
+	opacity: 0.5;
+	transition: opacity 0.3s;
+}
+
+.user-dashboard .content .right .collection-list ul li .book-list{
+	width: 40.5rem;
+	position: relative;
+	height: 0rem;
+	overflow: hidden;
+	top: -1rem;
+	opacity: 0;
+	transition: top,opacity 0.5s,0.5s
+}
+
+.user-dashboard .content .right .collection-list ul li .book-list .book{
+	border-top: 1px #f1f1f1 solid;
+	margin-top: 0.9375rem;
+	padding-top: 1rem;
+}
+
+.user-dashboard .content .right .book img{
+	width: 4rem;
+}
+
+.user-dashboard .content .right .book .info{
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.user-dashboard .content .right .book .info .book-detail{
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-start;
+	margin-left: 1.25rem;
+}
+
+.user-dashboard .content .right .book .info .book-detail span{
+	font-size: 0.75rem;
+	line-height: 1rem;
+	max-height: 3rem;
+	overflow: hidden;
+	margin-bottom: 0.25rem;
+	color: #333333;
+}
+
+.user-dashboard .content .right .book .info .book-detail span:first-child{
+	font-size: 1rem;
+	font-weight: bold;
+	color: #4682B4;
+	cursor: pointer;
+}
+
+.user-dashboard .content .right .book .info .book-detail span:last-child{
+	text-align: right;
+}
+
+.user-dashboard .content .right .book .info .book-detail .title-operation{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	margin-bottom: 0.5rem;
+}
+
+
+.user-dashboard .content .right .book .info .book-detail .title-operation .operation{
+	display: flex;
+	justify-items: center;
+	align-items: center;
+	margin-left: 0.75rem;
+}
+
+.user-dashboard .content .right .book .info .book-detail .title-operation .operation img{
+	width: 1rem;
+	margin-right: 1rem;
+	cursor: pointer;
+}
+
+.user-dashboard .content .right .book .info .book-detail .title-operation .operation img:hover{
+	opacity: 0.5;
+	transition: opacity 0.3s;
+}
+
+.user-dashboard .content .right .book .info .book-detail .title-operation .operation img:hover{
+	opacity: 0.5;
+	transition: opacity 0.3s;
+}
+
+.user-dashboard .content .right .collection-list ul li .book-list .no-book{
+	border-top: 1px #f1f1f1 solid;
+	min-height: 4rem;
+	margin-top: 0.9375rem;
+	padding-top: 0.625rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-size: 0.875rem;
+	color: #5F9EA0;
+}
+
+.user-dashboard .content .right .collection-list ul li .book-list .no-book img{
+	width: 1.5625rem;
+	margin-bottom: 0.625rem;
+}
+
+.user-dashboard .content .right .collection-list ul li .book-list .close-collection{
+	border: 1px lightblue solid;
+	margin-top: 0.9375rem;
+	padding: 0.625rem 0;
+	text-align: center;
+	font-size: 0.875rem;
+	color: steelblue;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	font-weight: bold;
+}
+
+.user-dashboard .content .right .collection-list ul li .book-list .close-collection:hover{
+	background-color: aliceblue;
+	transition: background-color 0.3s;
+}
