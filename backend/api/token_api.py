@@ -52,18 +52,10 @@ class Token(Resource):
             if admin == 1:
                 # Admin token
                 return {'token': auth.generate_token(account_id, username, password_encrypt, 1, email).decode(),
-                        'id': account_id,
-                        'username': username,
-                        'email': email,
-                        'admin': 1,
                         }
             else:
                 # User token
                 return {'token': auth.generate_token(account_id, username, password_encrypt, 0, email).decode(),
-                        'id': account_id,
-                        'username': username,
-                        'email': email,
-                        'admin': 0,
                         }
         conn.close()
         return {'message': 'Useless login info'}, 401
