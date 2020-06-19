@@ -66,4 +66,4 @@ class Token(Resource):
                         'admin': 0,
                         }
         conn.close()
-        return {'message': 'Uesless login info'}, 401
+        return {'message': 'Useless login info'}, 401
