@@ -37,14 +37,13 @@ class User:
     def register_account(username, password, admin, email):
         conn = connect_sys_db()
         # Get number of user
-        query = "SELECT count(*) as users_num from users"
-        db_result = read_sql(sql=query, con=conn)
-        id = db_result.iloc[0].users_num
+        # query = "SELECT count(*) as users_num from users"
+        # db_result = read_sql(sql=query, con=conn)
+        # id = db_result.iloc[0].users_num
         # SQL
-        query = 'INSERT INTO users VALUES(\'{id}\', \'{username}\',' \
+        query = 'INSERT INTO users VALUES(0, \'{username}\',' \
                 'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\', \'{email}\')' \
             .format(
-            id=id,
             username=username,
             password=password,
             admin=admin,
