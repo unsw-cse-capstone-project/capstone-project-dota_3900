@@ -120,6 +120,7 @@ DROP TABLE IF EXISTS `review_rate`;
 CREATE TABLE `review_rate` (
   `book_id` int NOT NULL,
   `user_id` int NOT NULL,
+  `username` varchar(64) NOT NULL,
   `rating` int NOT NULL,
   `review_content` text NOT NULL,
   `review_time` datetime NOT NULL,
