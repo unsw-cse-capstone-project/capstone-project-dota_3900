@@ -69,18 +69,13 @@ CREATE TABLE `collections` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `collection_user_fk_idx` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `collections`
 --
 
-LOCK TABLES `collections` WRITE;
-/*!40000 ALTER TABLE `collections` DISABLE KEYS */;
-INSERT INTO `collections` VALUES (3,2,'default','2020-06-15 12:43:07'),(4,2,'read','2020-06-15 12:43:07'),(5,1,'default','2020-06-15 12:49:10'),(6,1,'read','2020-06-15 12:49:10');
-/*!40000 ALTER TABLE `collections` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `collects`
@@ -103,12 +98,6 @@ CREATE TABLE `collects` (
 --
 -- Dumping data for table `collects`
 --
-
-LOCK TABLES `collects` WRITE;
-/*!40000 ALTER TABLE `collects` DISABLE KEYS */;
-INSERT INTO `collects` VALUES (1,3,'2020-06-15 12:46:21');
-/*!40000 ALTER TABLE `collects` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `review_rate`
@@ -157,18 +146,13 @@ CREATE TABLE `users` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'oj14','123',0,'oj14@foxmail.com'),(2,'oj13','123',0,'oj13@foxmail.com');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
