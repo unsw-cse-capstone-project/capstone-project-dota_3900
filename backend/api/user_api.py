@@ -22,6 +22,7 @@ user_register_model = api.model('user_register_model', {
 @api.route('')
 class UserRegister(Resource):
     @api.response(200, 'Success')
+    @api.response(201, 'Failed Register')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
@@ -33,6 +34,8 @@ class UserRegister(Resource):
         password = info['password']
         email = info['email']
         admin = 0
+        if username == "" or password == "" or email == "":
+            return {'message': 'Register failed. Username, password or email cannot be empty'}, 201
         try:
             success, errmsg = User.register_account(username, password, 0, email)
             if not success:
@@ -46,6 +49,7 @@ class UserRegister(Resource):
 @api.route('/password')
 class UserUpdatePassword(Resource):
     @api.response(200, 'Success')
+    @api.response(201, 'Update failed, Password cannot be empty')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
@@ -55,6 +59,8 @@ class UserUpdatePassword(Resource):
     def put(self):
         info = request.json
         new_password = info['password']
+        if new_password == "":
+            return {'message': 'Update failed. new password cannot be empty'}, 201
 
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
@@ -74,6 +80,7 @@ class UserUpdatePassword(Resource):
 @api.route('/username')
 class UserUpdateUsername(Resource):
     @api.response(200, 'Success')
+    @api.response(201, 'Update failed, username cannot be empty')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
     @api.response(500, 'Internal server error')
@@ -83,6 +90,8 @@ class UserUpdateUsername(Resource):
     def put(self):
         info = request.json
         new_username = info['username']
+        if new_username == "":
+            return {'message': 'Update failed. new username cannot be empty'}, 201
 
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')

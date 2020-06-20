@@ -11,7 +11,7 @@ api = Namespace('book', description='Book api')
 review_content_model = api.model('review_content_model', {
     'book_id': fields.Integer,
     'rating': fields.Integer,
-    'content': fields.String
+    'content': fields.String(),
 })
 
 
@@ -51,6 +51,7 @@ class BookDetail(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get book's detail by id")
     def get(self, book_id):
@@ -83,6 +84,7 @@ class ReviewApi(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal input')
     @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get review page")
     @api.expect(review_page_parser, validate=True)
@@ -105,6 +107,7 @@ class ReviewApi(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal input')
     @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get review of certain book posted by certain user")
     @api.expect(review_parser, validate=True)
@@ -126,9 +129,10 @@ class ReviewApi(Resource):
             return {'message': 'book_id and user_id cannot be both empty'}, 400
 
     @api.response(200, 'Success')
-    @api.response(200, 'Failed, review already existed')
+    @api.response(201, 'Failed, review already existed')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Post new review")
     @api.expect(review_content_model, validate=True)
@@ -143,6 +147,8 @@ class ReviewApi(Resource):
         book_id = info['book_id']
         rating = info['rating']
         content = info['content']
+        if book_id is None or rating is None or content == "":
+            return {'message': 'Rating or review content cannot be empty'}, 201
         try:
             if Review.new_review(user_id, book_id, rating, content):
                 return {'message': 'Post new review success'}, 200
@@ -169,6 +175,8 @@ class ReviewApi(Resource):
         book_id = info['book_id']
         content = info['content']
         rating = info['rating']
+        if book_id is None or rating is None or content == "":
+            return {'message': 'Rating or review content cannot be empty'}, 201
         try:
             if Review.edit_review(user_id, book_id, rating, content):
                 return {'message': 'Update review success'}, 200
@@ -180,6 +188,7 @@ class ReviewApi(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
     @api.response(401, 'Failed login')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Delete certain user account")
     @api.expect(delete_parser, validate=True)
