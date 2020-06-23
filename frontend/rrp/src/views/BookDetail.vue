@@ -45,7 +45,7 @@
 						<span>Rating: </span>
 						<div class="star-bar">
 							<StarBar :rating="book.avg_rating"></StarBar>
-							<span>{{ book.avg_rating }} ({{ book.num_rated }} votes)</span>
+							<span><b>{{ book.avg_rating }}</b> ({{ book.num_rated }} votes)</span>
 							<span style="font-size: 0.75rem; color:#888888">Rating from google books: {{book.google_rating}} ({{book.google_ratings_count}} votes)</span>
 						</div>
 					</div>
@@ -53,7 +53,6 @@
 						<button class="btn-default btn-style-orange">Add to collection</button>
 						<button class="btn-default btn-style-green">Finished reading</button>
 						<button class="btn-default btn-style-wheat">Write a review</button>
-						<span> <<< Unfinished part</span>
 					</div>
 				</div>
 			</div>
@@ -78,50 +77,50 @@
 				<div class="title">「 Recommend similar books for you」</div>
 				<ul class="book_list">
 					<li>
-						<img src="../assets/img/s33646692.jpg">
+						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
 						<span>Attack on titan</span>
 						<div class="rating">
-							<img src="../assets/img/icon/star.png">
+							<img src="../../public/icon/star.png">
 							<span>4.3</span>
 						</div>
 					</li>
 					<li>
-						<img src="../assets/img/s33646692.jpg">
+						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
 						<span>Attack on titan</span>
 						<div class="rating">
-							<img src="../assets/img/icon/star.png">
+							<img src="../../public/icon/star.png">
 							<span>4.3</span>
 						</div>
 					</li>
 					<li>
-						<img src="../assets/img/s33646692.jpg">
+						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
 						<span>Attack on titan</span>
 						<div class="rating">
-							<img src="../assets/img/icon/star.png">
-							<span>--</span>
-						</div>
-					</li>
-					<li>
-						<img src="../assets/img/s33646692.jpg">
-						<span>Attack on titan</span>
-						<div class="rating">
-							<img src="../assets/img/icon/star.png">
+							<img src="../../public/icon/star.png">
 							<span>4.3</span>
 						</div>
 					</li>
 					<li>
-						<img src="../assets/img/s33646692.jpg">
+						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
 						<span>Attack on titan</span>
 						<div class="rating">
-							<img src="../assets/img/icon/star.png">
+							<img src="../../public/icon/star.png">
 							<span>4.3</span>
 						</div>
 					</li>
 					<li>
-						<img src="../assets/img/s33646692.jpg">
+						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
 						<span>Attack on titan</span>
 						<div class="rating">
-							<img src="../assets/img/icon/star.png">
+							<img src="../../public/icon/star.png">
+							<span>4.3</span>
+						</div>
+					</li>
+					<li>
+						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
+						<span>Attack on titan</span>
+						<div class="rating">
+							<img src="../../public/icon/star.png">
 							<span>4.3</span>
 						</div>
 					</li>
@@ -181,21 +180,15 @@
 					this.book = res.data
 					this.book.categories = this.book.categories.replace(/\[\'/, '').replace( /\'\]/, '')
 					this.book.authors = this.book.authors.replace(/\[\'/, '').replace( /\'\]/, '').split("', '").join(", ")
-					if(this.book.num_rated < 10){
+					if(this.book.num_rated < 1){
 						this.book.avg_rating = 'Not enough votes'
+					}
+					else{
+						this.book.avg_rating = this.book.avg_rating.toFixed(1)
 					}
 				}).catch((error)=>{
 					this.PageNotFound = true
 				})
-			},
-			buildStars(rating){
-				let noStar = document.createElement(img)
-				noStar.src = "../assets/img/icon/no-star.png"
-				if (1){
-					for(let i = 0; i < 5; i++){
-						this.appendChild(noStar)
-					}
-				}
 			},
 		},
 		created: function() {

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import BookDetail from '../views/BookDetail.vue'
 import NotFoundPage from '../views/404.vue'
+import UserCollection from '../views/UserCollection.vue'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,12 @@ Vue.use(VueRouter)
     name: 'Book',
     component: BookDetail,
   },
+	{
+		path: '/user',
+		alias: '/user/collection',
+		name: 'UserCollection',
+		component: UserCollection
+	},
 	{
 		path: '*',
 		name: '404Page',
