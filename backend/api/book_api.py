@@ -3,12 +3,11 @@ import pymysql
 from flask import request
 from flask_restplus import Resource, Namespace, fields, reqparse, inputs
 from cls.book import Book
+from cls.collection import Collection
 from cls.user import User
 from cls.review import Review
 from config import SECRET_KEY
 from lib.validation_decorator import requires_login
-
-
 
 api = Namespace('book', description='Book api')
 review_content_model = api.model('review_content_model', {
@@ -31,6 +30,9 @@ delete_parser.add_argument('user_id', type=int, required=True)
 review_page_parser = reqparse.RequestParser()
 review_page_parser.add_argument('book_id', type=int, required=True)
 review_page_parser.add_argument('page', type=int, required=True)
+
+read_parser = reqparse.RequestParser()
+read_parser.add_argument('book_id', type=int, required=True)
 
 
 # Api: Get search result
@@ -205,3 +207,25 @@ class ReviewApi(Resource):
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Delete review success'}, 200
+
+
+@api.route('/read')
+class ReviewApi(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Mark book as read")
+    @api.expect(read_parser, validate=True)
+    @requires_login
+    def post(self):
+        args = read_parser.parse_args()
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        user_id = token_info['id']
+        try:
+            if not Collection.mark_as_read(user_id, args.get('book_id')):
+                return {'message': 'Resource not found'}, 404
+        except pymysql.Error as e:
+            return {'message': e.args[1]}, 500
+        return {'message': 'Mark success'}, 200

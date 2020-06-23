@@ -108,10 +108,6 @@ class User:
         query = 'SELECT username FROM users Where username = \'{username}\''.format(
             username=username
         )
-        # with mysql(conn) as cursor:
-        #     cursor.execute(query)
-        #     info = cursor.fetchone()
-        # return info is not None
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
             return False

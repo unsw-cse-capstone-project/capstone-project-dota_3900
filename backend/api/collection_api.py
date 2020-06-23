@@ -28,6 +28,8 @@ collection_add_book_parser = reqparse.RequestParser()
 collection_add_book_parser.add_argument('collection_id', type=int, required=True)
 collection_add_book_parser.add_argument('book_id', type=int, required=True)
 
+collection_user_id_parser = reqparse.RequestParser()
+collection_user_id_parser.add_argument('user_id', type=int, required=True)
 
 
 @api.route('/')
@@ -90,13 +92,15 @@ class CollectionApi(Resource):
     @api.response(200, 'Success')
     @api.response(401, 'Authenticate Failed')
     @api.doc(description="Get all collections of current user")
+    @api.expect(collection_user_id_parser, validate=True)
     @requires_login
     def get(self):
         # Get user's id from token
-        token = request.headers.get('AUTH-TOKEN')
-        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        user_id = token_info['id']
-        result = Collection.get_user_collection(user_id)
+        # token = request.headers.get('AUTH-TOKEN')
+        # token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        # user_id = token_info['id']
+        args = collection_user_id_parser.parse_args()
+        result = Collection.get_user_collection(args.get('user_id'))
         return {'Collections': result}, 200
 
     @api.response(200, 'Success')
@@ -118,17 +122,20 @@ class CollectionApi(Resource):
 
 
 @api.route('/books')
-class CollectionApi(Resource):
+class CollectionBooksApi(Resource):
     @api.response(200, 'Success')
     @api.response(201, 'Invalid input')
     @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get books in collection")
     @api.expect(collection_get_book_parser, validate=True)
-    # @requires_login
+    @requires_login
     def get(self):
         args = collection_get_book_parser.parse_args()
-        flag, books = Collection.get_book_in_collection(args.get('collection_id'))
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        user_id = token_info['id']
+        flag, books = Collection.get_book_in_collection(args.get('collection_id'), user_id)
         if not flag:
             return {'message': 'Resource not found'}, 404
         else:
@@ -140,7 +147,7 @@ class CollectionApi(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Add books to collection")
     @api.expect(collection_add_book_parser, validate=True)
-    # @requires_login
+    @requires_login
     def post(self):
         args = collection_add_book_parser.parse_args()
         flag, message = Collection.add_book_to_collection(args.get('collection_id'), args.get('book_id'))
@@ -158,4 +165,3 @@ class CollectionApi(Resource):
             return {'message': 'Delete book success'}, 200
         else:
             return {'message': 'Resource not found'}, 404
-

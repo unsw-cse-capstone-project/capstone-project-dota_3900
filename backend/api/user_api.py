@@ -112,7 +112,6 @@ class UserGetDetailByID(Resource):
     @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's detail by ID")
-    @requires_login
     def get(self, user_id):
         info = User.get_info_by_id(user_id)
         if info is None:
@@ -170,7 +169,6 @@ class UserGetReviewsByID(Resource):
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get all reviews and rating posted by user")
-    @requires_login
     def get(self, user_id):
         # Get review
         if not User.is_user_exists_by_id(user_id):
