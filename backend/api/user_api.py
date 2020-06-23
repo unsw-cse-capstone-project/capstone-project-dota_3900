@@ -183,7 +183,6 @@ class UserGetCollectionByID(Resource):
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's collection")
-    @requires_login
     def get(self, user_id):
         # Get review
         if not User.is_user_exists_by_id(user_id):
