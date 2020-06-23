@@ -3,17 +3,19 @@ import pymysql
 from flask import request
 from flask_restplus import Resource, Namespace, fields, reqparse, inputs
 from cls.book import Book
+from cls.user import User
 from cls.review import Review
 from config import SECRET_KEY
 from lib.validation_decorator import requires_login
+
+
 
 api = Namespace('book', description='Book api')
 review_content_model = api.model('review_content_model', {
     'book_id': fields.Integer,
     'rating': fields.Integer,
-    'content': fields.String(),
+    'content': fields.String,
 })
-
 
 search_parser = reqparse.RequestParser()
 search_parser.add_argument('search_content', required=True)
@@ -30,12 +32,12 @@ review_page_parser = reqparse.RequestParser()
 review_page_parser.add_argument('book_id', type=int, required=True)
 review_page_parser.add_argument('page', type=int, required=True)
 
+
 # Api: Get search result
 @api.route('/search_result')
 class BookSearch(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Search books")
     @api.expect(search_parser, validate=True)
@@ -47,10 +49,9 @@ class BookSearch(Resource):
 
 # Api: Get search result
 @api.route('/<int:book_id>/detail')
-class BookDetail(Resource):
+class BookGetDetailByID(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get book's detail by id")
@@ -60,7 +61,7 @@ class BookDetail(Resource):
             return {'message': 'Resource not found'}, 404
         else:
             avg_rating = Review.get_book_average_rating(book_id)
-            review_preview = Review.get_book_review_from_to(book_id,0,2)
+            review_preview = Review.get_book_review_from_to(book_id, 0, 2)
             num_rated = Review.get_book_num_rating(book_id)
             return {'book_id': int(detail.id),
                     'title': detail.title,
@@ -77,13 +78,13 @@ class BookDetail(Resource):
                     'avg_rating': avg_rating,
                     'num_rated': num_rated,
                     'review_preview': review_preview
-                    }
+                    }, 200
+
 
 @api.route('/review_page')
-class ReviewApi(Resource):
+class ReviewPage(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal input')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get review page")
@@ -94,7 +95,7 @@ class ReviewApi(Resource):
         page = args.get('page')
         book_id = args.get('book_id')
         page_num, last_page_num = Review.get_book_review_page_num(book_id, 10)
-        if(page <= 0 or page > page_num):
+        if (page <= 0 or page > page_num):
             return {'message': 'Resource not found'}, 404
         result = Review.get_book_review_page(book_id, 10, page)
         return {'total_page_num': page_num,
@@ -102,11 +103,11 @@ class ReviewApi(Resource):
                 'reviews': result
                 }, 200
 
+
 @api.route('/review')
 class ReviewApi(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal input')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get review of certain book posted by certain user")
@@ -116,6 +117,10 @@ class ReviewApi(Resource):
         args = review_parser.parse_args()
         book_id = args.get('book_id')
         user_id = args.get('user_id')
+        if (not User.is_user_exists_by_id(user_id)) and (user_id != None):
+            return {'message': 'Resource not found'}, 404
+        if (not Book.is_book_exists_by_id(book_id)) and (book_id != None):
+            return {'message': 'Resource not found'}, 404
         if (book_id == None and user_id != None):
             result = Review.get_user_reviews(user_id)
             return {'reviews': result}, 200
@@ -130,8 +135,7 @@ class ReviewApi(Resource):
 
     @api.response(200, 'Success')
     @api.response(201, 'Failed, review already existed')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Post new review")
@@ -158,9 +162,8 @@ class ReviewApi(Resource):
             return {'message': e.args[1]}, 500
 
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
-    @api.response(404, 'Review not found')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Edit existed rating and review")
     @api.expect(review_content_model, validate=True)
@@ -186,8 +189,7 @@ class ReviewApi(Resource):
             return {'message': e.args[1]}, 500
 
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Delete certain user account")
@@ -203,4 +205,3 @@ class ReviewApi(Resource):
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Delete review success'}, 200
-

@@ -1,4 +1,4 @@
-from cls.user import User, is_user_exists
+from cls.user import User
 from lib.sql_linker import connect_sys_db, mysql
 from config import SECRET_KEY
 from pandas import read_sql
@@ -17,7 +17,7 @@ class Admin(User):
     # Admin deletes user account
     @staticmethod
     def delete_user(username):
-        if not is_user_exists(username):
+        if not User.is_user_exists_by_username(username):
             return False
         conn = connect_sys_db()
         # SQL
@@ -30,7 +30,7 @@ class Admin(User):
     # Admin updates certain user account's password
     @staticmethod
     def update_user_password(username, new_password):
-        if not is_user_exists(username):
+        if not User.is_user_exists_by_username(username):
             return False
         conn = connect_sys_db()
         # SQL

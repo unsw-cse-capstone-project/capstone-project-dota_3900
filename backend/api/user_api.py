@@ -1,5 +1,6 @@
 from flask_restplus import Resource, Namespace, reqparse, fields
 
+from cls.collection import Collection
 from cls.review import Review
 from cls.user import User
 from lib.validation_decorator import requires_login
@@ -22,9 +23,7 @@ user_register_model = api.model('user_register_model', {
 @api.route('')
 class UserRegister(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Failed Register')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(201, 'Invalid input')
     @api.response(500, 'Internal server error')
     @api.doc(description="Register a new user account.")
     @api.expect(user_register_model, validate=True)
@@ -39,7 +38,7 @@ class UserRegister(Resource):
         try:
             success, errmsg = User.register_account(username, password, 0, email)
             if not success:
-                return {'message': errmsg}, 402
+                return {'message': errmsg}, 201
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Register new user account success'}, 200
@@ -49,9 +48,8 @@ class UserRegister(Resource):
 @api.route('/password')
 class UserUpdatePassword(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Update failed, Password cannot be empty')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(201, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Change user account password ")
     @api.expect(user_password_model, validate=True)
@@ -80,9 +78,8 @@ class UserUpdatePassword(Resource):
 @api.route('/username')
 class UserUpdateUsername(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Update failed, username cannot be empty')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(201, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Rename the account")
     @api.expect(user_username_model, validate=True)
@@ -109,11 +106,10 @@ class UserUpdateUsername(Resource):
 
 # Api: Get username by ID
 @api.route('/<int:user_id>/detail')
-class UserGetDetail(Resource):
+class UserGetDetailByID(Resource):
     @api.response(200, 'Success')
     @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
-    @api.response(404, 'Resource not found')
+    @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's detail by ID")
     @requires_login
@@ -130,10 +126,9 @@ class UserGetDetail(Resource):
 
 # Api: Get username by ID
 @api.route('/detail')
-class UserGetCurrDetail(Resource):
+class UserGetCurrDetailByID(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get current user's detail by ID")
@@ -157,8 +152,7 @@ class UserGetCurrDetail(Resource):
 @api.route('/my_user_id')
 class UserGetCurrID(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's ID")
@@ -170,14 +164,31 @@ class UserGetCurrID(Resource):
 
 
 @api.route('/<int:user_id>/reviews')
-class AllUserReviewRating(Resource):
+class UserGetReviewsByID(Resource):
     @api.response(200, 'Success')
-    @api.response(400, 'Illegal user')
-    @api.response(401, 'Failed login')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get all reviews and rating posted by user")
     @requires_login
     def get(self, user_id):
         # Get review
+        if not User.is_user_exists_by_id(user_id):
+            return {'message': "Resource not found"}, 404
         result = Review.get_user_reviews(user_id)
+        return {'list': result}, 200
+
+@api.route('/<int:user_id>/collections')
+class UserGetCollectionByID(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's collection")
+    @requires_login
+    def get(self, user_id):
+        # Get review
+        if not User.is_user_exists_by_id(user_id):
+            return {'message': "Resource not found"}, 404
+        result = Collection.get_user_collection(user_id)
         return {'list': result}, 200

@@ -41,3 +41,16 @@ class Book:
         else:
             info = db_result.iloc[0]
             return info
+
+    @staticmethod
+    def is_book_exists_by_id(id):
+        conn = connect_sys_db()
+        # SQL
+        query = 'SELECT id FROM books Where id = \'{id}\''.format(
+            id=id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True

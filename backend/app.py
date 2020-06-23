@@ -7,6 +7,7 @@ from api.token_api import api as token
 from api.user_api import api as user
 from api.admin_api import api as admin
 from api.book_api import api as book
+from api.collection_api import api as collection
 
 
 # create flask app
@@ -37,6 +38,7 @@ api.add_namespace(token)
 api.add_namespace(user)
 api.add_namespace(admin)
 api.add_namespace(book)
+api.add_namespace(collection)
 
 
 if __name__ == '__main__':

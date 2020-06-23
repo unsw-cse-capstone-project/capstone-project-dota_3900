@@ -1,5 +1,7 @@
 import datetime
 import json
+import time
+
 from pandas import read_sql
 
 from cls.user import User
@@ -87,6 +89,8 @@ class Review:
         ds = json.loads(json_str)
         result = []
         for index in ds:
+            ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+                                                     time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
 
@@ -104,7 +108,10 @@ class Review:
         ds = json.loads(json_str)
         result = []
         for index in ds:
+            ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+                                                     time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
+        # print(result)
         return result
 
     # Get certain book's review posted by certain user
@@ -122,6 +129,8 @@ class Review:
         ds = json.loads(json_str)
         result = []
         for index in ds:
+            ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+                                                     time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
 
@@ -130,11 +139,11 @@ class Review:
         reviews = Review.get_book_review(book_id)
         if len(reviews) == 0:
             return []
-        if len(reviews) < index_to:
-            index_to = len(reviews)-1
+        if len(reviews) < (index_to + 1):
+            index_to = len(reviews) - 1
         result = []
         index = index_from
-        while(index <= index_to):
+        while (index <= index_to):
             result.append(reviews[index])
             index = index + 1
         return result
@@ -184,8 +193,8 @@ class Review:
             num_page = 1
             num_last_page = num_reviews
         else:
-            num_last_page = num_reviews%review_each_page
-            num_page = (num_reviews - num_last_page)/review_each_page + 1
+            num_last_page = num_reviews % review_each_page
+            num_page = (num_reviews - num_last_page) / review_each_page + 1
         return num_page, num_last_page
 
     @staticmethod
@@ -197,6 +206,6 @@ class Review:
             index_from = reviews_num - last_page_num + 1
             index_to = reviews_num
         else:
-            index_from = 10*(curr_page - 1) + 1
-            index_to = 10*(curr_page)
+            index_from = 10 * (curr_page - 1) + 1
+            index_to = 10 * (curr_page)
         return Review.get_book_review_from_to(book_id, index_from - 1, index_to - 1)
