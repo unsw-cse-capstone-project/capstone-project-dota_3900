@@ -101,6 +101,8 @@ class CollectionApi(Resource):
         # user_id = token_info['id']
         args = collection_user_id_parser.parse_args()
         result = Collection.get_user_collection(args.get('user_id'))
+        if result == None:
+            return {'message': 'Resource not found'}, 404
         return {'Collections': result}, 200
 
     @api.response(200, 'Success')

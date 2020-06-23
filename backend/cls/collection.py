@@ -41,6 +41,8 @@ class Collection:
     @staticmethod
     def get_user_collection(user_id):
         conn = connect_sys_db()
+        if not User.is_user_exists_by_id(user_id):
+            return None
         # SQL
         query = "SELECT id, user_id, name, creation_time FROM collections WHERE user_id = \'{user_id}\'".format(
             user_id=user_id
@@ -153,7 +155,7 @@ class Collection:
             return 404, "Resource not found"
 
         if not Collection.is_collection_exists_by_id(collection_id):
-            return False, []
+            return 404, "Resource not found"
 
         conn = connect_sys_db()
         query = "SELECT * FROM collects WHERE (collection_id = \'{collection_id}\' and book_id = \'{book_id}\')".format(
