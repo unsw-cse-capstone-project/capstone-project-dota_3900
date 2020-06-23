@@ -29,6 +29,14 @@ Thursday: user-dashboard-my_reviews static page(draft) finished.
 Week3:
 Since we have some modifications about user story, so some parts of dashboard page need to be updated.
 
+- Frontend
 Monday: Update dashboard pages to satisfy new requirements
 Monday: Search static html page finished
+Thursday: Add functions on book-detail page
+
+Week4:
+This week I will continue to work on frontend-backend connection.
+
+- Frontend
+Tuesday: Partly finished review part and initialise user-collection page
 
