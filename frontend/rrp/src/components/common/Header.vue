@@ -4,7 +4,7 @@
 			<div class="title">
 				「 Read Recommendation Pro」
 			</div>
-			<div class="search" v-if="isHome === false">
+			<div class="search" v-if="isHome !== true">
 				<input class="search_bar" type="text" placeholder="Book title / Author / ISBN">
 				<button class="search_btn">
 					Search
@@ -13,9 +13,9 @@
 		</div>
 		
 		<div class="right" v-if="$store.state.token">
-			<span>{{ account.username }}</span>
+			<span>{{ account.username }} - Dashboard</span>
 			<span> | </span>
-			<span @click="logout">logout</span>
+			<span @click="logout">Logout</span>
 		</div>
 		<div class="right" v-else>
 			<span @click="openLoginForm">Login</span>
@@ -89,6 +89,9 @@
 					this.account = res.data
 				}).catch((error)=>{
 				  alert(error.response.data.message)
+					this.$store.commit('clearToken')
+					this.clearAccountInfo()
+					location.reload()
 				})
 			}
 		}

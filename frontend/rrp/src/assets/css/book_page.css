@@ -77,6 +77,10 @@
 	margin-right: 6.25rem;
 }
 
+.book-bar .right .rating-bar .star-bar img{
+	padding-top: 0.1875rem;
+}
+
 .book-bar .right .rating-bar .star-bar span{
 	font-size: 15px;
 	color: #333333;
