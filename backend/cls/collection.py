@@ -115,7 +115,7 @@ class Collection:
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
-        return True, 'Collection update success'
+        return True, 'Collection update successfully'
 
     # Delete existed collection
     @staticmethod
@@ -193,7 +193,7 @@ class Collection:
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
-        return 200, "Add book to collection success"
+        return 200, "Add book to collection successfully"
 
     # Delete existed book in collection
     @staticmethod
