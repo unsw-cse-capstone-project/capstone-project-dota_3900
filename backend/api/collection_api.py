@@ -110,6 +110,7 @@ class CollectionApi(Resource):
                 }, 200
 
     @api.response(200, 'Success')
+    @api.response(200, 'Failed')
     @api.response(404, 'Resource not found')
     @api.response(401, 'Authenticate Failed')
     @api.expect(collection_delete_parser, validate=True)
@@ -122,7 +123,12 @@ class CollectionApi(Resource):
         user_id = token_info['id']
         # Get collection_id from parser
         args = collection_delete_parser.parse_args()
-        if Collection.delete_collection(user_id, args.get('collection_id')):
+        collection_id = args.get('collection_id')
+        read_collection_id = Collection.get_readcollection_id(user_id)
+        main_collection_id = read_collection_id - 1
+        if collection_id == read_collection_id or collection_id == read_collection_id:
+            return {'message': 'Read History and Main collection cannot be deleted'}, 201
+        if Collection.delete_collection(user_id, collection_id):
             return {'message': 'Delete collection successfully'}, 200
         else:
             return {'message': 'Resource not found'}, 404
