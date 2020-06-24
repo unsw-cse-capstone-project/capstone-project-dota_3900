@@ -90,7 +90,7 @@ class CollectionApi(Resource):
     @api.response(401, 'Authenticate Failed')
     @api.doc(description="Get all collections of current user")
     @api.expect(collection_user_id_parser, validate=True)
-    @requires_login
+    # @requires_login
     def get(self):
         # Get user_id from parser
         args = collection_user_id_parser.parse_args()
@@ -126,7 +126,7 @@ class CollectionBooksApi(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get books in collection")
     @api.expect(collection_get_book_parser, validate=True)
-    @requires_login
+    # @requires_login
     def get(self):
         # Get user'id from Token
         token = request.headers.get('AUTH-TOKEN')

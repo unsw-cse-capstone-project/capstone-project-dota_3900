@@ -44,7 +44,7 @@ class User:
         #     return False, 'This username has already been registered'
 
         # If username already existed
-        if not User.is_user_exists_by_username(username):
+        if User.is_user_exists_by_username(username):
             return False, 'This username has already been registered'
         # SQL
         conn = connect_sys_db()
