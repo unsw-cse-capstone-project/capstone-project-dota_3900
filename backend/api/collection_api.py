@@ -3,6 +3,8 @@ import pymysql
 from flask import request
 from flask_restplus import Resource, Namespace, fields, reqparse, inputs
 from cls.collection import Collection
+from cls.review import Review
+from cls.user import User
 from config import SECRET_KEY
 from lib.validation_decorator import requires_login
 
@@ -52,7 +54,7 @@ class CollectionApi(Resource):
             return {'message': "Collection's name cannot be empty"}, 201
         try:
             if Collection.post_new_collection(user_id, name):
-                return {'message': 'Create new collection success'}, 200
+                return {'message': 'Create new collection successfully'}, 200
             else:
                 return {'message': 'This collection already exist'}, 201
         except pymysql.Error as e:
@@ -74,6 +76,11 @@ class CollectionApi(Resource):
         args = collection_update_name_parser.parse_args()
         new_name = args.get('new_name')
         collection_id = args.get('collection_id')
+        # Cannot update read history and main collection's name
+        read_collection_id = Collection.get_readcollection_id(user_id)
+        main_collection_id = read_collection_id - 1
+        if collection_id == read_collection_id or collection_id == main_collection_id:
+            return {'message': "Read History and Main collection's name cannot be changed"}, 201
         # Name input cannot be empty
         if new_name == "":
             return {'message': "Collection's name cannot be empty"}, 201
@@ -94,12 +101,21 @@ class CollectionApi(Resource):
     def get(self):
         # Get user_id from parser
         args = collection_user_id_parser.parse_args()
-        result = Collection.get_user_collection(args.get('user_id'))
+        user_id = args.get('user_id')
+        result = Collection.get_user_collection(user_id)
+        collection_num = Collection.get_num_collection(user_id)
+        readhistory_num = Collection.get_num_read_collection(user_id, Collection.get_readcollection_id(user_id))
+        myreviews_num = Review.get_user_num_review(user_id)
         if result == None:
             return {'message': 'Resource not found'}, 404
-        return {'Collections': result}, 200
+        return {'collections_num': collection_num,
+                'ReadHistory_num': readhistory_num,
+                'MyReview_num': myreviews_num,
+                'Collections': result
+                }, 200
 
     @api.response(200, 'Success')
+    @api.response(200, 'Failed')
     @api.response(404, 'Resource not found')
     @api.response(401, 'Authenticate Failed')
     @api.expect(collection_delete_parser, validate=True)
@@ -112,8 +128,14 @@ class CollectionApi(Resource):
         user_id = token_info['id']
         # Get collection_id from parser
         args = collection_delete_parser.parse_args()
-        if Collection.delete_collection(user_id, args.get('collection_id')):
-            return {'message': 'Delete collection success'}, 200
+        collection_id = args.get('collection_id')
+        # Read History and Main collection cannot be deleted
+        read_collection_id = Collection.get_readcollection_id(user_id)
+        main_collection_id = read_collection_id - 1
+        if collection_id == read_collection_id or collection_id == main_collection_id:
+            return {'message': 'Read History and Main collection cannot be deleted'}, 201
+        if Collection.delete_collection(user_id, collection_id):
+            return {'message': 'Delete collection successfully'}, 200
         else:
             return {'message': 'Resource not found'}, 404
 
@@ -159,6 +181,27 @@ class CollectionBooksApi(Resource):
         # Get collection_id and book_id from parser
         args = collection_add_book_parser.parse_args()
         if Collection.delete_book_in_collection(args.get('collection_id'), args.get('book_id')):
-            return {'message': 'Delete book success'}, 200
+            return {'message': 'Delete book successfully'}, 200
         else:
             return {'message': 'Resource not found'}, 404
+
+# Api: Get user's read history
+@api.route('/read_history')
+class CollectionBooksApi(Resource):
+    @api.response(200, 'Success')
+    @api.response(201, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get books in collection")
+    @api.expect(collection_user_id_parser, validate=True)
+    # @requires_login
+    def get(self):
+        # Get collection_id from parser
+        args = collection_user_id_parser.parse_args()
+        user_id = args.get('user_id')
+        collection_id = Collection.get_readcollection_id(user_id)
+        flag, books = Collection.get_book_in_collection(collection_id, user_id)
+        if not flag:
+            return {'message': 'Resource not found'}, 404
+        else:
+            return {'books': books}, 200
