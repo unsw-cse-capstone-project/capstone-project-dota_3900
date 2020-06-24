@@ -32,7 +32,7 @@ collection_user_id_parser.add_argument('user_id', type=int, required=True)
 
 
 # Api: change to Collection
-@api.route('/')
+@api.route('')
 class CollectionApi(Resource):
     @api.response(200, 'Success')
     @api.response(201, 'Invalid input')
