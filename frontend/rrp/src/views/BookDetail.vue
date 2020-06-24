@@ -3,7 +3,7 @@
 		<Header></Header>
 
 		<!-- 404 page if there is no book_id in query -->
-		<main v-if="PageNotFound">
+		<main v-if="pageNotFound">
 			<NotFound></NotFound>
 		</main>
 
@@ -160,7 +160,7 @@
 					"num_rated": '',
 					"review_preview": []
 				},
-				PageNotFound: false
+				pageNotFound: false
 			}
 		},
 		components: {
@@ -172,10 +172,10 @@
 		},
 		methods: {
 			getBookDetails(){
-				let book_id = this.$route.query.id
+				let bookID = this.$route.query.id
 				this.axios({
 				  method: 'get',
-				  url: `${API_URL}/book/${book_id}/detail`,
+				  url: `${API_URL}/book/${bookID}/detail`,
 				}).then((res)=>{
 					this.book = res.data
 					this.book.categories = this.book.categories.replace(/\[\'/, '').replace( /\'\]/, '')
@@ -187,13 +187,13 @@
 						this.book.avg_rating = this.book.avg_rating.toFixed(1)
 					}
 				}).catch((error)=>{
-					this.PageNotFound = true
+					this.pageNotFound = true
 				})
 			},
 		},
 		created: function() {
 			this.getBookDetails()
-		}
+		},
 	}
 </script>
 

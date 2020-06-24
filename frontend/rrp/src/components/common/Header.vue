@@ -13,7 +13,10 @@
 		</div>
 		
 		<div class="right" v-if="$store.state.token">
-			<span>{{ account.username }} - Dashboard</span>
+			<router-link :to="{name: 'UserCollection', query: {id: account.user_id}}">
+				<span>{{ account.username }} - Dashboard</span>
+			</router-link>
+			
 			<span> | </span>
 			<span @click="logout">Logout</span>
 		</div>
@@ -66,6 +69,25 @@
 					location.reload()
 			  }
 			},
+			getAccountInfo(){
+				if(this.$store.state.token){
+					this.axios({
+					  method: 'get',
+					  url: `${API_URL}/user/detail`,
+						headers: {
+						  'Content-Type': 'application/json',
+						  'AUTH-TOKEN': this.$store.state.token
+						}
+					}).then((res)=>{
+						this.account = res.data
+					}).catch((error)=>{
+					  alert(error.response.data.message)
+						this.$store.commit('clearToken')
+						this.clearAccountInfo()
+						location.reload()
+					})
+				}
+			},
 			clearAccountInfo(){
 				this.account = {
 					user_id: '',
@@ -75,24 +97,13 @@
 				}
 			},
 		},
-		created: function(){
+		mounted: function(){
 			// get User info from token
-			if(this.$store.state.token){
-				this.axios({
-				  method: 'get',
-				  url: `${API_URL}/user/detail`,
-					headers: {
-					  'Content-Type': 'application/json',
-					  'AUTH-TOKEN': this.$store.state.token
-					}
-				}).then((res)=>{
-					this.account = res.data
-				}).catch((error)=>{
-				  alert(error.response.data.message)
-					this.$store.commit('clearToken')
-					this.clearAccountInfo()
-					location.reload()
-				})
+			this.getAccountInfo()
+		},
+		watch: {
+			'$route' (){
+				location.reload()
 			}
 		}
 	}

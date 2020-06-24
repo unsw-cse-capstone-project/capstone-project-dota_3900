@@ -6,7 +6,7 @@
 				<StarBar :rating="review.rating"></StarBar>
 			</div>
 			<div class="comment-datetime">
-				{{ timeStampToDatetime(review.review_time) }}
+				{{ review.review_time }}
 			</div>
 		</div>
 		<div class="comment">
@@ -23,19 +23,6 @@
 		components: {
 			StarBar,
 		},
-		methods: {
-			timeStampToDatetime(timeStamp) {
-				let datetime = new Date();
-				datetime.setTime(timeStamp);
-				let year = datetime.getFullYear();
-				let month = datetime.getMonth() + 1;
-				let date = datetime.getDate();
-				let hour = datetime.getHours();
-				let minute = datetime.getMinutes();
-				let second = datetime.getSeconds();
-				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
-			}
-		}
 	}
 </script>
 
