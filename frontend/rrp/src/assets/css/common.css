@@ -8,6 +8,10 @@ body {
 	font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+a:link, a:visited {
+	text-decoration: none;
+	color: white;
+}
 
 body{
 	background-color: #444444;

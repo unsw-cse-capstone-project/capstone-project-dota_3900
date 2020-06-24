@@ -4,10 +4,9 @@
 }
 
 .backgound-gray {
-background: #000000;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to bottom, #434343, #000000);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to bottom, #434343, #000000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+background: #654ea3;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to top, #eaafc8, #654ea3);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to top, #eaafc8, #654ea3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
 
@@ -51,14 +50,14 @@ background: linear-gradient(to bottom, #434343, #000000); /* W3C, IE 10+/ Edge, 
 	color: white;
 	border: none;
 	background-color: mediumvioletred;
-	transition: color, background-color 0.3s,0.3s;
+	transition: color, background-color 0.3s, 0.3s;
 }
 
 .search-mainpage .search-bar button:hover {
 	opacity: 1;
 	background-color: white;
 	color: black;
-	transition: color,background-color 0.3s,0.3s;
+	transition: color, background-color 0.3s, 0.3s;
 }
 
 .search-mainpage .categories-list {
