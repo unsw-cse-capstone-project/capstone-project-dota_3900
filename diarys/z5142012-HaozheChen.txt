@@ -16,10 +16,19 @@ Coding:
     3. Code refactor √
 ------------WK03-----------
 Other:
-    1. Proposal
+    1. Proposal √
 Coding:
     1. Book Api √
     2. Review Api √
     3. Rating Api √
     4. Code format and comment √
     5. Compare frontend requirement with backend Api √
+------------WK04-----------
+Other:
+    1. Jira check
+    2. Ready for demo1
+Coding:
+    1. Collection Api
+    2. Code format
+    3. Finish sprint 1
+    4. Establish environment for frontend
