@@ -16,8 +16,7 @@
 					<div class="title" v-else>
 						User page - {{ account.username }}
 					</div>
-					<button class="btn-default btn-style-white animation-fadein-top delay_04s" v-if="isMyDashboard()">New Collection</button>
-
+					<button class="btn-default btn-style-white animation-fadein-top delay_04s" v-if="isMyDashboard()" @click="openNewCollectionForm()">New Collection</button>
 				</div>
 				<div class="content">
 					<div class="left">
@@ -61,17 +60,17 @@
 								<li v-for="collection in collections" :key="collection.id">
 									<div class="head">
 										<div class="info">
-											<span>{{ collection.name }}</span>
+											<span class="collection-title" @click="closeBookList(collection.id)">{{ collection.name }}</span>
 											<div class="status">
 												<span>Books: {{ collection.book_num }}</span>
 												<span>Finished: {{ collection.finished_num }}</span>
-												<span>creation-time: {{ timeStamp2datetime(collection.creation_time) }}</span>
+												<span>Creation time: {{ timeStamp2datetime(collection.creation_time) }}</span>
 											</div>
 										</div>
 										<div class="operation">
-											<img src="../../public/icon/edit.png" title="Edit collection name" v-if="isMyDashboard()">
-											<img src="../../public/icon/delete.png" title="Delete collection" v-if="isMyDashboard()">
-											<img src="../../public/icon/copy.png" title="Copy collection">
+											<img src="../../public/icon/edit.png" title="Edit collection name" v-if="isMyDashboard() && collection.name !== 'Main collection'" @click="openModifyCollectionNameForm(collection.id, collection.name)">
+											<img src="../../public/icon/delete.png" title="Delete collection" v-if="isMyDashboard() && collection.name !== 'Main collection'" @click="deleteCollection(collection.id, collection.name)">
+											<img src="../../public/icon/copy.png" title="Copy collection" v-if="$store.state.token">
 											<img src="../../public/icon/open.png" title="Open collection" @click="closeBookList(collection.id)">
 										</div>
 									</div>
@@ -132,6 +131,9 @@
 		</main>
 
 		<Footer></Footer>
+		
+		<NewCollectionForm></NewCollectionForm>
+		<ModifyCollectionNameForm :collectionID="collectionID2Modify" :collectionName="collectionName2Modify"></ModifyCollectionNameForm>
 	</div>
 </template>
 
@@ -140,6 +142,8 @@
 	import Header from '../components/common/Header.vue'
 	import Footer from '../components/common/Footer.vue'
 	import NotFound from '../components/common/NotFound.vue'
+	import NewCollectionForm from '../components/forms/NewCollectionForm.vue'
+	import ModifyCollectionNameForm from '../components/forms/ModifyCollectionNameForm.vue'
 	export default {
 		name: 'UserCollection',
 		data: function() {
@@ -158,6 +162,9 @@
 				},
 				pageNotFound: false,
 				collections: [],
+				
+				collectionName2Modify: '',
+				collectionID2Modify: '',
 			}
 		},
 		computed: {
@@ -172,7 +179,9 @@
 		components: {
 			Header,
 			Footer,
-			NotFound
+			NotFound,
+			NewCollectionForm,
+			ModifyCollectionNameForm,
 		},
 		methods: {
 			getAccountsInfo() {
@@ -213,9 +222,16 @@
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
+			
 			getCollections() {
 				let userID = this.$route.query.id
-				this.axios.get(`${API_URL}/collection?user_id=${userID}`).then((res) => {
+				this.axios({
+					method: 'GET',
+					url: `${API_URL}/collection`,
+					params: {
+						user_id: userID
+					},
+				}).then((res) => {
 					let collections = res.data.Collections
 					for (let i = 0; i < collections.length; i++) {
 						let collectionID = collections[i].id
@@ -245,23 +261,18 @@
 					alert(error.response.data.message)
 				})
 			},
-			getCollectionBooks(collectionID) {
-				this.axios.get(`${API_URL}/collection/books?collection_id=${collectionID}`).then((res) => {
-					console.log(res)
-					return res
-				}).catch((error) => {
-					alert(error)
-				})
-			},
 			timeStamp2datetime(timeStamp) {
-				var datetime = new Date();
+				let datetime = new Date();
 				datetime.setTime(timeStamp);
-				var year = datetime.getFullYear();
-				var month = datetime.getMonth() + 1;
-				var date = datetime.getDate();
-				var hour = datetime.getHours();
-				var minute = datetime.getMinutes();
-				var second = datetime.getSeconds();
+				let year = datetime.getFullYear()
+				let month = datetime.getMonth() + 1
+				let date = datetime.getDate()
+				let hour = datetime.getHours()
+				let minute = datetime.getMinutes()
+				let second = datetime.getSeconds()
+				if(hour < 10) hour = '0' + hour
+				if(minute < 10) minute = '0' + minute
+				if(second < 10) second = '0' + second
 				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
 			},
 			closeBookList(collectionID){
@@ -274,6 +285,29 @@
 					bookList.style.height = "0rem";
 					bookList.style.top = "-1.25rem";
 					bookList.style.opacity= "0";
+				}
+			},
+			openNewCollectionForm(){
+				let newCollectionForm = document.getElementById('newCollectionForm')
+				newCollectionForm.style.display = 'block'
+			},
+			openModifyCollectionNameForm(collectionID, collectionName){
+				let modifyCollectionNameForm = document.getElementById('modifyCollectionNameForm')
+				this.collectionID2Modify = collectionID
+				this.collectionName2Modify = collectionName
+				modifyCollectionNameForm.style.display = 'block'
+			},
+			deleteCollection(collectionID, collectionName){
+				if(confirm(`Are you sure to delete the collection: ${collectionName}\nYou cannot undo this operation.`)){
+					this.axios.delete(`${API_URL}/collection?collection_id=${collectionID}`, {headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						}}).then((res) => {
+						alert(res.data.message)
+						this.getCollections()
+					}).catch((error) => {
+						alert(error.response.data.message)
+					})
 				}
 			}
 		},

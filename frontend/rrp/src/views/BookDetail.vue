@@ -20,9 +20,10 @@
 							<span>Authors: </span>
 							<span>{{ book.authors }}</span>
 						</li>
-						<li>
+						<li id="desc">
 							<span>Description: </span>
 							<span>{{ book.description }}</span>
+							<div class="more" id="view-more"> <span @click="showAllText()">more >></span> </div>
 						</li>
 						<li>
 							<span>Publisher: </span>
@@ -190,6 +191,15 @@
 					this.pageNotFound = true
 				})
 			},
+			showAllText(){
+				let desc = document.getElementById('desc')
+				let more = document.getElementById('view-more')
+				if(desc.offsetHeight >= 112){
+					desc.style.maxHeight = 'none'
+					desc.style.overflow = 'none'
+					more.style.display = 'none'
+				}
+			}
 		},
 		created: function() {
 			this.getBookDetails()

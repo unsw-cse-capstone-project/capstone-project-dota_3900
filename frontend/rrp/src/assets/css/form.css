@@ -65,8 +65,8 @@
 }
 
 .modal .title span {
-	color: grey;
-	font-size: 0.7em;
+	color: darkgrey;
+	font-size: 0.75rem;
 }
 
 .modal select {
@@ -86,7 +86,7 @@
 
 .modal {
 	position: fixed;
-	z-index: 100;
+	z-index: 300;
 	left: 0;
 	top: 0;
 	width: 100%;

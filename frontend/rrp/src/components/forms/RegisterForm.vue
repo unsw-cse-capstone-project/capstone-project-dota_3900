@@ -34,7 +34,7 @@
 <script>
 	import API_URL from '../../serviceAPI.config.js'
 	export default {
-		name: 'LoginForm',
+		name: 'RegisterForm',
 		data: function() {
 			return{
 				account: {

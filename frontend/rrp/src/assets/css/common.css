@@ -188,6 +188,14 @@ footer span {
 	background-color: white;
 	border-color: green;
 	color: green;
+	transition: color,background-color 0.2s,0.2s;
+}
+
+.btn-style-white:hover {
+	background-color: green;
+	border-color: green;
+	color: white;
+	transition: color,background-color 0.2s,0.2s;
 }
 
 .btn-style-orange {
