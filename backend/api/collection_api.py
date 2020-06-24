@@ -76,6 +76,11 @@ class CollectionApi(Resource):
         args = collection_update_name_parser.parse_args()
         new_name = args.get('new_name')
         collection_id = args.get('collection_id')
+        # Cannot update read history and main collection's name
+        read_collection_id = Collection.get_readcollection_id(user_id)
+        main_collection_id = read_collection_id - 1
+        if collection_id == read_collection_id or collection_id == main_collection_id:
+            return {'message': "Read History and Main collection's name cannot be changed"}, 201
         # Name input cannot be empty
         if new_name == "":
             return {'message': "Collection's name cannot be empty"}, 201
@@ -124,9 +129,10 @@ class CollectionApi(Resource):
         # Get collection_id from parser
         args = collection_delete_parser.parse_args()
         collection_id = args.get('collection_id')
+        # Read History and Main collection cannot be deleted
         read_collection_id = Collection.get_readcollection_id(user_id)
         main_collection_id = read_collection_id - 1
-        if collection_id == read_collection_id or collection_id == read_collection_id:
+        if collection_id == read_collection_id or collection_id == main_collection_id:
             return {'message': 'Read History and Main collection cannot be deleted'}, 201
         if Collection.delete_collection(user_id, collection_id):
             return {'message': 'Delete collection successfully'}, 200
