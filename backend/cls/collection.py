@@ -133,7 +133,7 @@ class Collection:
 
     # Get list of books in collection
     @staticmethod
-    def get_book_in_collection(collection_id, user_id):
+    def get_book_in_collection(collection_id):
         # Is collection exist
         if not Collection.is_collection_exists_by_id(collection_id):
             return False, []

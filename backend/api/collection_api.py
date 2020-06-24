@@ -128,13 +128,9 @@ class CollectionBooksApi(Resource):
     @api.expect(collection_get_book_parser, validate=True)
     # @requires_login
     def get(self):
-        # Get user'id from Token
-        token = request.headers.get('AUTH-TOKEN')
-        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        user_id = token_info['id']
         # Get collection_id from parser
         args = collection_get_book_parser.parse_args()
-        flag, books = Collection.get_book_in_collection(args.get('collection_id'), user_id)
+        flag, books = Collection.get_book_in_collection(args.get('collection_id'))
         if not flag:
             return {'message': 'Resource not found'}, 404
         else:
