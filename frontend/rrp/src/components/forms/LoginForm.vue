@@ -33,8 +33,8 @@
 			</div>
 
 			<div class="container2">
-				<button type="submit" class="btn-green" @click="submit">Login</button>
-				<button type="button" class="btn-red" @click="closeForm">Cancel</button>
+				<button type="submit" class="btn-green" @click.prevent="submit">Login</button>
+				<button type="button" class="btn-red" @click.prevent="closeForm">Cancel</button>
 			</div>
 		</form>
 	</div>

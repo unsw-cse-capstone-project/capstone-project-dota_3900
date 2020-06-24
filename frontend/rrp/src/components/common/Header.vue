@@ -1,9 +1,9 @@
 <template>
 	<header :class="{'opacity-background': isHome}">
 		<div class="left">
-			<div class="title">
-				「 Read Recommendation Pro」
-			</div>
+			<router-link :to="{name: 'Home'}">
+				<div class="title">「 Read Recommendation Pro」</div>
+			</router-link>
 			<div class="search" v-if="isHome !== true">
 				<input class="search_bar" type="text" placeholder="Book title / Author / ISBN">
 				<button class="search_btn">

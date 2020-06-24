@@ -63,9 +63,6 @@
 
 
 
-
-
-
 .user-dashboard .content .right .collection-list ul{
 	padding: 0;
 	margin: 0;
@@ -143,9 +140,9 @@
 	width: 40.5rem;
 	position: relative;
 	height: 0rem;
-	overflow: hidden;
-	top: -1rem;
 	opacity: 0;
+	top: -1rem;
+	overflow: hidden;
 	transition: top,opacity 0.5s,0.5s
 }
 
@@ -157,6 +154,7 @@
 
 .user-dashboard .content .right .book img{
 	width: 4rem;
+	cursor: pointer;
 }
 
 .user-dashboard .content .right .book .info{
@@ -187,6 +185,10 @@
 	font-weight: bold;
 	color: #4682B4;
 	cursor: pointer;
+}
+
+.user-dashboard .content .right .book .info .book-detail span:first-child:hover{
+	text-decoration: underline;
 }
 
 .user-dashboard .content .right .book .info .book-detail span:last-child{

@@ -24,8 +24,8 @@
 			</div>
 
 			<div class="container2">
-				<button type="" class="btn-green" @click="submit">Register</button>
-				<button type="button" class="btn-red" @click="closeForm">Cancel</button>
+				<button type="" class="btn-green" @click.prevent="submit">Register</button>
+				<button type="button" class="btn-red" @click.prevent="closeForm">Cancel</button>
 			</div>
 		</form>
 	</div>

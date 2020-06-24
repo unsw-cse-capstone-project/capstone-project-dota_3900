@@ -10,15 +10,14 @@
 		<main v-else>
 			<div class="user-dashboard">
 				<div class="top">
-					
 					<div class="title" v-if="isMyDashboard()">
 						My dashboard - {{ account.username }}
 					</div>
 					<div class="title" v-else>
 						User page - {{ account.username }}
 					</div>
-					
 					<button class="btn-default btn-style-white animation-fadein-top delay_04s" v-if="isMyDashboard()">New Collection</button>
+
 				</div>
 				<div class="content">
 					<div class="left">
@@ -44,7 +43,7 @@
 								<div>2</div>
 							</li>
 						</ul>
-						<ul>
+						<ul v-if="isMyDashboard()">
 							<li>
 								<img src="../../public/icon/modify-email.png">
 								<span>Modify Email</span>
@@ -55,82 +54,60 @@
 							</li>
 						</ul>
 					</div>
+
 					<div class="right animation-fadein-top delay_02s">
 						<div class="collection-list">
 							<ul>
-								<li>
+								<li v-for="collection in collections" :key="collection.id">
 									<div class="head">
 										<div class="info">
-											<span>Main Collection</span>
+											<span>{{ collection.name }}</span>
 											<div class="status">
-												<span>Books: 5</span>
-												<span>Finished: 2</span>
-												<span>creation-time: 2020-02-02</span>
+												<span>Books: {{ collection.book_num }}</span>
+												<span>Finished: {{ collection.finished_num }}</span>
+												<span>creation-time: {{ timeStamp2datetime(collection.creation_time) }}</span>
 											</div>
 										</div>
 										<div class="operation">
-											<img src="../../public/icon/edit.png" title="Edit collection name">
-											<img src="../../public/icon/delete.png" title="Delete collection">
+											<img src="../../public/icon/edit.png" title="Edit collection name" v-if="isMyDashboard()">
+											<img src="../../public/icon/delete.png" title="Delete collection" v-if="isMyDashboard()">
 											<img src="../../public/icon/copy.png" title="Copy collection">
-											<img src="../../public/icon/open.png" title="Open collection" id="open-book-list">
+											<img src="../../public/icon/open.png" title="Open collection" @click="closeBookList(collection.id)">
 										</div>
 									</div>
-									<div class="book-list" id="main-collection-book-list">
-										<div class="book">
+									<div class="book-list" :id="'collection' + collection.id" >
+										<div class="book" v-for="book in collection.books" :key="book.collect_datetime">
 											<div class="info">
-												<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
+												<router-link :to="{name: 'Book', query: {id: book.book_id}}">
+													<img :src="book.book_cover_url">
+												</router-link>
 												<div class="book-detail">
 													<div class="title-operation">
-														<span><b>Attack on Titan: Vol 13</b></span>
+														<router-link :to="{name: 'Book', query: {id: book.book_id}}">
+															<span><b>{{book.title}}</b></span>
+														</router-link>
 														<div class="operation">
-															<img src="../../public/icon/plus.png" title="Add to my collection">
-															<img src="../../public/icon/minus.png" title="Delete from this collection">
-															<img src="../../public/icon/move.png" title="Move to another collection">
-															<button class="btn-default btn-style-green">Finished</button>
+															<img src="../../public/icon/plus.png" title="Add to my collection" v-if="!isMyDashboard()">
+															<img src="../../public/icon/minus.png" title="Delete from this collection" v-if="isMyDashboard()">
+															<img src="../../public/icon/move.png" title="Move to another collection" v-if="isMyDashboard()">
+															<button class="btn-default btn-style-green" v-if="isMyDashboard() && book.finish_datetime !== undefined">Finished</button>
+															<button class="btn-default btn-style-wheat" v-if="isMyDashboard() && book.finish_datetime === undefined">Unfinished</button>
 														</div>
 													</div>
-													<span><b>Author: </b>Hajime Isayama</span>
-													<span><b>Description: </b>NO SAFE PLACE LEFT At great cost to the Garrison and the Survey Corps,
-														Commander Erwin has managed to recover Eren from the Titans who tried to carry him off. But during the
-														battle, Eren manifested yet another power he doesn't understand. As Eren and Krista find new enemies,
-														the Survey Corps faces threats from both inside and outside the walls. And what will happen to Ymir, now
-														that she has decided to make herself the Titans' prize?</span>
-													<span><b>Publisher & publication date: </b>Kodansha Comics (2014-07-11)</span>
-													<span><b>Category: </b>Comic</span>
-													<span><b>Collect date: </b>2020-06-11</span>
-													<span><b>Date read: </b>2020-06-11</span>
+													<span><b>Author: </b>{{book.authors}}</span>
+													<span><b>Description: </b>{{book.description}}</span>
+													<span><b>Publisher & publication date: </b>{{book.publisher}} ({{book.published_date}})</span>
+													<span><b>Category: </b>{{book.categories}}</span>
+													<span><b>Collect date: </b>{{timeStamp2datetime(book.collect_datetime)}}</span>
+													<span v-if="book.finish_datetime !== undefined"><b>Date read: </b>{{timeStamp2datetime(book.finish_datetime)}}</span>
 												</div>
 											</div>
 										</div>
-										<div class="close-collection" id="close-tab">
-											<span>Close collection</span>
-										</div>
-									</div>
-								</li>
-
-								<li>
-									<div class="head">
-										<div class="info">
-											<span>My Sci-fi Collection</span>
-											<div class="status">
-												<span>Books: 0</span>
-												<span>Finished: 0</span>
-												<span>creation-time: 2020-02-02</span>
-											</div>
-										</div>
-										<div class="operation">
-											<img src="../../public/icon/edit.png" title="Edit collection name">
-											<img src="../../public/icon/delete.png" title="Delete collection">
-											<img src="../../public/icon/copy.png" title="Copy collection">
-											<img src="../../public/icon/open.png" title="Open collection" id="open-book-list">
-										</div>
-									</div>
-									<div class="book-list" id="book-list2">
-										<div class="no-book">
-											<img src="img/icon/hint.png">
+										<div class="no-book" v-if="collection.book_num === 0">
+											<img src="../../public/icon/hint.png">
 											<span>Oops, there is no book yet!</span>
 										</div>
-										<div class="close-collection" id="close-tab2">
+										<div class="close-collection" @click="closeBookList(collection.id)">
 											<span>Close collection</span>
 										</div>
 									</div>
@@ -179,7 +156,17 @@
 					email: '',
 					admin: ''
 				},
-				pageNotFound: false
+				pageNotFound: false,
+				collections: [],
+			}
+		},
+		computed: {
+			sortedCollection: function(){
+				return this.collections.forEach(function(collection){
+					collection.books.sort(function(book1, book2){
+						return parseFloat(book2.collect_datetime)- parseFloat(book1.collect_datetime)
+					})
+				})
 			}
 		},
 		components: {
@@ -190,7 +177,7 @@
 		methods: {
 			getAccountsInfo() {
 				// if there is no user id in query -> 404
-				if (this.$route.query.id === undefined){
+				if (this.$route.query.id === undefined) {
 					this.pageNotFound = true
 					return
 				}
@@ -207,7 +194,7 @@
 					return
 				})
 				// get my info (if exists)
-				if(this.$store.state.token){
+				if (this.$store.state.token) {
 					this.axios({
 						method: 'get',
 						url: `${API_URL}/user/detail`,
@@ -223,13 +210,77 @@
 					})
 				}
 			},
-			isMyDashboard(){
+			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
+			getCollections() {
+				let userID = this.$route.query.id
+				this.axios.get(`${API_URL}/collection?user_id=${userID}`).then((res) => {
+					let collections = res.data.Collections
+					for (let i = 0; i < collections.length; i++) {
+						let collectionID = collections[i].id
+						collections[i].books = []
+						this.axios.get(`${API_URL}/collection/books?collection_id=${collectionID}`).then((res) => {
+							let bookIDs = res.data.books
+							for (let j = 0; j < bookIDs.length; j++) {
+								let bookID = bookIDs[j].book_id
+								this.axios.get(`${API_URL}/book/${bookID}/detail`).then((res) => {
+									let book = res.data
+									book.categories = book.categories.replace(/\[\'/, '').replace(/\'\]/, '')
+									book.authors = book.authors.replace(/\[\'/, '').replace(/\'\]/, '').split("', '").join(", ")
+									book.collect_datetime = bookIDs[j].collect_time
+									book.finish_datetime = bookIDs[j].finish_time
+									collections[i].books.push(book)
+								})
+							}
+						})
+					}
+					collections.forEach(function(collection){
+						collection.books = collection.books.sort(function(book1, book2){
+							return book1.collect_datetime.parseFloat() - book2.collect_datetime.parseFloat()
+						})
+					})
+					this.collections = collections
+				}).catch((error) => {
+					alert(error.response.data.message)
+				})
+			},
+			getCollectionBooks(collectionID) {
+				this.axios.get(`${API_URL}/collection/books?collection_id=${collectionID}`).then((res) => {
+					console.log(res)
+					return res
+				}).catch((error) => {
+					alert(error)
+				})
+			},
+			timeStamp2datetime(timeStamp) {
+				var datetime = new Date();
+				datetime.setTime(timeStamp);
+				var year = datetime.getFullYear();
+				var month = datetime.getMonth() + 1;
+				var date = datetime.getDate();
+				var hour = datetime.getHours();
+				var minute = datetime.getMinutes();
+				var second = datetime.getSeconds();
+				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
+			},
+			closeBookList(collectionID){
+				let bookList = document.getElementById('collection' + collectionID)
+				if (bookList.style.height !== "auto") {
+					bookList.style.height = "auto";
+					bookList.style.top = "0rem";
+					bookList.style.opacity= "1";
+				} else {
+					bookList.style.height = "0rem";
+					bookList.style.top = "-1.25rem";
+					bookList.style.opacity= "0";
+				}
+			}
 		},
 		mounted: function() {
 			this.getAccountsInfo()
-		}
+			this.getCollections()
+		},
 	}
 </script>
 
