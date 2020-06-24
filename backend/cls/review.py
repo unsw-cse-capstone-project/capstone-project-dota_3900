@@ -28,7 +28,7 @@ class Review:
                 username=username,
                 rating=rating,
                 content=content,
-                time=datetime.datetime.now()
+                time=datetime.datetime.utcnow()
             )
             with mysql(conn) as cursor:
                 cursor.execute(query)
@@ -51,7 +51,7 @@ class Review:
             query = 'UPDATE review_rate SET rating = \'{rating}\', review_content = \'{review_content}\', review_time = \'{review_time}\' WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')'.format(
                 rating=rating,
                 review_content=content,
-                review_time=datetime.datetime.now(),
+                review_time=datetime.datetime.utcnow(),
                 user_id=user_id,
                 book_id=book_id
             )

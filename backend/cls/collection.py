@@ -83,7 +83,7 @@ class Collection:
             query = "INSERT INTO collections VALUES(0,\'{user_id}\',\'{name}\',\'{time}\')".format(
                 user_id=user_id,
                 name=name,
-                time=datetime.datetime.now()
+                time=datetime.datetime.utcnow()
             )
             with mysql(conn) as cursor:
                 cursor.execute(query)
@@ -189,7 +189,7 @@ class Collection:
         query = "INSERT INTO collects VALUES(\'{book_id}\', \'{collection_id}\', \'{collect_time}\')".format(
             book_id=book_id,
             collection_id=collection_id,
-            collect_time=datetime.datetime.now()
+            collect_time=datetime.datetime.utcnow()
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
@@ -249,7 +249,7 @@ class Collection:
         query = "INSERT INTO collects VALUES(\'{book_id}\', \'{collection_id}\', \'{collect_time}\')".format(
             book_id=book_id,
             collection_id=read_collection_id,
-            collect_time=datetime.datetime.now()
+            collect_time=datetime.datetime.utcnow()
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
