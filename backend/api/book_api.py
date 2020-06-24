@@ -116,7 +116,7 @@ class ReviewApi(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get review of certain book posted by certain user")
     @api.expect(review_parser, validate=True)
-    @requires_login
+    # @requires_login
     def get(self):
         # Get book_id and user_id from parser
         args = review_parser.parse_args()

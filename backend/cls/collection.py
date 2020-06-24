@@ -61,8 +61,8 @@ class Collection:
             # Timestamp -> datetime
             if ds[index]['name'] == "Read":
                 continue
-            ds[index]['creation_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-                                                       time.localtime(ds[index]['creation_time'] / 1000 - 28800))
+            # ds[index]['creation_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+            #                                            time.localtime(ds[index]['creation_time'] / 1000 - 28800))
             ds[index]['book_num'] = Collection.get_num_book_collection(int(ds[index]['id']))
             ds[index]['finished_num'] = Collection.get_num_read_collection(user_id, int(ds[index]['id']))
             result.append(ds[index])
@@ -156,12 +156,13 @@ class Collection:
         result = []
         for index in ds:
             # Timestamp -> datetime
-            ds[index]['collect_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-                                                      time.localtime(ds[index]['collect_time'] / 1000 - 28800))
+            # ds[index]['collect_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+            #                                           time.localtime(ds[index]['collect_time'] / 1000 - 28800))
             finish_date = Collection.get_book_read_date(user_id, ds[index]['book_id'])
             # post finish_time if finish
             if finish_date != 0:
-                ds[index]['finish_time'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                # ds[index]['finish_time'] = time.strftime('%Y-%m-%d %H:%M:%S')
+                ds[index]['finish_time'] = finish_date
             result.append(ds[index])
         return True, result
 
@@ -284,14 +285,19 @@ class Collection:
         read_collection_id = Collection.get_readcollection_id(user_id)
         # SQL
         conn = connect_sys_db()
-        query = "select collect_time FROM collects WHERE (collection_id = \'{collection_id}\' AND book_id = \'{book_id}\')".format(
+        query = "SELECT * FROM collects WHERE (collection_id = \'{collection_id}\' AND book_id = \'{book_id}\')".format(
             collection_id=read_collection_id,
             book_id=book_id
         )
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
             return 0
-        return db_result.iloc[0].collect_time
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            return ds[index]['collect_time']
+        return 0
 
     # Get number of collections of user
     @staticmethod

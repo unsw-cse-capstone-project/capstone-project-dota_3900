@@ -93,8 +93,8 @@ class Review:
         result = []
         for index in ds:
             # Timestamp -> datetime
-            ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-                                                     time.localtime(ds[index]['review_time'] / 1000 - 28800))
+            # ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+            #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
 
@@ -112,8 +112,8 @@ class Review:
         result = []
         for index in ds:
             # Timestamp -> datetime
-            ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-                                                     time.localtime(ds[index]['review_time'] / 1000 - 28800))
+            # ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+            #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
 
@@ -132,8 +132,8 @@ class Review:
         result = []
         for index in ds:
             # Timestamp -> datetime
-            ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-                                                     time.localtime(ds[index]['review_time'] / 1000 - 28800))
+            # ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+            #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
 
