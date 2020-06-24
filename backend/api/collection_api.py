@@ -50,6 +50,8 @@ class CollectionApi(Resource):
         args = collection_name_parser.parse_args()
         name = args.get('collection_name')
         # Name input cannot be empty string
+        if name == "Main collection" or name == "Read":
+            return {'message': "Collection's name cannot be 'Main Collection' or 'Read'"}, 201
         if name == "":
             return {'message': "Collection's name cannot be empty"}, 201
         try:
@@ -139,6 +141,7 @@ class CollectionApi(Resource):
         else:
             return {'message': 'Resource not found'}, 404
 
+
 # Api: changes to books in collection
 @api.route('/books')
 class CollectionBooksApi(Resource):
@@ -184,6 +187,7 @@ class CollectionBooksApi(Resource):
             return {'message': 'Delete book successfully'}, 200
         else:
             return {'message': 'Resource not found'}, 404
+
 
 # Api: Get user's read history
 @api.route('/read_history')
