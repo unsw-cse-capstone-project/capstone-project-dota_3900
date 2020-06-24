@@ -59,6 +59,8 @@ class Collection:
         result = []
         for index in ds:
             # Timestamp -> datetime
+            if ds[index]['name'] == "Read":
+                continue
             ds[index]['creation_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
                                                        time.localtime(ds[index]['creation_time'] / 1000 - 28800))
             ds[index]['book_num'] = Collection.get_num_book_collection(int(ds[index]['id']))

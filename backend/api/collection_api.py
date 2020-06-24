@@ -188,3 +188,24 @@ class CollectionBooksApi(Resource):
             return {'message': 'Delete book successfully'}, 200
         else:
             return {'message': 'Resource not found'}, 404
+
+# Api: Get user's read history
+@api.route('/read_history')
+class CollectionBooksApi(Resource):
+    @api.response(200, 'Success')
+    @api.response(201, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get books in collection")
+    @api.expect(collection_user_id_parser, validate=True)
+    # @requires_login
+    def get(self):
+        # Get collection_id from parser
+        args = collection_user_id_parser.parse_args()
+        user_id = args.get('user_id')
+        collection_id = Collection.get_readcollection_id(user_id)
+        flag, books = Collection.get_book_in_collection(collection_id, user_id)
+        if not flag:
+            return {'message': 'Resource not found'}, 404
+        else:
+            return {'books': books}, 200
