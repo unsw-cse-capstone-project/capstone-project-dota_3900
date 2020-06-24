@@ -44,12 +44,13 @@ class BookSearch(Resource):
     @api.doc(description="Search books")
     @api.expect(search_parser, validate=True)
     def get(self):
+        # Get search_content by parser
         args = search_parser.parse_args()
         result = Book.book_search(args.get('search_content'))
         return {'list': result}, 200
 
 
-# Api: Get search result
+# Api: Get book's detail
 @api.route('/<int:book_id>/detail')
 class BookGetDetailByID(Resource):
     @api.response(200, 'Success')
@@ -82,7 +83,7 @@ class BookGetDetailByID(Resource):
                     'review_preview': review_preview
                     }, 200
 
-
+# Api: Get info of review_page
 @api.route('/review_page')
 class ReviewPage(Resource):
     @api.response(200, 'Success')
@@ -91,12 +92,13 @@ class ReviewPage(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get review page")
     @api.expect(review_page_parser, validate=True)
-    # @requires_login
     def get(self):
+        # Get page and book_id from parser
         args = review_page_parser.parse_args()
         page = args.get('page')
         book_id = args.get('book_id')
         page_num, last_page_num = Review.get_book_review_page_num(book_id, 10)
+        # Index out of range
         if (page <= 0 or page > page_num):
             return {'message': 'Resource not found'}, 404
         result = Review.get_book_review_page(book_id, 10, page)
@@ -105,7 +107,7 @@ class ReviewPage(Resource):
                 'reviews': result
                 }, 200
 
-
+# Api: get book's review
 @api.route('/review')
 class ReviewApi(Resource):
     @api.response(200, 'Success')
@@ -116,22 +118,29 @@ class ReviewApi(Resource):
     @api.expect(review_parser, validate=True)
     @requires_login
     def get(self):
+        # Get book_id and user_id from parser
         args = review_parser.parse_args()
         book_id = args.get('book_id')
         user_id = args.get('user_id')
+        # If user does not exist
         if (not User.is_user_exists_by_id(user_id)) and (user_id != None):
             return {'message': 'Resource not found'}, 404
+        # if book does not exist
         if (not Book.is_book_exists_by_id(book_id)) and (book_id != None):
             return {'message': 'Resource not found'}, 404
+        # show reviews posted by certain user by only input user_id
         if (book_id == None and user_id != None):
             result = Review.get_user_reviews(user_id)
             return {'reviews': result}, 200
+        # show reviews of certain book by only input book_id
         elif (book_id != None and user_id == None):
             result = Review.get_book_review(book_id)
             return {'reviews': result}, 200
+        # show reviews posted by certain user of certain book by input both id
         elif (book_id != None and user_id != None):
             result = Review.get_book_user_review(user_id, book_id)
             return {'reviews': result}, 200
+        # book_id and user_id cannot be both empty
         elif (book_id == None and user_id == None):
             return {'message': 'book_id and user_id cannot be both empty'}, 400
 
@@ -153,6 +162,7 @@ class ReviewApi(Resource):
         book_id = info['book_id']
         rating = info['rating']
         content = info['content']
+        # input cannot be empty string
         if book_id is None or rating is None or content == "":
             return {'message': 'Rating or review content cannot be empty'}, 201
         try:
@@ -180,6 +190,7 @@ class ReviewApi(Resource):
         book_id = info['book_id']
         content = info['content']
         rating = info['rating']
+        # input cannot be empty string
         if book_id is None or rating is None or content == "":
             return {'message': 'Rating or review content cannot be empty'}, 201
         try:
@@ -198,6 +209,7 @@ class ReviewApi(Resource):
     @api.expect(delete_parser, validate=True)
     @requires_login
     def delete(self):
+        # Get book_id and user_id from parser
         args = delete_parser.parse_args()
         book_id = args.get('book_id')
         user_id = args.get('user_id')
@@ -208,7 +220,7 @@ class ReviewApi(Resource):
             return {'message': e.args[1]}, 500
         return {'message': 'Delete review success'}, 200
 
-
+# Api: Mark certain book as read
 @api.route('/read')
 class ReviewApi(Resource):
     @api.response(200, 'Success')
@@ -219,10 +231,12 @@ class ReviewApi(Resource):
     @api.expect(read_parser, validate=True)
     @requires_login
     def post(self):
-        args = read_parser.parse_args()
+        # Get user_id from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+        # Get book_id from parser
+        args = read_parser.parse_args()
         try:
             if not Collection.mark_as_read(user_id, args.get('book_id')):
                 return {'message': 'Resource not found'}, 404

@@ -28,11 +28,12 @@ class UserRegister(Resource):
     @api.doc(description="Register a new user account.")
     @api.expect(user_register_model, validate=True)
     def post(self):
+        # Get info from json input
         info = request.json
         username = info['username']
         password = info['password']
         email = info['email']
-        admin = 0
+        # input cannot be empty string
         if username == "" or password == "" or email == "":
             return {'message': 'Register failed. Username, password or email cannot be empty'}, 201
         try:
@@ -57,13 +58,12 @@ class UserUpdatePassword(Resource):
     def put(self):
         info = request.json
         new_password = info['password']
+        # new password cannot be empty string
         if new_password == "":
             return {'message': 'Update failed. new password cannot be empty'}, 201
-
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
         tokn_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-
         # Get user object
         id = tokn_info['id']
         account = User(id)
@@ -87,13 +87,12 @@ class UserUpdateUsername(Resource):
     def put(self):
         info = request.json
         new_username = info['username']
+        # input cannot be empty string
         if new_username == "":
             return {'message': 'Update failed. new username cannot be empty'}, 201
-
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-
         # Get user object
         id = token_info['id']
         account = User(id)
@@ -133,6 +132,7 @@ class UserGetCurrDetailByID(Resource):
     @api.doc(description="Get current user's detail by ID")
     @requires_login
     def get(self):
+        # Get user_id from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
@@ -161,7 +161,7 @@ class UserGetCurrID(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         return {'id': token_info['id']}
 
-
+# Api: Get user's all review
 @api.route('/<int:user_id>/reviews')
 class UserGetReviewsByID(Resource):
     @api.response(200, 'Success')
@@ -176,6 +176,7 @@ class UserGetReviewsByID(Resource):
         result = Review.get_user_reviews(user_id)
         return {'list': result}, 200
 
+# Api: Get user's all collections
 @api.route('/<int:user_id>/collections')
 class UserGetCollectionByID(Resource):
     @api.response(200, 'Success')

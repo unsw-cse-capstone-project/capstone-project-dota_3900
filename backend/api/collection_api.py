@@ -7,9 +7,6 @@ from config import SECRET_KEY
 from lib.validation_decorator import requires_login
 
 api = Namespace('collection', description='Collection api')
-# collection_create_model = api.model('collection_create_model',{
-#     'name': fields.String
-# })
 
 collection_name_parser = reqparse.RequestParser()
 collection_name_parser.add_argument('collection_name', required=True)
@@ -32,6 +29,7 @@ collection_user_id_parser = reqparse.RequestParser()
 collection_user_id_parser.add_argument('user_id', type=int, required=True)
 
 
+# Api: change to Collection
 @api.route('/')
 class CollectionApi(Resource):
     @api.response(200, 'Success')
@@ -39,19 +37,17 @@ class CollectionApi(Resource):
     @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Create new collection")
-    # @api.expect(collection_create_model, validate=True)
     @api.expect(collection_name_parser, validate=True)
     @requires_login
     def post(self):
-        args = collection_name_parser.parse_args()
-        # Get user's id from token
+        # Get user's id from Token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
-        # Get collection's name from json input
-        info = request.json
-        # name = info['name']
+        # Get collection_name from parser
+        args = collection_name_parser.parse_args()
         name = args.get('collection_name')
+        # Name input cannot be empty string
         if name == "":
             return {'message': "Collection's name cannot be empty"}, 201
         try:
@@ -67,17 +63,18 @@ class CollectionApi(Resource):
     @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Update collection's name")
-    # @api.expect(collection_create_model, validate=True)
     @api.expect(collection_update_name_parser, validate=True)
     @requires_login
     def put(self):
-        args = collection_update_name_parser.parse_args()
         # Get user's id from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+        # Get new_name and collection_id from parser
+        args = collection_update_name_parser.parse_args()
         new_name = args.get('new_name')
         collection_id = args.get('collection_id')
+        # Name input cannot be empty
         if new_name == "":
             return {'message': "Collection's name cannot be empty"}, 201
         try:
@@ -95,10 +92,7 @@ class CollectionApi(Resource):
     @api.expect(collection_user_id_parser, validate=True)
     @requires_login
     def get(self):
-        # Get user's id from token
-        # token = request.headers.get('AUTH-TOKEN')
-        # token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        # user_id = token_info['id']
+        # Get user_id from parser
         args = collection_user_id_parser.parse_args()
         result = Collection.get_user_collection(args.get('user_id'))
         if result == None:
@@ -112,17 +106,18 @@ class CollectionApi(Resource):
     @api.doc(description="Delete collection")
     @requires_login
     def delete(self):
-        args = collection_delete_parser.parse_args()
         # Get user's id from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+        # Get collection_id from parser
+        args = collection_delete_parser.parse_args()
         if Collection.delete_collection(user_id, args.get('collection_id')):
             return {'message': 'Delete collection success'}, 200
         else:
             return {'message': 'Resource not found'}, 404
 
-
+# Api: changes to books in collection
 @api.route('/books')
 class CollectionBooksApi(Resource):
     @api.response(200, 'Success')
@@ -133,10 +128,12 @@ class CollectionBooksApi(Resource):
     @api.expect(collection_get_book_parser, validate=True)
     @requires_login
     def get(self):
-        args = collection_get_book_parser.parse_args()
+        # Get user'id from Token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+        # Get collection_id from parser
+        args = collection_get_book_parser.parse_args()
         flag, books = Collection.get_book_in_collection(args.get('collection_id'), user_id)
         if not flag:
             return {'message': 'Resource not found'}, 404
@@ -151,6 +148,7 @@ class CollectionBooksApi(Resource):
     @api.expect(collection_add_book_parser, validate=True)
     @requires_login
     def post(self):
+        # Get collection_id and book_id from parser
         args = collection_add_book_parser.parse_args()
         flag, message = Collection.add_book_to_collection(args.get('collection_id'), args.get('book_id'))
         return {'message': message}, flag
@@ -159,9 +157,10 @@ class CollectionBooksApi(Resource):
     @api.response(201, 'Invalid input')
     @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Add books to collection")
+    @api.doc(description="Delete book in collection")
     @api.expect(collection_add_book_parser, validate=True)
     def delete(self):
+        # Get collection_id and book_id from parser
         args = collection_add_book_parser.parse_args()
         if Collection.delete_book_in_collection(args.get('collection_id'), args.get('book_id')):
             return {'message': 'Delete book success'}, 200
