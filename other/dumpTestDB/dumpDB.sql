@@ -78,7 +78,7 @@ CREATE TABLE `collections` (
 
 LOCK TABLES `collections` WRITE;
 /*!40000 ALTER TABLE `collections` DISABLE KEYS */;
-INSERT INTO `collections` VALUES (1,1,'Main collection','2020-06-24 20:27:06'),(2,1,'Read','2020-06-24 20:27:06'),(3,2,'Main collection','2020-06-24 20:27:11'),(4,2,'Read','2020-06-24 20:27:11'),(5,3,'Main collection','2020-06-24 20:27:17'),(6,3,'Read','2020-06-24 20:27:17'),(7,4,'Main collection','2020-06-24 20:27:24'),(8,4,'Read','2020-06-24 20:27:24');
+INSERT INTO `collections` VALUES (1,1,'Main collection','2020-06-24 12:47:45'),(2,1,'Read','2020-06-24 12:47:45'),(3,2,'Main collection','2020-06-24 12:48:34'),(4,2,'Read','2020-06-24 12:48:34'),(5,3,'Main collection','2020-06-24 12:48:40'),(6,3,'Read','2020-06-24 12:48:40'),(7,4,'Main collection','2020-06-24 12:48:45'),(8,4,'Read','2020-06-24 12:48:45');
 /*!40000 ALTER TABLE `collections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,9 +179,9 @@ UNLOCK TABLES;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `users_AFTER_INSERT` AFTER INSERT ON `users` FOR EACH ROW BEGIN
 	insert into collections(user_id, name, creation_time)
-    values(new.id,"Main collection",now());
+    values(new.id,"Main collection",utc_timestamp());
     insert into collections(user_id, name, creation_time)
-    values(new.id,"Read",now());
+    values(new.id,"Read",utc_timestamp());
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -198,4 +198,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-24 20:30:52
+-- Dump completed on 2020-06-24 20:49:14

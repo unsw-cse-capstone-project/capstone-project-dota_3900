@@ -164,9 +164,9 @@ CREATE TABLE `users` (
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `users_AFTER_INSERT` AFTER INSERT ON `users` FOR EACH ROW BEGIN
 	insert into collections(user_id, name, creation_time)
-    values(new.id,"Main collection",now());
+    values(new.id,"Main collection",utc_timestamp());
     insert into collections(user_id, name, creation_time)
-    values(new.id,"Read",now());
+    values(new.id,"Read",utc_timestamp());
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
