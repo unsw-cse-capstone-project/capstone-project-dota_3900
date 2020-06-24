@@ -69,7 +69,7 @@ CREATE TABLE `collections` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `collection_user_fk_idx` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +78,7 @@ CREATE TABLE `collections` (
 
 LOCK TABLES `collections` WRITE;
 /*!40000 ALTER TABLE `collections` DISABLE KEYS */;
-INSERT INTO `collections` VALUES (1,1,'Main collection','2020-06-24 11:53:10'),(2,1,'Read','2020-06-24 11:53:10'),(3,2,'Main collection','2020-06-24 11:53:19'),(4,2,'Read','2020-06-24 11:53:19'),(5,3,'Main collection','2020-06-24 11:53:24'),(6,3,'Read','2020-06-24 11:53:24'),(7,4,'Main collection','2020-06-24 11:53:32'),(8,4,'Read','2020-06-24 11:53:32'),(9,1,'My favourite books','2020-06-24 18:23:14');
+INSERT INTO `collections` VALUES (1,1,'Main collection','2020-06-24 20:27:06'),(2,1,'Read','2020-06-24 20:27:06'),(3,2,'Main collection','2020-06-24 20:27:11'),(4,2,'Read','2020-06-24 20:27:11'),(5,3,'Main collection','2020-06-24 20:27:17'),(6,3,'Read','2020-06-24 20:27:17'),(7,4,'Main collection','2020-06-24 20:27:24'),(8,4,'Read','2020-06-24 20:27:24');
 /*!40000 ALTER TABLE `collections` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -106,7 +106,6 @@ CREATE TABLE `collects` (
 
 LOCK TABLES `collects` WRITE;
 /*!40000 ALTER TABLE `collects` DISABLE KEYS */;
-INSERT INTO `collects` VALUES (0,1,'2020-06-24 11:57:18'),(0,2,'2020-06-24 11:56:07'),(1,2,'2020-06-24 11:56:43'),(123,9,'2020-06-24 18:23:59'),(245,1,'2020-06-24 18:22:18'),(666,3,'2020-06-24 11:09:09'),(1224,9,'2020-06-24 18:24:01');
 /*!40000 ALTER TABLE `collects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +136,6 @@ CREATE TABLE `review_rate` (
 
 LOCK TABLES `review_rate` WRITE;
 /*!40000 ALTER TABLE `review_rate` DISABLE KEYS */;
-INSERT INTO `review_rate` VALUES (0,1,'test1',5,'This book is very interesting','2020-06-24 11:56:01');
 /*!40000 ALTER TABLE `review_rate` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,9 +165,29 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'test1','3DEF554986DF74F0D042B0BE8BC9EBE8',0,'tset1@gmail.com'),(2,'test2','C24E956422CE6E470349A611A8BCE642',0,'tset2@gmail.com'),(3,'test3','C24E956422CE6E470349A611A8BCE642',0,'tset3@gmail.com'),(4,'test4','756EED8729B35F575BF41759E35D95A3',0,'tset4@gmail.com');
+INSERT INTO `users` VALUES (1,'test1','3DEF554986DF74F0D042B0BE8BC9EBE8',0,'test1@gmail.com'),(2,'test2','C24E956422CE6E470349A611A8BCE642',0,'test2@gmail.com'),(3,'test3','B5395452D123236616D1B0A0E7E9A3C4',0,'test3@gmail.com'),(4,'test4','756EED8729B35F575BF41759E35D95A3',0,'test4@gmail.com');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `users_AFTER_INSERT` AFTER INSERT ON `users` FOR EACH ROW BEGIN
+	insert into collections(user_id, name, creation_time)
+    values(new.id,"Main collection",now());
+    insert into collections(user_id, name, creation_time)
+    values(new.id,"Read",now());
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -180,4 +198,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-06-24 19:16:08
+-- Dump completed on 2020-06-24 20:28:35
