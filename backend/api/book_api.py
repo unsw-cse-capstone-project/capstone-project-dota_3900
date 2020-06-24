@@ -167,7 +167,7 @@ class ReviewApi(Resource):
             return {'message': 'Rating or review content cannot be empty'}, 201
         try:
             if Review.new_review(user_id, book_id, rating, content):
-                return {'message': 'Post new review success'}, 200
+                return {'message': 'Post new review successfuly'}, 200
             else:
                 return {'message': 'Review already existed'}, 201
         except pymysql.Error as e:
@@ -195,7 +195,7 @@ class ReviewApi(Resource):
             return {'message': 'Rating or review content cannot be empty'}, 201
         try:
             if Review.edit_review(user_id, book_id, rating, content):
-                return {'message': 'Update review success'}, 200
+                return {'message': 'Update review successfully'}, 200
             else:
                 return {'message': 'Review not found'}, 404
         except pymysql.Error as e:
@@ -218,7 +218,7 @@ class ReviewApi(Resource):
                 return {'message': 'Delete review failed, this review does not exist'}, 402
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
-        return {'message': 'Delete review success'}, 200
+        return {'message': 'Delete review successfully'}, 200
 
 # Api: Mark certain book as read
 @api.route('/read')
@@ -242,4 +242,4 @@ class ReviewApi(Resource):
                 return {'message': 'Resource not found'}, 404
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
-        return {'message': 'Mark success'}, 200
+        return {'message': 'Mark successfully'}, 200

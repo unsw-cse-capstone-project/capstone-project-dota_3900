@@ -220,3 +220,12 @@ class Review:
             index_from = 10 * (curr_page - 1) + 1
             index_to = 10 * (curr_page)
         return Review.get_book_review_from_to(book_id, index_from - 1, index_to - 1)
+
+    @staticmethod
+    def get_user_num_review(user_id):
+        conn = connect_sys_db()
+        query = "SELECT count(*) as num FROM review_rate WHERE user_id = \'{user_id}\'".format(
+            user_id = user_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        return int(db_result.iloc[0].num)

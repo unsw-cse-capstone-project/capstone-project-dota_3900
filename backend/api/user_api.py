@@ -42,7 +42,7 @@ class UserRegister(Resource):
                 return {'message': errmsg}, 201
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
-        return {'message': 'Register new user account success'}, 200
+        return {'message': 'Register new user account successfully'}, 200
 
 
 # Api: Update user's password
@@ -71,7 +71,7 @@ class UserUpdatePassword(Resource):
             account.update_password(new_password)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
-        return {'message': 'Change password success'}, 200
+        return {'message': 'Change password successfully'}, 200
 
 
 # Api: Update user's username
@@ -100,7 +100,7 @@ class UserUpdateUsername(Resource):
             account.update_username(new_username)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
-        return {'message': 'Change username success'}, 200
+        return {'message': 'Change username successfully'}, 200
 
 
 # Api: Get username by ID

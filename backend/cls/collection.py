@@ -271,7 +271,7 @@ class Collection:
         # SQL
         conn = connect_sys_db()
         query = "SELECT count(*) as num FROM collects WHERE collection_id = \'{collection_id}\'".format(
-            collection_id = collection_id
+            collection_id=collection_id
         )
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num)
@@ -290,3 +290,14 @@ class Collection:
         if db_result.empty:
             return 0
         return db_result.iloc[0].collect_time
+
+    # Get number of collections of user
+    @staticmethod
+    def get_num_collection(user_id):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT count(*) as num FROM collections WHERE (user_id = \'{user_id}\')".format(
+            user_id=user_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        return int(db_result.iloc[0].num) - 1
