@@ -35,16 +35,6 @@ class Collection:
             cursor.execute(query)
         return True, 'Collection update successfully'
 
-    # Delete existed collection
-    def delete_collection(self, user_id):
-        # SQL
-        conn = connect_sys_db()
-        query = "DELETE FROM collections WHERE (user_id = \'{user_id}\' AND id = \'{id}\')".format(
-            user_id=user_id,
-            id=self._id
-        )
-        with mysql(conn) as cursor:
-            cursor.execute(query)
 
     # Get list of books in collection
     def get_book_in_collection(self):
@@ -307,3 +297,14 @@ class Collection:
             ds[index]['book_cover_url'] = book_info.book_cover_url
             result.append(ds[index])
         return result
+
+    @staticmethod
+    # Delete existed collection
+    def delete_collection(collection_id):
+        # SQL
+        conn = connect_sys_db()
+        query = "DELETE FROM collections WHERE (id = \'{id}\')".format(
+            id=collection_id
+        )
+        with mysql(conn) as cursor:
+            cursor.execute(query)
