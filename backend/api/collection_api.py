@@ -246,3 +246,21 @@ class CollectionReadHistoryApi(Resource):
         collection = Collection(collection_id)
         books = collection.get_book_in_collection()
         return {'books': books}, 200
+
+# Api: Get user's 10 most recently added books
+@api.route('/recently_added')
+class CollectionReadHistoryApi(Resource):
+    @api.response(200, 'Success')
+    @api.response(201, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's 10 most recently added books")
+    @api.expect(collection_user_id_parser, validate=True)
+    def get(self):
+        # Get collection_id from parser
+        args = collection_user_id_parser.parse_args()
+        user_id = args.get('user_id')
+        if not User.is_user_exists_by_id(user_id):
+            return {'message': 'Resource not found'}, 404
+        result = Collection.get_recent_added_books(user_id)
+        return {'books': result}, 200
