@@ -296,7 +296,7 @@ class Collection:
             user_id=user_id
         )
         db_result = read_sql(sql=query, con=conn)
-        print(db_result)
+        # print(db_result)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
