@@ -10,7 +10,7 @@ import jwt
 import pymysql
 
 api = Namespace('user', description='User account setting')
-user_password_model = api.model('user_password_model', {'password': fields.String})
+user_password_model = api.model('user_password_model', {'old_password': fields.String, 'new_password': fields.String})
 user_username_model = api.model('user_username_model', {'username': fields.String})
 user_email_model = api.model('email', {'email': fields.String})
 user_register_model = api.model('user_register_model', {
@@ -58,21 +58,24 @@ class UserUpdatePassword(Resource):
     @requires_login
     def put(self):
         info = request.json
-        new_password = info['password']
+        new_password = info['new_password']
+        old_password = info['old_password']
         # new password cannot be empty string
-        if new_password == "":
-            return {'message': 'Update failed. new password cannot be empty'}, 201
+        if new_password == "" or old_password == "":
+            return {'message': 'Update failed. Both old password and new password cannot be empty'}, 201
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
-        tokn_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         # Get user object
-        id = tokn_info['id']
+        id = token_info['id']
         user = User(id)
         try:
-            user.update_password(new_password)
+            if not user.update_password(old_password, new_password):
+                return {'message': 'Old password is wrong'}, 201
+            else:
+                return {'message': 'Change password successfully'}, 200
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
-        return {'message': 'Change password successfully'}, 200
 
 
 # Api: Update user's username

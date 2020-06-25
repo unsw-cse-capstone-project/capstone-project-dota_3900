@@ -31,7 +31,17 @@ class User:
             cursor.execute(query)
 
     # Update user's password
-    def update_password(self, new_password):
+    def update_password(self, old_password, new_password):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT * FROM users WHERE (password = HEX(AES_ENCRYPT(\'{old_password}\', \'{key}\')) AND id = \'{id}\')".format(
+            old_password = old_password,
+            id =self._id,
+            key=SECRET_KEY
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
         # SQL
         conn = connect_sys_db()
         query = 'UPDATE users SET password = HEX(AES_ENCRYPT(\'{new_password}\', \'{key}\')) WHERE id = \'{id}\'' \
@@ -42,6 +52,7 @@ class User:
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
+        return True
 
     # Get user's detail by id
     def get_info(self):
