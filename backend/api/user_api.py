@@ -12,6 +12,7 @@ import pymysql
 api = Namespace('user', description='User account setting')
 user_password_model = api.model('user_password_model', {'password': fields.String})
 user_username_model = api.model('user_username_model', {'username': fields.String})
+user_email_model = api.model('email', {'email': fields.String})
 user_register_model = api.model('user_register_model', {
     'username': fields.String(required=True),
     'password': fields.String(required=True),
@@ -66,9 +67,9 @@ class UserUpdatePassword(Resource):
         tokn_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         # Get user object
         id = tokn_info['id']
-        account = User(id)
+        user = User(id)
         try:
-            account.update_password(new_password)
+            user.update_password(new_password)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Change password successfully'}, 200
@@ -90,17 +91,49 @@ class UserUpdateUsername(Resource):
         # input cannot be empty string
         if new_username == "":
             return {'message': 'Update failed. new username cannot be empty'}, 201
+        if User.is_user_exists_by_username(new_username):
+            return {'message': 'This user already existed'}, 201
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         # Get user object
         id = token_info['id']
-        account = User(id)
+        user = User(id)
         try:
-            account.update_username(new_username)
+            user.update_username(new_username)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Change username successfully'}, 200
+
+# Api: Update user's username
+@api.route('/email')
+class UserUpdateEmail(Resource):
+    @api.response(200, 'Success')
+    @api.response(201, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Update the user's email")
+    @api.expect(user_email_model, validate=True)
+    @requires_login
+    def put(self):
+        info = request.json
+        new_email = info['email']
+        # input cannot be empty string
+        if new_email == "":
+            return {'message': 'Update failed. new username cannot be empty'}, 201
+        if User.is_user_exists_by_email(new_email):
+            return {'message': 'This email already been registered'}, 201
+        # Get user's detail from token
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        # Get user object
+        id = token_info['id']
+        user = User(id)
+        try:
+            user.update_email(new_email)
+        except pymysql.Error as e:
+            return {'message': e.args[1]}, 500
+        return {'message': 'Change email address successfully'}, 200
 
 
 # Api: Get username by ID
@@ -112,7 +145,8 @@ class UserGetDetailByID(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's detail by ID")
     def get(self, user_id):
-        info = User.get_info_by_id(user_id)
+        user = User(user_id)
+        info = user.get_info()
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
@@ -121,6 +155,7 @@ class UserGetDetailByID(Resource):
                     'email': info.email,
                     'admin': int(info.admin),
                     }, 200
+
 
 # Api: Get username by ID
 @api.route('/detail')
@@ -136,7 +171,8 @@ class UserGetCurrDetailByID(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
-        info = User.get_info_by_id(user_id)
+        user = User(user_id)
+        info = user.get_info()
         if info is None:
             return {'message': "Resource not found"}, 404
         else:
@@ -161,6 +197,7 @@ class UserGetCurrID(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         return {'id': token_info['id']}
 
+
 # Api: Get user's all review
 @api.route('/<int:user_id>/reviews')
 class UserGetReviewsByID(Resource):
@@ -176,6 +213,7 @@ class UserGetReviewsByID(Resource):
         result = Review.get_user_reviews(user_id)
         return {'list': result}, 200
 
+
 # Api: Get user's all collections
 @api.route('/<int:user_id>/collections')
 class UserGetCollectionByID(Resource):
@@ -190,4 +228,22 @@ class UserGetCollectionByID(Resource):
             return {'message': "Resource not found"}, 404
         result = Collection.get_user_collection(user_id)
         return {'list': result}, 200
-    
+
+
+@api.route('/<int:user_id>/dashboard_tags')
+class UserDashboardTag(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's dashboard tag")
+    def get(self, user_id):
+        if not User.is_user_exists_by_id(user_id):
+            return {'message': 'Resource not found'}, 404
+        collection_num = Collection.get_num_collection(user_id)
+        readhistory_num = Collection.get_num_read_collection(user_id, Collection.get_readcollection_id(user_id))
+        myreviews_num = Review.get_user_num_review(user_id)
+        return {'collections_num': collection_num,
+                'ReadHistory_num': readhistory_num,
+                'MyReview_num': myreviews_num
+                }, 200

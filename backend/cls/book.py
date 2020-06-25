@@ -7,6 +7,23 @@ class Book:
     def __init__(self, id):
         self._id = id
 
+    # Get book's all detail by book_id
+    def get_info(self):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT id, title, authors, publisher, published_date, description," \
+                "ISBN13, categories, google_rating, google_ratings_count, book_cover_url, " \
+                "language FROM books WHERE id = \'{id}\' ".format(
+            id=self._id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            # if ID not existed
+            return None
+        else:
+            info = db_result.iloc[0]
+            return info
+
     # Search result of input content
     @staticmethod
     def book_search(input):
@@ -22,24 +39,6 @@ class Book:
         for index in ds:
             result.append(ds[index])
         return result
-
-    # Get book's all detail by book_id
-    @staticmethod
-    def get_info_by_id(id):
-        # SQL
-        conn = connect_sys_db()
-        query = "SELECT id, title, authors, publisher, published_date, description," \
-                "ISBN13, categories, google_rating, google_ratings_count, book_cover_url, " \
-                "language FROM books WHERE id = \'{id}\' ".format(
-            id=id
-        )
-        db_result = read_sql(sql=query, con=conn)
-        if db_result.empty:
-            # if ID not existed
-            return None
-        else:
-            info = db_result.iloc[0]
-            return info
 
     # Is book exist by book_id
     @staticmethod
