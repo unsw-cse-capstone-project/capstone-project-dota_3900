@@ -249,7 +249,7 @@ class CollectionReadHistoryApi(Resource):
 
 # Api: Get user's 10 most recently added books
 @api.route('/recently_added')
-class CollectionReadHistoryApi(Resource):
+class CollectionRecentlyAddedApi(Resource):
     @api.response(200, 'Success')
     @api.response(201, 'Invalid input')
     @api.response(401, 'Authenticate Failed')
