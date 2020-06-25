@@ -23,19 +23,24 @@
 			</li>
 		</ul>
 		<ul v-if="isMyDashboard()">
-			<li>
+			<li @click="openUpdateEmailForm()">
 				<img src="../../../public/icon/modify-email.png">
-				<span>Modify Email</span>
+				<span>Update Email</span>
 			</li>
 			<li>
 				<img src="../../../public/icon/modify-password.png">
 				<span>Update Password</span>
 			</li>
+			
+			<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
 		</ul>
+		
+		
 	</div>
 </template>
 
 <script>
+	import UpdateEmailForm from '../forms/UpdateEmailForm.vue'
 	export default {
 		name: 'DashboardNavi',
 		props: ['account', 'myAccount'],
@@ -43,9 +48,16 @@
 			return {
 			}
 		},
+		components:{
+			UpdateEmailForm
+		},
 		methods: {
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
+			},
+			openUpdateEmailForm(){
+				let updateEmailForm = document.getElementById('updateEmailForm')
+				updateEmailForm.style.display = 'block'
 			},
 		}
 	}

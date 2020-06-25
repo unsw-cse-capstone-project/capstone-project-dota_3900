@@ -65,12 +65,16 @@
 					Recently Added Books
 				</div>
 				<div class="books">
-					<div class="book">
-						<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-						<span><b>Attack on Titan - Volume 14</b></span>
-					</div>
+					<router-link v-for="recentBook in recentlyAddedBooks" :key="recentBook.book_id" :to="{name: 'Book', query: {id: recentBook.book_id}}">
+						<div class="book">
+							<span>{{timeStamp2datetime(recentBook.latest)}}</span>
+							<img :src="recentBook.book_cover_url">
+							<span><b>{{recentBook.title}}</b></span>
+						</div>
+					</router-link>
 				</div>
 			</div>
+
 		</div>
 		<NewCollectionForm></NewCollectionForm>
 		<ModifyCollectionNameForm :collectionID="collectionID2Modify" :collectionName="collectionName2Modify"></ModifyCollectionNameForm>
@@ -89,20 +93,20 @@
 				collections: [],
 				collectionName2Modify: '',
 				collectionID2Modify: '',
+				recentlyAddedBooks: [],
 			}
 		},
-		computed:{
-			sortedCollections: function(){
-				let collections = this.collections.sort(function(collection1, collection2){
-					if(collection2.name === 'Main collection'){
+		computed: {
+			sortedCollections: function() {
+				let collections = this.collections.sort(function(collection1, collection2) {
+					if (collection2.name === 'Main collection') {
 						return 1
-					}
-					else{
+					} else {
 						return collection2.creation_time - collection1.creation_time
 					}
 				})
-				collections.forEach(function(collection){
-					collection.books = collection.books.sort(function(book1, book2){
+				collections.forEach(function(collection) {
+					collection.books = collection.books.sort(function(book1, book2) {
 						return book2.collect_datetime - book1.collect_datetime
 					})
 				})
@@ -117,7 +121,7 @@
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
-			
+
 			getCollections() {
 				let userID = this.$route.query.id
 				this.axios({
@@ -148,7 +152,7 @@
 					}
 					this.collections = collections
 				}).catch((error) => {
-					alert(error.response.data.message)
+					console.log(error.response.data.message)
 				})
 			},
 			timeStamp2datetime(timeStamp) {
@@ -160,53 +164,71 @@
 				let hour = datetime.getHours()
 				let minute = datetime.getMinutes()
 				let second = datetime.getSeconds()
-				if(hour < 10) hour = '0' + hour
-				if(minute < 10) minute = '0' + minute
-				if(second < 10) second = '0' + second
+				if (hour < 10) hour = '0' + hour
+				if (minute < 10) minute = '0' + minute
+				if (second < 10) second = '0' + second
 				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
 			},
-			closeBookList(collectionID){
+			closeBookList(collectionID) {
 				let bookList = document.getElementById('collection' + collectionID)
 				if (bookList.style.height !== "auto") {
 					bookList.style.height = "auto";
 					bookList.style.top = "0rem";
-					bookList.style.opacity= "1";
+					bookList.style.opacity = "1";
 				} else {
 					bookList.style.height = "0rem";
 					bookList.style.top = "-1.25rem";
-					bookList.style.opacity= "0";
+					bookList.style.opacity = "0";
 				}
 			},
-			openNewCollectionForm(){
+			openNewCollectionForm() {
 				let newCollectionForm = document.getElementById('newCollectionForm')
 				newCollectionForm.style.display = 'block'
 			},
-			openModifyCollectionNameForm(collectionID, collectionName){
+			openModifyCollectionNameForm(collectionID, collectionName) {
 				let modifyCollectionNameForm = document.getElementById('modifyCollectionNameForm')
 				this.collectionID2Modify = collectionID
 				this.collectionName2Modify = collectionName
 				modifyCollectionNameForm.style.display = 'block'
 			},
-			deleteCollection(collectionID, collectionName){
-				if(confirm(`Are you sure to delete the collection: ${collectionName}\nYou cannot undo this operation.`)){
-					this.axios.delete(`${API_URL}/collection?collection_id=${collectionID}`, {headers: {
+			deleteCollection(collectionID, collectionName) {
+				if (confirm(`Are you sure to delete the collection: ${collectionName}\nYou cannot undo this operation.`)) {
+					this.axios.delete(`${API_URL}/collection?collection_id=${collectionID}`, {
+						headers: {
 							'Content-Type': 'application/json',
 							'AUTH-TOKEN': this.$store.state.token
-						}}).then((res) => {
+						}
+					}).then((res) => {
 						alert(res.data.message)
 						this.getCollections()
+						this.getRecentlyAddedBooks()
 					}).catch((error) => {
-						alert(error.response.data.message)
+						console.log(error.response.data.message)
 					})
 				}
+			},
+			getRecentlyAddedBooks() {
+				let userID = this.$route.query.id
+				this.axios({
+					method: 'GET',
+					url: `${API_URL}/collection/recently_added`,
+					params: {
+						user_id: userID,
+					},
+				}).then((res) => {
+					this.recentlyAddedBooks = res.data.books
+				}).catch((error) => {
+					console.log(error.response.data.message)
+				})
 			}
 		},
 		mounted: function() {
 			this.getCollections()
+			this.getRecentlyAddedBooks()
 		},
 	}
 </script>
 
 <style scoped>
-		@import url("../../assets/css/user_collection.css");
+	@import url("../../assets/css/user_collection.css");
 </style>

@@ -21,7 +21,6 @@
 </template>
 
 <script>
-	import {mapMutations} from 'vuex'
 	import API_URL from '../../serviceAPI.config.js'
 	export default {
 		name: 'ModifyCollectionNameForm',
@@ -32,7 +31,6 @@
 			}
 		},
 		methods:{
-			...mapMutations(['updateToken']),
 			closeForm(){
 				let newCollectionForm = document.getElementById('modifyCollectionNameForm')
 				newCollectionForm.style.display = 'none'

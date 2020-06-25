@@ -17,6 +17,12 @@
 	color: #222222;
 }
 
+.user-dashboard .top .title span{
+	font-size: 0.75rem;
+	color: palevioletred;
+	margin-left: 0.625rem;
+}
+
 .user-dashboard .content{
 	width: 100%;
 	display: flex;
@@ -40,6 +46,7 @@
 }
 
 .user-dashboard .content .left ul li{
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: left;
@@ -47,7 +54,7 @@
 	padding: 0.875rem 0;
 	border-top: 0.0625rem #e1e1e1 dotted;
 	cursor: pointer;
-	transition: padding-left 0.3s;
+	transition: padding-left,color 0.3s,0.3s;
 	color: #444444;
 	overflow: hidden;
 }
@@ -70,10 +77,9 @@
 }
 
 .user-dashboard .content .left ul li:hover{
-	background-color: #f4f4f4;
 	padding-left: 0.3125rem;
-	transition: padding-left 0.3s;
-	font-weight: bold;
+	transition: padding-left,color 0.3s,0.3s;
+	color: mediumvioletred;
 }
 
 .user-dashboard .content .left ul li:first-child{

@@ -37,13 +37,14 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	transition: border-color 0.3s;
+	transition: border-color,background-color 0.3s,0.3s;
 }
 
 .user-dashboard .content .right .collection-list .recently-added-list .books .book:hover{
 	border: 1px purple solid;
-	transition: border-color 0.3s;
+	transition: border-color,background-color 0.3s,0.3s;
 	cursor: pointer;
+	background-color: #FFF9FE;
 }
 
 .user-dashboard .content .right .collection-list .recently-added-list .books .book img{
@@ -59,6 +60,11 @@
 	text-align: center;
 	margin-bottom: 0.125rem;
 	color: #333333;
+}
+
+.user-dashboard .content .right .collection-list .recently-added-list .books .book span:first-child{
+	font-size: 0.6875rem;
+	color: grey;
 }
 
 
@@ -77,6 +83,13 @@
 	padding: 1.5rem;
 	margin-bottom: 0.9375rem;
 	background-color: white;
+}
+
+.user-dashboard .content .right .collection-list ul li:nth-child(1){
+background: #FFEFBA;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #FFFFFF, #FFF9FE);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #FFFFFF, #FFF9FE); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
 
 .user-dashboard .content .right .collection-list ul li .head{
@@ -265,6 +278,7 @@
 	font-size: 0.875rem;
 	color: steelblue;
 	cursor: pointer;
+	background-color: white;
 	transition: background-color 0.3s;
 	font-weight: bold;
 }

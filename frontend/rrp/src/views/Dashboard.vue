@@ -11,7 +11,7 @@
 			<div class="user-dashboard">
 				<div class="top">
 					<div class="title" v-if="isMyDashboard()">
-						My dashboard - {{ account.username }}
+						My dashboard - {{ account.username }} <span>{{account.email}}</span>
 					</div>
 					<div class="title" v-else>
 						User page - {{ account.username }}
@@ -39,7 +39,7 @@
 	import NotFound from '../components/common/NotFound.vue'
 	import Collection from '../components/dashboard/Collection.vue'
 	export default {
-		name: 'UserCollection',
+		name: 'Dashboard',
 		data: function() {
 			return {
 				myAccount: {
@@ -95,8 +95,7 @@
 					}).then((res) => {
 						this.myAccount = res.data
 					}).catch((error) => {
-						this.pageNotFound = true
-						return
+						this.$store.commit('clearToken')
 					})
 				}
 			},
