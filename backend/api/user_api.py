@@ -190,3 +190,4 @@ class UserGetCollectionByID(Resource):
             return {'message': "Resource not found"}, 404
         result = Collection.get_user_collection(user_id)
         return {'list': result}, 200
+    
