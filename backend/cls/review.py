@@ -231,3 +231,6 @@ class Review:
         )
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num)
+
+
+

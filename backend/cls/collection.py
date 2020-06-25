@@ -287,7 +287,23 @@ class Collection:
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num) - 1
 
-    # Get most ten recently added books
-    # @staticmethod
-    # def get_recently_added_book(user_id):
-    #     query = "SELECT count(*) as num FROM "
+    @staticmethod
+    def get_recent_added_books(user_id):
+        conn = connect_sys_db()
+        query = "SELECT book_id, max(collect_time) as latest FROM collections \
+        JOIN collects ON collections.id = collects.collection_id WHERE user_id = \'{user_id}\' \
+        AND name != 'read' GROUP BY book_id ORDER BY latest DESC".format(
+            user_id=user_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        print(db_result)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            book = Book(ds[index]['book_id'])
+            book_info = book.get_info()
+            ds[index]['title'] = book_info.title
+            ds[index]['book_cover_url'] = book_info.book_cover_url
+            result.append(ds[index])
+        return result
