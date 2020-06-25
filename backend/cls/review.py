@@ -9,10 +9,12 @@ from lib.sql_linker import connect_sys_db, mysql
 
 
 class Review:
+
     # Post new review
     @staticmethod
     def new_review(user_id, book_id, rating, content):
-        username = User.get_username_by_id(user_id)
+        user = User(user_id)
+        username = user.get_username()
         # SQL
         conn = connect_sys_db()
         query = "SELECT * FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\')".format(

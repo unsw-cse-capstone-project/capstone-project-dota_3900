@@ -59,7 +59,8 @@ class BookGetDetailByID(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get book's detail by id")
     def get(self, book_id):
-        detail = Book.get_info_by_id(book_id)
+        book = Book(book_id)
+        detail = book.get_info()
         if detail is None:
             return {'message': 'Resource not found'}, 404
         else:
