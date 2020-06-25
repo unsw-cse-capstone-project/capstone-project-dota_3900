@@ -44,7 +44,6 @@ header {
 	margin-bottom: 0.625rem;
 	min-width: 62.5rem;
 	position: relative;
-	z-index: 10;
 }
 
 header .left {
