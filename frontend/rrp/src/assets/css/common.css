@@ -44,7 +44,6 @@ header {
 	margin-bottom: 0.625rem;
 	min-width: 62.5rem;
 	position: relative;
-	z-index: 10;
 }
 
 header .left {
@@ -188,6 +187,14 @@ footer span {
 	background-color: white;
 	border-color: green;
 	color: green;
+	transition: color,background-color 0.2s,0.2s;
+}
+
+.btn-style-white:hover {
+	background-color: green;
+	border-color: green;
+	color: white;
+	transition: color,background-color 0.2s,0.2s;
 }
 
 .btn-style-orange {

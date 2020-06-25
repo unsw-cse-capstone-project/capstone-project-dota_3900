@@ -38,9 +38,30 @@
 }
 
 .book-bar .right ul li{
+	position: relative;
 	margin-top: 15px;
 	list-style: none;
 	max-width: 43.75rem;
+	max-height: 8rem;
+	overflow: hidden;
+}
+
+.book-bar .right ul li .more{
+	position: absolute;
+	top: 6.75rem;
+	background-color: white;
+	text-align: right;
+	color: steelblue;
+	font-size: 0.875rem;
+	padding-bottom: 0.125rem;
+	margin-top: 0.25rem;
+	width: 100%;
+	
+}
+
+.book-bar .right ul li .more span:hover{
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .book-bar .right ul li span{

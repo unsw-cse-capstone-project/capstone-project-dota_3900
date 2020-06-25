@@ -95,6 +95,17 @@
 	font-weight: bold;
 }
 
+.user-dashboard .content .right .collection-list ul li .head .info .collection-title{
+	cursor: pointer;
+	transition: color 0.2s;
+}
+
+.user-dashboard .content .right .collection-list ul li .head .info .collection-title:hover{
+	color: purple;
+	transition: color 0.2s;
+}
+
+
 .user-dashboard .content .right .collection-list ul li .head .info .status{
 	font-size: 0.875rem;
 	margin-top: 0.625rem;
@@ -169,6 +180,7 @@
 	justify-content: flex-start;
 	align-items: flex-start;
 	margin-left: 1.25rem;
+	width: 100%;
 }
 
 .user-dashboard .content .right .book .info .book-detail span{

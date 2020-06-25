@@ -65,8 +65,8 @@
 }
 
 .modal .title span {
-	color: grey;
-	font-size: 0.7em;
+	color: darkgrey;
+	font-size: 0.75rem;
 }
 
 .modal select {

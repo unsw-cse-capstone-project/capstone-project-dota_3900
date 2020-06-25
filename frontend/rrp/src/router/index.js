@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import BookDetail from '../views/BookDetail.vue'
 import NotFoundPage from '../views/404.vue'
-import UserCollection from '../views/UserCollection.vue'
+import Dashboard from '../views/Dashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -22,7 +22,7 @@ Vue.use(VueRouter)
 		path: '/user',
 		alias: '/user/collection',
 		name: 'UserCollection',
-		component: UserCollection
+		component: Dashboard
 	},
 	{
 		path: '*',
