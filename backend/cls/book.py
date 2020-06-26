@@ -53,3 +53,18 @@ class Book:
             return False
         else:
             return True
+
+    # Is book exist in certain collection
+    @staticmethod
+    def is_book_exists_in_collection(collection_id, book_id):
+        # SQL
+        conn = connect_sys_db()
+        query = 'SELECT * FROM collects Where (book_id = \'{book_id}\' AND collection_id = \'{collection_id}\')'.format(
+            book_id = book_id,
+            collection_id = collection_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True

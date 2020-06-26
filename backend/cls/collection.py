@@ -108,6 +108,19 @@ class Collection:
             cursor.execute(query)
         return True
 
+    # Move book to another collection
+    def move_book_to_another_collection(self, new_collection_id, book_id):
+        # SQL
+        conn = connect_sys_db()
+        query = "UPDATE collects SET collection_id = \'{new_collection_id}\' WHERE (book_id = \'{book_id}\' AND collection_id = \'{old_collection_id}\')".format(
+            new_collection_id = new_collection_id,
+            old_collection_id = self._id,
+            book_id = book_id
+        )
+        with mysql(conn) as cursor:
+            cursor.execute(query)
+
+
     # Is collection existed by user_id and collection_id
     @staticmethod
     def is_collection_exists_by_both_id(user_id, collection_id):

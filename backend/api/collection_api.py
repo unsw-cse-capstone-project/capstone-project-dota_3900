@@ -32,6 +32,11 @@ collection_add_book_parser.add_argument('book_id', type=int, required=True)
 collection_user_id_parser = reqparse.RequestParser()
 collection_user_id_parser.add_argument('user_id', type=int, required=True)
 
+collection_move_parser = reqparse.RequestParser()
+collection_move_parser.add_argument('new_collection_id', type = int, required = True)
+collection_move_parser.add_argument('old_collection_id', type = int, required = True)
+collection_move_parser.add_argument('book_id', type = int, required = True)
+
 
 # Api: change to Collection
 @api.route('')
@@ -223,6 +228,40 @@ class CollectionBooksApi(Resource):
             return {'message': 'Delete book successfully'}, 200
         else:
             return {'message': 'Resource not found'}, 404
+
+    @api.response(200, 'Success')
+    @api.response(201, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Move book to another collection")
+    @api.expect(collection_move_parser, validate=True)
+    @requires_login
+    def put(self):
+        # Get collection_id and book_id from parser
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        user_id = token_info['id']
+        # Get args from parser
+        args = collection_move_parser.parse_args()
+        new_collection_id = args.get('new_collection_id')
+        old_collection_id = args.get('old_collection_id')
+        book_id = args.get('book_id')
+        if not (Collection.is_collection_exists_by_both_id(user_id, new_collection_id) and Collection.is_collection_exists_by_both_id(user_id, old_collection_id)):
+            return {'message': 'Resource not found'}, 404
+        if not Book.is_book_exists_by_id(book_id):
+            return {'message': 'Resource not found'}, 404
+        if not Book.is_book_exists_in_collection(old_collection_id, book_id):
+            return {'message': 'Resource not found'}, 404
+        if Book.is_book_exists_in_collection(new_collection_id, book_id):
+            return {'message': 'This book already existed in the collection you want to move to'}, 201
+        if old_collection_id == Collection.get_readcollection_id(user_id) or new_collection_id == Collection.get_readcollection_id(user_id):
+            return {'message': 'You cannot move in or out books in Read collection'}, 201
+        try:
+            collection = Collection(old_collection_id)
+            collection.move_book_to_another_collection(new_collection_id, book_id)
+            return {'message': 'Move book to another collection successfully'}, 200
+        except pymysql.Error as e:
+            return {'message': e.args[1]}, 500
 
 
 # Api: Get user's read history
