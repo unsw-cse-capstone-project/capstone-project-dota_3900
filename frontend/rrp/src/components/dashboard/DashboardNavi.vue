@@ -4,22 +4,22 @@
 			<li :class="{selected: $route.name === 'UserCollection'}">
 				<img src="../../../public/icon/Collection.png">
 				<span>Collections</span>
-				<div>2</div>
+				<div>{{tags.collections_num}}</div>
 			</li>
 			<li>
 				<img src="../../../public/icon/goal.png">
 				<span>Monthly Goal</span>
-				<div>1</div>
+				<div>-</div>
 			</li>
 			<li>
 				<img src="../../../public/icon/already-read.png">
 				<span>Read History</span>
-				<div>11</div>
+				<div>{{tags.ReadHistory_num}}</div>
 			</li>
 			<li>
 				<img src="../../../public/icon/my-reviews.png">
 				<span>My Reviews</span>
-				<div>2</div>
+				<div>{{tags.MyReview_num}}</div>
 			</li>
 		</ul>
 		<ul v-if="isMyDashboard()">
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+	import API_URL from '../../serviceAPI.config.js'
 	import UpdateEmailForm from '../forms/UpdateEmailForm.vue'
 	import UpdatePasswordForm from '../forms/UpdatePasswordForm.vue'
 	export default {
@@ -48,6 +49,11 @@
 		props: ['account', 'myAccount'],
 		data: function() {
 			return {
+				tags: {
+				  collections_num: 0,
+				  ReadHistory_num: 0,
+				  MyReview_num: 0
+				}
 			}
 		},
 		components:{
@@ -66,6 +72,18 @@
 				let updateEmailForm = document.getElementById('updatePasswordForm')
 				updateEmailForm.style.display = 'block'
 			},
+			getTags(){
+				let userID = this.$route.query.id
+				this.axios.get(`${API_URL}/user/${userID}/dashboard_tags`).then((res) => {
+					this.tags = res.data
+				}).catch((error) => {
+					console.log(error.response.data.message)
+					this.clearForm()
+				})
+			}
+		},
+		mounted: function(){
+			this.getTags()
 		}
 	}
 </script>

@@ -51,7 +51,7 @@
 						</div>
 					</div>
 					<div class="operation-bar">
-						<button class="btn-default btn-style-orange">Add to collection</button>
+						<button class="btn-default btn-style-orange" v-if="$store.state.token" @click="openAddBookForm(book.book_id, book.title)">Add to collection</button>
 						<button class="btn-default btn-style-green">Finished reading</button>
 						<button class="btn-default btn-style-wheat">Write a review</button>
 					</div>
@@ -128,6 +128,8 @@
 				</ul>
 			</div>
 		</main>
+		
+		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
 
 		<Footer></Footer>
 	</div>
@@ -140,10 +142,17 @@
 	import NotFound from '../components/common/NotFound.vue'
 	import StarBar from '../components/common/StarBar.vue'
 	import Review from '../components/book/Review.vue'
+	import AddBookForm from '../components/forms/AddBookForm.vue'
 	export default {
 		name: 'BookDetail',
 		data: function() {
 			return {
+				myAccount: {
+					user_id: '',
+					username: '',
+					email: '',
+					admin: ''
+				},
 				book: {
 					"book_id": '',
 					"title": '',
@@ -162,6 +171,9 @@
 					"review_preview": []
 				},
 				pageNotFound: false,
+				
+				toAddBookID: '',
+				toAddBookName: '',
 			}
 		},
 		components: {
@@ -169,7 +181,8 @@
 			Footer,
 			NotFound,
 			StarBar,
-			Review
+			Review,
+			AddBookForm
 		},
 		methods: {
 			getBookDetails(){
@@ -199,9 +212,33 @@
 					desc.style.overflow = 'none'
 					more.style.display = 'none'
 				}
-			}
+			},
+			openAddBookForm(bookID, bookName){
+				this.toAddBookID = bookID
+				this.toAddBookName = bookName
+				let addBookForm = document.getElementById('addBookForm')
+				addBookForm.style.display = 'block'
+			},
+			getAccountsInfo() {
+				// get my info (if exists)
+				if (this.$store.state.token) {
+					this.axios({
+						method: 'get',
+						url: `${API_URL}/user/detail`,
+						headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						}
+					}).then((res) => {
+						this.myAccount = res.data
+					}).catch((error) => {
+						this.$store.commit('clearToken')
+					})
+				}
+			},
 		},
 		created: function() {
+			this.getAccountsInfo()
 			this.getBookDetails()
 		},
 	}

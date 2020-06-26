@@ -20,7 +20,6 @@
 				</div>
 				<div class="content">
 					<DashboardNavi :account="account" :myAccount="myAccount"></DashboardNavi>
-					
 					<Collection v-if="$route.name === 'UserCollection'" ref="collection" :account="account" :myAccount="myAccount"></Collection>
 				</div>
 			</div>
@@ -79,7 +78,7 @@
 				}).then((res) => {
 					this.account = res.data
 				}).catch((error) => {
-					alert(error.response.data.message)
+					console.log(error.response.data.message)
 					this.pageNotFound = true
 					return
 				})

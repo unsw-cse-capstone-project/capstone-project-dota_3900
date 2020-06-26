@@ -7,8 +7,8 @@
 						<div class="info">
 							<span class="collection-title" @click="closeBookList(collection.id)">{{ collection.name }}</span>
 							<div class="status">
-								<span>Books: {{ collection.book_num }}</span>
-								<span>Finished: {{ collection.finished_num }}</span>
+								<span>Books: {{ collection.books.length }}</span>
+								<span>Finished: {{ countReadBooks(collection.books) }}</span>
 								<span v-if="collection.name !== 'Main collection'">Creation time: {{ timeStamp2datetime(collection.creation_time) }}</span>
 							</div>
 						</div>
@@ -33,9 +33,9 @@
 											<span><b>{{book.title}}</b></span>
 										</router-link>
 										<div class="operation">
-											<img src="../../../public/icon/plus.png" title="Add to my collection" v-if="!isMyDashboard()">
-											<img src="../../../public/icon/minus.png" title="Delete from this collection" v-if="isMyDashboard()">
-											<img src="../../../public/icon/move.png" title="Move to another collection" v-if="isMyDashboard()">
+											<img src="../../../public/icon/plus.png" title="Add to my collection" v-if="!isMyDashboard() && $store.state.token" @click="openCollectionAddBookForm(book.book_id, book.title)">
+											<img src="../../../public/icon/minus.png" title="Delete from this collection" v-if="isMyDashboard()" @click="removeBookFromCollection(collection.id, collection.name, book.book_id, book.title)" >
+											<img src="../../../public/icon/move.png" title="Move to another collection" v-if="isMyDashboard()" @click="openCollectionMoveBookForm(collection.id, book.book_id, book.title)">
 											<button class="btn-default btn-style-green" v-if="isMyDashboard() && book.finish_datetime !== undefined">Finished</button>
 											<button class="btn-default btn-style-wheat" v-if="isMyDashboard() && book.finish_datetime === undefined">Unfinished</button>
 										</div>
@@ -78,6 +78,8 @@
 		</div>
 		<NewCollectionForm></NewCollectionForm>
 		<ModifyCollectionNameForm :collectionID="collectionID2Modify" :collectionName="collectionName2Modify"></ModifyCollectionNameForm>
+		<CollectionMoveBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toMoveBookID" :toMoveBookName="toMoveBookName" :curCollectionID="curCollectionID"></CollectionMoveBookForm>
+		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
 	</div>
 </template>
 
@@ -85,6 +87,9 @@
 	import API_URL from '../../serviceAPI.config.js'
 	import NewCollectionForm from '../../components/forms/NewCollectionForm.vue'
 	import ModifyCollectionNameForm from '../../components/forms/ModifyCollectionNameForm.vue'
+	import CollectionMoveBookForm from '../forms/CollectionMoveBookForm.vue'
+	import AddBookForm from '../forms/AddBookForm.vue'
+	
 	export default {
 		name: 'UserCollection',
 		props: ['account', 'myAccount'],
@@ -94,17 +99,18 @@
 				collectionName2Modify: '',
 				collectionID2Modify: '',
 				recentlyAddedBooks: [],
+				
+				toMoveBookID: '',
+				toMoveBookName: '',
+				curCollectionID: '',
+				
+				toAddBookID: '',
+				toAddBookName: '',
 			}
 		},
 		computed: {
 			sortedCollections: function() {
-				let collections = this.collections.sort(function(collection1, collection2) {
-					if (collection2.name === 'Main collection') {
-						return 1
-					} else {
-						return collection2.creation_time - collection1.creation_time
-					}
-				})
+				let collections = this.collections
 				collections.forEach(function(collection) {
 					collection.books = collection.books.sort(function(book1, book2) {
 						return book2.collect_datetime - book1.collect_datetime
@@ -116,8 +122,19 @@
 		components: {
 			NewCollectionForm,
 			ModifyCollectionNameForm,
+			CollectionMoveBookForm,
+			AddBookForm,
 		},
 		methods: {
+			countReadBooks(books){
+				let count = 0
+				for(let i = 0; i < books.length; i++){
+					if(books[i].finish_datetime){
+						count++
+					}
+				}
+				return count
+			},
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
@@ -200,11 +217,13 @@
 						}
 					}).then((res) => {
 						alert(res.data.message)
-						this.getCollections()
-						this.getRecentlyAddedBooks()
+						location.reload()
 					}).catch((error) => {
 						console.log(error.response.data.message)
+						this.getCollections()
+						this.getRecentlyAddedBooks()
 					})
+
 				}
 			},
 			getRecentlyAddedBooks() {
@@ -220,6 +239,41 @@
 				}).catch((error) => {
 					console.log(error.response.data.message)
 				})
+			},
+			removeBookFromCollection(collectionID, CollectionName, bookID, bookName){
+				if(confirm(`Are you sure to remove \'${bookName}\' from \'${CollectionName}\' collection?`)){
+					this.axios({
+						method: 'DELETE',
+						url: `${API_URL}/collection/books`,
+						headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						},
+						params: {
+							collection_id: collectionID,
+							book_id: bookID,
+						},
+					}).then((res) => {
+						alert(res.data.message)
+					}).catch((error) => {
+						console.log(error.response.data.message)
+					})
+					this.getCollections()
+					this.getRecentlyAddedBooks()
+				}
+			},
+			openCollectionMoveBookForm(curCollectionID, bookID, bookName){
+				this.toMoveBookID = bookID
+				this.toMoveBookName = bookName
+				this.curCollectionID = curCollectionID
+				let collectionMoveBookForm = document.getElementById('collectionMoveBookForm')
+				collectionMoveBookForm.style.display = 'block'
+			},
+			openCollectionAddBookForm(bookID, bookName){
+				this.toAddBookID = bookID
+				this.toAddBookName = bookName
+				let collectionAddBookForm = document.getElementById('addBookForm')
+				collectionAddBookForm.style.display = 'block'
 			}
 		},
 		mounted: function() {

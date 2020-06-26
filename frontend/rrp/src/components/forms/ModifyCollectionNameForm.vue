@@ -11,6 +11,10 @@
 					<input type="text" placeholder="Enter new collection name" v-model="newName" required>
 				</div>
 			</div>
+			<div class="row">
+				<span>Confirm Password:</span>
+				<input type="password" placeholder="re-enter password">
+			</div>
 
 			<div class="container2">
 				<button type="submit" class="btn-green" @click.prevent="submit()">Submit</button>
@@ -26,21 +30,21 @@
 		name: 'ModifyCollectionNameForm',
 		props: ['collectionID', 'collectionName'],
 		data: function() {
-			return{
+			return {
 				newName: ''
 			}
 		},
-		methods:{
-			closeForm(){
+		methods: {
+			closeForm() {
 				let newCollectionForm = document.getElementById('modifyCollectionNameForm')
 				newCollectionForm.style.display = 'none'
 				this.clearForm()
 			},
-			clearForm(){
+			clearForm() {
 				this.newName = ''
 			},
-			submit(){
-				if(this.newName === ''){
+			submit() {
+				if (this.newName === '') {
 					alert('New collection name cannot be an empty string.')
 				}
 				this.axios({
@@ -58,7 +62,7 @@
 					alert(res.data.message)
 					location.reload()
 				}).catch((error) => {
-					alert(error.response.data.message)
+					console.log(error.response.data.message)
 					this.clearForm()
 				})
 			}
