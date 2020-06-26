@@ -11,10 +11,6 @@
 					<input type="text" placeholder="Enter new collection name" v-model="newName" required>
 				</div>
 			</div>
-			<div class="row">
-				<span>Confirm Password:</span>
-				<input type="password" placeholder="re-enter password">
-			</div>
 
 			<div class="container2">
 				<button type="submit" class="btn-green" @click.prevent="submit()">Submit</button>
