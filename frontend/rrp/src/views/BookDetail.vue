@@ -161,7 +161,7 @@
 					"num_rated": '',
 					"review_preview": []
 				},
-				pageNotFound: false
+				pageNotFound: false,
 			}
 		},
 		components: {

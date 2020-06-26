@@ -5,7 +5,6 @@
 </template>
 
 <style>
-@import url("assets/css/common.css"); 
 	
 #app {
   font-family: Helvetica, Arial, sans-serif;

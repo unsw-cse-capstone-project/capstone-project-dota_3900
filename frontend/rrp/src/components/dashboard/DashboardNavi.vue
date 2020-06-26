@@ -27,12 +27,13 @@
 				<img src="../../../public/icon/modify-email.png">
 				<span>Update Email</span>
 			</li>
-			<li>
+			<li @click="openUpdatePasswordForm()">
 				<img src="../../../public/icon/modify-password.png">
 				<span>Update Password</span>
 			</li>
 			
 			<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
+			<UpdatePasswordForm></UpdatePasswordForm>
 		</ul>
 		
 		
@@ -41,6 +42,7 @@
 
 <script>
 	import UpdateEmailForm from '../forms/UpdateEmailForm.vue'
+	import UpdatePasswordForm from '../forms/UpdatePasswordForm.vue'
 	export default {
 		name: 'DashboardNavi',
 		props: ['account', 'myAccount'],
@@ -49,7 +51,8 @@
 			}
 		},
 		components:{
-			UpdateEmailForm
+			UpdateEmailForm,
+			UpdatePasswordForm,
 		},
 		methods: {
 			isMyDashboard() {
@@ -57,6 +60,10 @@
 			},
 			openUpdateEmailForm(){
 				let updateEmailForm = document.getElementById('updateEmailForm')
+				updateEmailForm.style.display = 'block'
+			},
+			openUpdatePasswordForm(){
+				let updateEmailForm = document.getElementById('updatePasswordForm')
 				updateEmailForm.style.display = 'block'
 			},
 		}
