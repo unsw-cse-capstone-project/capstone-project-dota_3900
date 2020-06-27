@@ -100,6 +100,7 @@ class Review:
             #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             book = Book(ds[index]['book_id'])
             ds[index]['book_title'] = book.get_info().title
+            ds[index]['book_cover_url'] = book.get_info().book_cover_url
             result.append(ds[index])
         return result
 
