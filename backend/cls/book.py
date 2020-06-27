@@ -33,6 +33,8 @@ class Book:
             input=input
         )
         db_result = read_sql(sql=query, con=conn)
+        print(db_result)
+        print(query)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
@@ -68,3 +70,56 @@ class Book:
             return False
         else:
             return True
+
+    # Get total number of search result page
+    @staticmethod
+    def get_book_search_page_num(content, result_each_page):
+        results = Book.book_search(content)
+        print(len(results))
+        num_results = len(results)
+        # If total number of review < number of review on each page
+        if num_results <= result_each_page:
+            num_page = 1
+            num_last_page = num_results
+        else:
+            num_last_page = num_results % result_each_page
+            if num_last_page != 0:
+                num_page = (num_results - num_last_page) / result_each_page + 1
+            else:
+                num_page = num_results / result_each_page
+        return num_page, num_last_page
+
+    # Get review list on certain review page
+    @staticmethod
+    def get_book_search_page(content, result_each_page, curr_page):
+        page_num, last_page_num = Book.get_book_search_page_num(content, result_each_page)
+        reviews = Book.book_search(content)
+        reviews_num = len(reviews)
+        if page_num == curr_page:
+            if last_page_num != 0:
+                index_from = reviews_num - last_page_num + 1
+                index_to = reviews_num
+            else:
+                index_from = reviews_num - result_each_page + 1
+                index_to = reviews_num
+        else:
+            index_from = result_each_page * (curr_page - 1) + 1
+            index_to = result_each_page * (curr_page)
+        return Book.get_book_search_from_to(content, index_from - 1, index_to - 1)
+
+    # Get search result from index_from to index_to
+    @staticmethod
+    def get_book_search_from_to(content, index_from, index_to):
+        results = Book.book_search(content)
+        # If there is no result
+        if len(results) == 0:
+            return []
+        # If index_to is over range
+        if len(results) < (index_to + 1):
+            index_to = len(results) - 1
+        result = []
+        index = index_from
+        while index <= index_to:
+            result.append(results[index])
+            index = index + 1
+        return result

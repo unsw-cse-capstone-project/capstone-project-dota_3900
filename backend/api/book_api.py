@@ -18,6 +18,7 @@ review_content_model = api.model('review_content_model', {
 
 search_parser = reqparse.RequestParser()
 search_parser.add_argument('search_content', required=True)
+search_parser.add_argument('page', type=int, required=True)
 
 review_parser = reqparse.RequestParser()
 review_parser.add_argument('book_id', type=int)
@@ -35,19 +36,43 @@ read_parser = reqparse.RequestParser()
 read_parser.add_argument('book_id', type=int, required=True)
 
 
-# Api: Get search result
-@api.route('/search_result')
-class BookSearch(Resource):
+# # Api: Get search result
+# @api.route('/search_result')
+# class BookSearch(Resource):
+#     @api.response(200, 'Success')
+#     @api.response(401, 'Authenticate Failed')
+#     @api.response(500, 'Internal server error')
+#     @api.doc(description="Search books")
+#     @api.expect(search_parser, validate=True)
+#     def get(self):
+#         # Get search_content by parser
+#         args = search_parser.parse_args()
+#         result = Book.book_search(args.get('search_content'))
+#         return {'list': result}, 200
+# Api: Get info of review_page
+
+@api.route('/search_page')
+class SearchPage(Resource):
     @api.response(200, 'Success')
     @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Search books")
+    @api.doc(description="Get search result page")
     @api.expect(search_parser, validate=True)
     def get(self):
-        # Get search_content by parser
+        # Get page and book_id from parser
         args = search_parser.parse_args()
-        result = Book.book_search(args.get('search_content'))
-        return {'list': result}, 200
+        page = args.get('page')
+        content = args.get('search_content')
+        page_num, last_page_num = Book.get_book_search_page_num(content, 15)
+        # Index out of range
+        if page <= 0 or page > page_num:
+            return {'message': 'Resource not found'}, 404
+        result = Book.get_book_search_page(content, 15, page)
+        return {'total_page_num': page_num,
+                'current_page': page,
+                'reviews': result
+                }, 200
 
 
 # Api: Get book's detail
@@ -98,11 +123,11 @@ class ReviewPage(Resource):
         args = review_page_parser.parse_args()
         page = args.get('page')
         book_id = args.get('book_id')
-        page_num, last_page_num = Review.get_book_review_page_num(book_id, 10)
+        page_num, last_page_num = Review.get_book_review_page_num(book_id, 15)
         # Index out of range
         if (page <= 0 or page > page_num):
             return {'message': 'Resource not found'}, 404
-        result = Review.get_book_review_page(book_id, 5, page)
+        result = Review.get_book_review_page(book_id, 15, page)
         return {'total_page_num': page_num,
                 'current_page': page,
                 'reviews': result

@@ -100,6 +100,7 @@ class Review:
             #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             book = Book(ds[index]['book_id'])
             ds[index]['book_title'] = book.get_info().title
+            ds[index]['book_cover_url'] = book.get_info().book_cover_url
             result.append(ds[index])
         return result
 
@@ -209,7 +210,10 @@ class Review:
             num_last_page = num_reviews
         else:
             num_last_page = num_reviews % review_each_page
-            num_page = (num_reviews - num_last_page) / review_each_page + 1
+            if num_last_page != 0:
+                num_page = (num_reviews - num_last_page) / review_each_page + 1
+            else:
+                num_page = num_reviews / review_each_page
         return num_page, num_last_page
 
     # Get review list on certain review page
@@ -219,8 +223,12 @@ class Review:
         reviews = Review.get_book_review(book_id)
         reviews_num = len(reviews)
         if page_num == curr_page:
-            index_from = reviews_num - last_page_num + 1
-            index_to = reviews_num
+            if last_page_num != 0:
+                index_from = reviews_num - last_page_num + 1
+                index_to = reviews_num
+            else:
+                index_from = reviews_num - review_each_page + 1
+                index_to = reviews_num
         else:
             index_from = review_each_page * (curr_page - 1) + 1
             index_to = review_each_page * (curr_page)
