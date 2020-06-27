@@ -188,6 +188,10 @@ class ReviewApi(Resource):
         book_id = info['book_id']
         rating = info['rating']
         content = info['content']
+        if not Book.is_book_exists_by_id(book_id):
+            return {'message': 'Resource not found'}, 404
+        if not Collection.is_book_read(user_id, book_id):
+            return {'message': 'You can only review and rate after you read the book'}, 201
         # input cannot be empty string
         if book_id is None or rating is None or content == "":
             return {'message': 'Rating or review content cannot be empty'}, 201
@@ -239,9 +243,12 @@ class ReviewApi(Resource):
         args = delete_parser.parse_args()
         book_id = args.get('book_id')
         user_id = args.get('user_id')
+        if not Book.is_book_exists_by_id(book_id):
+            return {'message': 'Resource not found'}, 404
+        if not Review.is_review_exist_by_both_id(user_id, book_id):
+            return {'message': 'Resource not found'}, 404
         try:
-            if not Review.delete_review(user_id, book_id):
-                return {'message': 'Delete review failed, this review does not exist'}, 402
+            Review.delete_review(user_id, book_id)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Delete review successfully'}, 200
@@ -298,6 +305,8 @@ class BookUnreadApi(Resource):
             return {'message': 'This book is not been marked as read yet'}
         try:
             Collection.mark_as_unread(user_id,book_id)
+            if Review.is_review_exist_by_both_id(user_id, book_id):
+                Review.delete_review(user_id, book_id)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Mark successfully'}, 200
@@ -322,7 +331,7 @@ class BookReadReviewCheck(Resource):
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
         read_flag = Collection.is_book_read(user_id, book_id)
-        review_flag = Review.is_book_review(user_id, book_id)
+        review_flag = Review.is_review_exist_by_both_id(user_id, book_id)
         return {'read': read_flag,
                 'review': review_flag}, 200
 

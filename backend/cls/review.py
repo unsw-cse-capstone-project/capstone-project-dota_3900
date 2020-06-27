@@ -67,10 +67,10 @@ class Review:
     # Delete existed review
     @staticmethod
     def delete_review(user_id, book_id):
-        review_list = Review.get_book_user_review(user_id, book_id)
-        # If review does not exist
-        if (review_list == []):
-            return False
+        # review_list = Review.get_book_user_review(user_id, book_id)
+        # # If review does not exist
+        # if (review_list == []):
+        #     return False
         # SQL
         conn = connect_sys_db()
         query = 'DELETE FROM review_rate WHERE book_id = \'{book_id}\' AND user_id = \'{user_id}\'' \
@@ -80,7 +80,6 @@ class Review:
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
-        return True
 
     # Get certain user's all review
     @staticmethod
@@ -142,6 +141,21 @@ class Review:
             #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
+
+    # Get certain book's review posted by certain user
+    @staticmethod
+    def is_review_exist_by_both_id(user_id, book_id):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT user_id, username, book_id, rating, review_content, review_time FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\') ORDER BY review_time DESC".format(
+            user_id=user_id,
+            book_id=book_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True
 
     # Get reivew from index_from to index_to
     @staticmethod
@@ -243,18 +257,7 @@ class Review:
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num)
 
-    @staticmethod
-    def is_book_review(user_id, book_id):
-        conn = connect_sys_db()
-        query = "SELECT * FROM review_rate WHERE (book_id = book_id AND user_id = user_id)".format(
-            book_id = book_id,
-            user_id = user_id
-        )
-        db_result = read_sql(sql=query, con=conn)
-        if db_result.empty:
-            return False
-        else:
-            return True
+
 
 
 
