@@ -36,8 +36,8 @@
 											<img src="../../../public/icon/plus.png" title="Add to my collection" v-if="!isMyDashboard() && $store.state.token" @click="openCollectionAddBookForm(book.book_id, book.title)">
 											<img src="../../../public/icon/minus.png" title="Delete from this collection" v-if="isMyDashboard()" @click="removeBookFromCollection(collection.id, collection.name, book.book_id, book.title)" >
 											<img src="../../../public/icon/move.png" title="Move to another collection" v-if="isMyDashboard()" @click="openCollectionMoveBookForm(collection.id, book.book_id, book.title)">
-											<button class="btn-default btn-style-green" v-if="isMyDashboard() && book.finish_datetime !== undefined">Finished</button>
-											<button class="btn-default btn-style-wheat" v-if="isMyDashboard() && book.finish_datetime === undefined">Unfinished</button>
+											<button class="btn-default btn-style-green" style="cursor: default;" v-if="isMyDashboard() && book.finish_datetime !== undefined">Finished</button>
+											<button class="btn-default btn-style-wheat" style="cursor: default;" v-if="isMyDashboard() && book.finish_datetime === undefined">Unfinished</button>
 										</div>
 									</div>
 									<span><b>Author: </b>{{book.authors}}</span>
@@ -126,6 +126,42 @@
 			AddBookForm,
 		},
 		methods: {
+			markAsRead() {
+				this.axios({
+					method: 'post',
+					url: `${API_URL}/book/read`,
+					headers: {
+						'Content-Type': 'application/json',
+						'AUTH-TOKEN': this.$store.state.token
+					},
+					params: {
+						book_id: this.$route.query.id
+					}
+				}).then((res) => {
+					this.getCollections()
+				}).catch((error) => {
+					console.log(error.response.data.message)
+				})
+			},
+			markAsUnread() {
+				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
+					this.axios({
+						method: 'post',
+						url: `${API_URL}/book/unread`,
+						headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						},
+						params: {
+							book_id: this.$route.query.id
+						}
+					}).then((res) => {
+						this.getCollections()
+					}).catch((error) => {
+						console.log(error.response.data.message)
+					})
+				}
+			},
 			countReadBooks(books){
 				let count = 0
 				for(let i = 0; i < books.length; i++){
@@ -138,7 +174,6 @@
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
-
 			getCollections() {
 				let userID = this.$route.query.id
 				this.axios({

@@ -10,7 +10,7 @@
 		<main v-else>
 			<div class="book-bar animation-fadein-top delay_02s">
 				<div class="left">
-					<img :src="book.book_cover_url" >
+					<img :src="book.book_cover_url">
 				</div>
 				<div class="right">
 					<h6>ISBN: {{ book.ISBN13 }}</h6>
@@ -47,13 +47,16 @@
 						<div class="star-bar">
 							<StarBar :rating="book.avg_rating"></StarBar>
 							<span><b>{{ book.avg_rating }}</b> ({{ book.num_rated }} votes)</span>
-							<span style="font-size: 0.75rem; color:#888888">Rating from google books: {{book.google_rating}} ({{book.google_ratings_count}} votes)</span>
+							<span style="font-size: 0.75rem; color:#888888">Rating from google books: {{book.google_rating}} ({{book.google_ratings_count}}
+								votes)</span>
 						</div>
 					</div>
-					<div class="operation-bar">
-						<button class="btn-default btn-style-orange" v-if="$store.state.token" @click="openAddBookForm(book.book_id, book.title)">Add to collection</button>
-						<button class="btn-default btn-style-green">Finished reading</button>
-						<button class="btn-default btn-style-wheat">Write a review</button>
+					<div class="operation-bar" v-if="$store.state.token">
+						<button class="btn-default btn-style-orange" @click="openAddBookForm(book.book_id, book.title)">Add to collection</button>
+						<button class="btn-default btn-style-softgreen" v-if="!bookStatus.read" @click="markAsRead()">Mark as read</button>
+						<button class="btn-default btn-style-softwheat" v-if="bookStatus.read" @click="markAsUnread()">Mark as unread</button>
+						<button class="btn-default btn-style-blue" v-if="bookStatus.read && !bookStatus.review" @click="openAddReviewForm('POST')">Write a review</button>
+						<button class="btn-default btn-style-blue" v-if="bookStatus.read && bookStatus.review" @click="openAddReviewForm('PUT')">Modify review</button>
 					</div>
 				</div>
 			</div>
@@ -128,9 +131,9 @@
 				</ul>
 			</div>
 		</main>
-		
-		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
 
+		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
+		<ReviewRatingForm :method="reviewRatingMethod" :bookID="book.book_id" :bookName="book.title"></ReviewRatingForm>
 		<Footer></Footer>
 	</div>
 </template>
@@ -143,6 +146,7 @@
 	import StarBar from '../components/common/StarBar.vue'
 	import Review from '../components/book/Review.vue'
 	import AddBookForm from '../components/forms/AddBookForm.vue'
+	import ReviewRatingForm from '../components/forms/ReviewRatingForm.vue'
 	export default {
 		name: 'BookDetail',
 		data: function() {
@@ -152,6 +156,10 @@
 					username: '',
 					email: '',
 					admin: ''
+				},
+				bookStatus: {
+					read: false,
+					review: false
 				},
 				book: {
 					"book_id": '',
@@ -171,9 +179,11 @@
 					"review_preview": []
 				},
 				pageNotFound: false,
-				
+
 				toAddBookID: '',
 				toAddBookName: '',
+				
+				reviewRatingMethod: '',
 			}
 		},
 		components: {
@@ -182,38 +192,38 @@
 			NotFound,
 			StarBar,
 			Review,
-			AddBookForm
+			AddBookForm,
+			ReviewRatingForm,
 		},
 		methods: {
-			getBookDetails(){
+			getBookDetails() {
 				let bookID = this.$route.query.id
 				this.axios({
-				  method: 'get',
-				  url: `${API_URL}/book/${bookID}/detail`,
-				}).then((res)=>{
+					method: 'get',
+					url: `${API_URL}/book/${bookID}/detail`,
+				}).then((res) => {
 					this.book = res.data
-					this.book.categories = this.book.categories.replace(/\[\'/, '').replace( /\'\]/, '')
-					this.book.authors = this.book.authors.replace(/\[\'/, '').replace( /\'\]/, '').split("', '").join(", ")
-					if(this.book.num_rated < 1){
+					this.book.categories = this.book.categories.replace(/\[\'/, '').replace(/\'\]/, '')
+					this.book.authors = this.book.authors.replace(/\[\'/, '').replace(/\'\]/, '').split("', '").join(", ")
+					if (this.book.num_rated < 1) {
 						this.book.avg_rating = 'Not enough votes'
-					}
-					else{
+					} else {
 						this.book.avg_rating = this.book.avg_rating.toFixed(1)
 					}
-				}).catch((error)=>{
+				}).catch((error) => {
 					this.pageNotFound = true
 				})
 			},
-			showAllText(){
+			showAllText() {
 				let desc = document.getElementById('desc')
 				let more = document.getElementById('view-more')
-				if(desc.offsetHeight >= 112){
+				if (desc.offsetHeight >= 112) {
 					desc.style.maxHeight = 'none'
 					desc.style.overflow = 'none'
 					more.style.display = 'none'
 				}
 			},
-			openAddBookForm(bookID, bookName){
+			openAddBookForm(bookID, bookName) {
 				this.toAddBookID = bookID
 				this.toAddBookName = bookName
 				let addBookForm = document.getElementById('addBookForm')
@@ -236,10 +246,72 @@
 					})
 				}
 			},
+			getBookStatus() {
+				if (this.$store.state.token) {
+					this.axios({
+						method: 'get',
+						url: `${API_URL}/book/read_review_check`,
+						headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						},
+						params: {
+							book_id: this.$route.query.id
+						}
+					}).then((res) => {
+						this.bookStatus = res.data
+					}).catch((error) => {
+						console.log(error.response.data.message)
+					})
+				}
+			},
+			markAsRead() {
+				this.axios({
+					method: 'post',
+					url: `${API_URL}/book/read`,
+					headers: {
+						'Content-Type': 'application/json',
+						'AUTH-TOKEN': this.$store.state.token
+					},
+					params: {
+						book_id: this.$route.query.id
+					}
+				}).then((res) => {
+					this.getBookStatus()
+				}).catch((error) => {
+					console.log(error.response.data.message)
+				})
+			},
+			markAsUnread() {
+				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
+					this.axios({
+						method: 'post',
+						url: `${API_URL}/book/unread`,
+						headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						},
+						params: {
+							book_id: this.$route.query.id
+						}
+					}).then((res) => {
+						this.getBookStatus()
+						location.reload()
+					}).catch((error) => {
+						console.log(error.response.data.message)
+					})
+				}
+			},
+			openAddReviewForm(method){
+				this.reviewRatingMethod = method
+				let reviewRatingForm = document.getElementById('reviewRatingForm')
+				reviewRatingForm.style.display = 'block'
+			}
 		},
 		created: function() {
 			this.getAccountsInfo()
 			this.getBookDetails()
+			this.getBookStatus()
 		},
 	}
 </script>

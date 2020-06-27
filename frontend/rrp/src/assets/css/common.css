@@ -4,7 +4,7 @@ body {
 	padding: 0;
 	height: 100%;
 	width: 100%;
-	min-width: 59.375rem;
+	min-width: 62.5rem;
 	font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
@@ -19,6 +19,14 @@ body{
 
 button,input,select{
 	outline: none;
+}
+
+textarea{
+	background:transparent;
+	border: none;
+	font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
+	font-size: 0.875rem;
+	overflow-y: scroll;
 }
 
 .root{
@@ -177,9 +185,21 @@ footer span {
 	color: white;
 }
 
+.btn-style-softgreen {
+	background-color: white;
+	border-color: green;
+	color: green;
+}
+
 .btn-style-wheat {
 	background-color: wheat;
 	border-color: navajowhite;
+	color: #444444;
+}
+
+.btn-style-softwheat {
+	background-color: beige;
+	border-color: dimgray;
 	color: #444444;
 }
 
@@ -188,6 +208,12 @@ footer span {
 	border-color: green;
 	color: green;
 	transition: color,background-color 0.2s,0.2s;
+}
+
+.btn-style-blue {
+	background-color: aliceblue;
+	border-color: cadetblue;
+	color: steelblue;
 }
 
 .btn-style-white:hover {

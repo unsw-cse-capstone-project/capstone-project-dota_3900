@@ -21,6 +21,7 @@
 				<div class="content">
 					<DashboardNavi :account="account" :myAccount="myAccount"></DashboardNavi>
 					<Collection v-if="$route.name === 'UserCollection'" ref="collection" :account="account" :myAccount="myAccount"></Collection>
+					<Reviews v-if="$route.name === 'UserReviews'" :account="account" :myAccount="myAccount"></Reviews>
 				</div>
 			</div>
 			
@@ -37,6 +38,7 @@
 	import DashboardNavi from '../components/dashboard/DashboardNavi.vue'
 	import NotFound from '../components/common/NotFound.vue'
 	import Collection from '../components/dashboard/Collection.vue'
+	import Reviews from '../components/dashboard/Reviews.vue'
 	export default {
 		name: 'Dashboard',
 		data: function() {
@@ -62,6 +64,7 @@
 			NotFound,
 			DashboardNavi,
 			Collection,
+			Reviews,
 		},
 		methods: {
 			getAccountsInfo() {
