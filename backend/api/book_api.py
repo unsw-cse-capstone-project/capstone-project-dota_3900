@@ -263,9 +263,66 @@ class BookReadApi(Resource):
         user_id = token_info['id']
         # Get book_id from parser
         args = read_parser.parse_args()
+        book_id = args.get('book_id')
+        if Collection.is_book_read(user_id, book_id):
+            return {'message': 'This book is already been marked as read'}
+        if not Book.is_book_exists_by_id(book_id):
+            return {'message': 'Resource not found'}, 404
         try:
-            if not Collection.mark_as_read(user_id, args.get('book_id')):
-                return {'message': 'Resource not found'}, 404
+            Collection.mark_as_read(user_id,book_id)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Mark successfully'}, 200
+
+# Api: Mark certain book as unread
+@api.route('/unread')
+class BookUnreadApi(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Mark book as unread")
+    @api.expect(read_parser, validate=True)
+    @requires_login
+    def post(self):
+        # Get user_id from token
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        user_id = token_info['id']
+        # Get book_id from parser
+        args = read_parser.parse_args()
+        book_id = args.get('book_id')
+        if not Book.is_book_exists_by_id(book_id):
+            return {'message': 'Resource not found'}, 404
+        if not Collection.is_book_read(user_id, book_id):
+            return {'message': 'This book is not been marked as read yet'}
+        try:
+            Collection.mark_as_unread(user_id,book_id)
+        except pymysql.Error as e:
+            return {'message': e.args[1]}, 500
+        return {'message': 'Mark successfully'}, 200
+
+@api.route("/read_review_check")
+class BookReadReviewCheck(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Check wheather this book has been read or reviewd before")
+    @api.expect(read_parser, validate=True)
+    @requires_login
+    def get(self):
+        # Get user_id from token
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        user_id = token_info['id']
+        # Get book_id from parser
+        args = read_parser.parse_args()
+        book_id = args.get('book_id')
+        if not Book.is_book_exists_by_id(book_id):
+            return {'message': 'Resource not found'}, 404
+        read_flag = Collection.is_book_read(user_id, book_id)
+        review_flag = Review.is_book_review(user_id, book_id)
+        return {'read': read_flag,
+                'review': review_flag}, 200
+

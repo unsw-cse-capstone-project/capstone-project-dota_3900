@@ -33,8 +33,8 @@ class Book:
             input=input
         )
         db_result = read_sql(sql=query, con=conn)
-        print(db_result)
-        print(query)
+        # print(db_result)
+        # print(query)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []

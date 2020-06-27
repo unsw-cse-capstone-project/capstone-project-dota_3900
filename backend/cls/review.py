@@ -243,5 +243,18 @@ class Review:
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num)
 
+    @staticmethod
+    def is_book_review(user_id, book_id):
+        conn = connect_sys_db()
+        query = "SELECT * FROM review_rate WHERE (book_id = book_id AND user_id = user_id)".format(
+            book_id = book_id,
+            user_id = user_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True
+
 
 
