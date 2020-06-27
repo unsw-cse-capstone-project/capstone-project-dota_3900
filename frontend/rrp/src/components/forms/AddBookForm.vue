@@ -61,8 +61,8 @@
 					},
 				}).then((res) => {
 					alert(res.data.message)
-					this.clearForm()
-					this.closeForm()
+					if(res.status === 200)
+						this.closeForm()
 				}).catch((error) => {
 					alert(error.response.data.message)
 				})
@@ -76,7 +76,6 @@
 					this.myCollections = res.data.Collections // id, name
 				}).catch((error) => {
 					console.log(error.response.data.message)
-					this.clearForm()
 				})
 			},
 		},

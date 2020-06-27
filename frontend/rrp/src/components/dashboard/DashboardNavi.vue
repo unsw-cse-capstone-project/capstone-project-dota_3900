@@ -1,11 +1,13 @@
 <template>
 	<div class="left">
 		<ul>
-			<li :class="{selected: $route.name === 'UserCollection'}">
-				<img src="../../../public/icon/Collection.png">
-				<span>Collections</span>
-				<div>{{tags.collections_num}}</div>
-			</li>
+			<router-link :to="{name: 'UserCollection', query: {id: $route.query.id}}">
+				<li :class="{selected: $route.name === 'UserCollection'}">
+					<img src="../../../public/icon/Collection.png">
+					<span>Collections</span>
+					<div>{{tags.collections_num}}</div>
+				</li>
+			</router-link>
 			<li>
 				<img src="../../../public/icon/goal.png">
 				<span>Monthly Goal</span>
@@ -16,11 +18,13 @@
 				<span>Read History</span>
 				<div>{{tags.ReadHistory_num}}</div>
 			</li>
-			<li>
-				<img src="../../../public/icon/my-reviews.png">
-				<span>My Reviews</span>
-				<div>{{tags.MyReview_num}}</div>
-			</li>
+			<router-link :to="{name: 'UserReviews', query: {id: $route.query.id}}">
+				<li :class="{selected: $route.name === 'UserReviews'}">
+					<img src="../../../public/icon/my-reviews.png">
+					<span>Reviews</span>
+					<div>{{tags.MyReview_num}}</div>
+				</li>
+			</router-link>
 		</ul>
 		<ul v-if="isMyDashboard()">
 			<li @click="openUpdateEmailForm()">

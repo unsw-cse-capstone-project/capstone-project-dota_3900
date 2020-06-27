@@ -22,6 +22,17 @@
 	border-radius: 0.625rem;
 }
 
+.modal textarea {
+	width: 100%;
+	height: 12.5rem;
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	border-radius: 0.625rem;
+}
+
 .modal .btn-green {
 	border: 1px solid green;
 	border-radius: 4px;

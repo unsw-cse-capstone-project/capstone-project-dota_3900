@@ -25,6 +25,11 @@ Vue.use(VueRouter)
 		component: Dashboard
 	},
 	{
+		path: '/user/reviews',
+		name: 'UserReviews',
+		component: Dashboard
+	},
+	{
 		path: '*',
 		name: '404Page',
 		component: NotFoundPage

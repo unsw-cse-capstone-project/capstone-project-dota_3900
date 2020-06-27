@@ -10,6 +10,8 @@
 	font-size: 1.25rem;
 	display: flex;
 	justify-content: space-between;
+	height: 1.5625rem;
+	align-items: baseline;
 }
 
 .user-dashboard .top .title{
