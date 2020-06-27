@@ -71,7 +71,7 @@ class SearchPage(Resource):
         result = Book.get_book_search_page(content, 15, page)
         return {'total_page_num': page_num,
                 'current_page': page,
-                'reviews': result
+                'result': result
                 }, 200
 
 

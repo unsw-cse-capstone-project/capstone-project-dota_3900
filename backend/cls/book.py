@@ -29,16 +29,15 @@ class Book:
     def book_search(input):
         # SQL
         conn = connect_sys_db()
-        query = "SELECT id, authors, title ,ISBN13 FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
+        query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
             input=input
         )
         db_result = read_sql(sql=query, con=conn)
-        # print(db_result)
-        # print(query)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
         for index in ds:
+            ds[index]['average'] = Book.get_book_average_rating(ds[index]['id'])
             result.append(ds[index])
         return result
 
@@ -75,7 +74,7 @@ class Book:
     @staticmethod
     def get_book_search_page_num(content, result_each_page):
         results = Book.book_search(content)
-        print(len(results))
+        # print(len(results))
         num_results = len(results)
         # If total number of review < number of review on each page
         if num_results <= result_each_page:
@@ -123,3 +122,26 @@ class Book:
             result.append(results[index])
             index = index + 1
         return result
+
+    # Get average rating of book
+    @staticmethod
+    def get_book_average_rating(book_id):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT rating FROM review_rate WHERE (book_id = \'{book_id}\')".format(
+            book_id=book_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            result.append(ds[index])
+        # If there is no rating
+        if len(result) == 0:
+            return 0
+        sum = 0
+        # Get average rating
+        for i in result:
+            sum = sum + i['rating']
+        return float(sum / len(result))
