@@ -81,6 +81,7 @@
 				})
 			},
 		},
+		
 		watch: {
 			myAccountID: function(){
 				this.getMyCollections()

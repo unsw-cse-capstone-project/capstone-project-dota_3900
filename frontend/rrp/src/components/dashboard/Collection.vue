@@ -255,11 +255,13 @@
 						},
 					}).then((res) => {
 						alert(res.data.message)
+						this.getCollections()
+						this.getRecentlyAddedBooks()
 					}).catch((error) => {
 						console.log(error.response.data.message)
+						this.getCollections()
+						this.getRecentlyAddedBooks()
 					})
-					this.getCollections()
-					this.getRecentlyAddedBooks()
 				}
 			},
 			openCollectionMoveBookForm(curCollectionID, bookID, bookName){
