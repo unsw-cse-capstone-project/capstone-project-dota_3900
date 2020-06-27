@@ -102,7 +102,7 @@ class ReviewPage(Resource):
         # Index out of range
         if (page <= 0 or page > page_num):
             return {'message': 'Resource not found'}, 404
-        result = Review.get_book_review_page(book_id, 10, page)
+        result = Review.get_book_review_page(book_id, 5, page)
         return {'total_page_num': page_num,
                 'current_page': page,
                 'reviews': result
@@ -223,7 +223,7 @@ class ReviewApi(Resource):
 
 # Api: Mark certain book as read
 @api.route('/read')
-class ReviewApi(Resource):
+class BookReadApi(Resource):
     @api.response(200, 'Success')
     @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')

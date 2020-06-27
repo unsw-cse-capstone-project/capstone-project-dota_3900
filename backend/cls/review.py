@@ -4,6 +4,7 @@ import time
 
 from pandas import read_sql
 
+from cls.book import Book
 from cls.user import User
 from lib.sql_linker import connect_sys_db, mysql
 
@@ -97,6 +98,8 @@ class Review:
             # Timestamp -> datetime
             # ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
             #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
+            book = Book(ds[index]['book_id'])
+            ds[index]['book_title'] = book.get_info().title
             result.append(ds[index])
         return result
 
@@ -219,8 +222,8 @@ class Review:
             index_from = reviews_num - last_page_num + 1
             index_to = reviews_num
         else:
-            index_from = 10 * (curr_page - 1) + 1
-            index_to = 10 * (curr_page)
+            index_from = review_each_page * (curr_page - 1) + 1
+            index_to = review_each_page * (curr_page)
         return Review.get_book_review_from_to(book_id, index_from - 1, index_to - 1)
 
     @staticmethod
