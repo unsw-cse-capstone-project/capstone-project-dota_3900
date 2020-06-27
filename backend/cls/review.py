@@ -210,7 +210,10 @@ class Review:
             num_last_page = num_reviews
         else:
             num_last_page = num_reviews % review_each_page
-            num_page = (num_reviews - num_last_page) / review_each_page + 1
+            if num_last_page != 0:
+                num_page = (num_reviews - num_last_page) / review_each_page + 1
+            else:
+                num_page = num_reviews / review_each_page
         return num_page, num_last_page
 
     # Get review list on certain review page
@@ -220,8 +223,12 @@ class Review:
         reviews = Review.get_book_review(book_id)
         reviews_num = len(reviews)
         if page_num == curr_page:
-            index_from = reviews_num - last_page_num + 1
-            index_to = reviews_num
+            if last_page_num != 0:
+                index_from = reviews_num - last_page_num + 1
+                index_to = reviews_num
+            else:
+                index_from = reviews_num - review_each_page + 1
+                index_to = reviews_num
         else:
             index_from = review_each_page * (curr_page - 1) + 1
             index_to = review_each_page * (curr_page)
@@ -235,6 +242,19 @@ class Review:
         )
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num)
+
+    @staticmethod
+    def is_book_review(user_id, book_id):
+        conn = connect_sys_db()
+        query = "SELECT * FROM review_rate WHERE (book_id = book_id AND user_id = user_id)".format(
+            book_id = book_id,
+            user_id = user_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True
 
 
 

@@ -35,7 +35,6 @@ class Collection:
             cursor.execute(query)
         return True, 'Collection update successfully'
 
-
     # Get list of books in collection
     def get_book_in_collection(self):
         # SQL
@@ -113,13 +112,12 @@ class Collection:
         # SQL
         conn = connect_sys_db()
         query = "UPDATE collects SET collection_id = \'{new_collection_id}\' WHERE (book_id = \'{book_id}\' AND collection_id = \'{old_collection_id}\')".format(
-            new_collection_id = new_collection_id,
-            old_collection_id = self._id,
-            book_id = book_id
+            new_collection_id=new_collection_id,
+            old_collection_id=self._id,
+            book_id=book_id
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
-
 
     # Is collection existed by user_id and collection_id
     @staticmethod
@@ -199,7 +197,6 @@ class Collection:
         else:
             return False
 
-
     # Get readcollection's id of user
     @staticmethod
     def get_readcollection_id(user_id):
@@ -217,12 +214,12 @@ class Collection:
     # Mark certain book as read
     @staticmethod
     def mark_as_read(user_id, book_id):
-        # Is user exist
-        if not User.is_user_exists_by_id(user_id):
-            return False
-        # Is book exist
-        if not Book.is_book_exists_by_id(book_id):
-            return False
+        # # Is user exist
+        # if not User.is_user_exists_by_id(user_id):
+        #     return False
+        # # Is book exist
+        # if not Book.is_book_exists_by_id(book_id):
+        #     return False
         read_collection_id = Collection.get_readcollection_id(user_id)
         # SQL
         conn = connect_sys_db()
@@ -233,7 +230,33 @@ class Collection:
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
-        return True
+
+    @staticmethod
+    def is_book_read(user_id, book_id):
+        collection_id = Collection.get_readcollection_id(user_id)
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT book_id FROM collects WHERE (book_id = \'{book_id}\' AND collection_id = \'{collection_id}\')".format(
+            book_id=book_id,
+            collection_id=collection_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def mark_as_unread(user_id, book_id):
+        read_collection_id = Collection.get_readcollection_id(user_id)
+        # SQL
+        conn = connect_sys_db()
+        query = "DELETE FROM collects WHERE (collection_id = \'{collection_id}\' AND book_id = \'{book_id}\')".format(
+            book_id=book_id,
+            collection_id=read_collection_id,
+        )
+        with mysql(conn) as cursor:
+            cursor.execute(query)
 
     # Get number of books which have been read in collection
     @staticmethod
