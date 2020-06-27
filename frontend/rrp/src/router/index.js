@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import BookDetail from '../views/BookDetail.vue'
 import NotFoundPage from '../views/404.vue'
 import Dashboard from '../views/Dashboard.vue'
+import SearchResult from '../views/SearchResult.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ Vue.use(VueRouter)
 		path: '/user/reviews',
 		name: 'UserReviews',
 		component: Dashboard
+	},
+	{
+		path: '/search',
+		name: 'SearchResult',
+		component: SearchResult
 	},
 	{
 		path: '*',

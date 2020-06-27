@@ -40,6 +40,7 @@
 	justify-content: flex-start;
 	align-items: flex-start;
 	margin-left: 1.25rem;
+	width: 56.25rem;
 }
 
 .search-results-list ul li .info .book-detail span{
@@ -99,18 +100,49 @@
 	padding: 1.25rem 0;
 }
 
+.search-results-list .pages-bar div{
+	list-style: none;
+	margin-right: 0.625rem;
+	font-size: 0.875rem;
+	color: steelblue;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 0.125rem 0.25rem;
+	border-radius: 0.3125rem;
+	margin: 0.125rem;
+}
+
+.search-results-list .pages-bar div:hover{
+	background-color: steelblue;
+	cursor: pointer;
+	color: white;
+}
+
+
 .search-results-list .pages-bar li{
 	list-style: none;
-	border: 1px lightblue solid;
 	margin-right: 0.625rem;
-	padding: 0.1875rem 0.5rem;
-	background-color: aliceblue;
 	font-size: 0.875rem;
-	color: #485563;
+	color: mediumvioletred;
 	cursor: pointer;
+	font-weight: bold;
+	padding: 0.125rem 0.25rem;
+	border-radius: 0.3125rem;
+	margin: 0.125rem;
+}
+
+.search-results-list .pages-bar .selected{
+	color: #222222;
+	pointer-events: none;
+}
+
+.search-results-list .pages-bar li:hover{
+	background-color: mediumvioletred;
+	cursor: pointer;
+	color: white;
 }
 
 .search-results-list .pages-bar span{
 	font-size: 0.875rem;
-	margin-right: 0.625rem;
+	color: steelblue;
 }
