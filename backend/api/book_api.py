@@ -63,7 +63,8 @@ class SearchPage(Resource):
         # Get page and book_id from parser
         args = search_parser.parse_args()
         page = args.get('page')
-        content = args.get('search_content')
+        content = Book.book_search_regex(args.get('search_content'))
+        # Book.book_search_regex(content)
         page_num, last_page_num = Book.get_book_search_page_num(content, 15)
         # Index out of range
         if page <= 0 or page > page_num:

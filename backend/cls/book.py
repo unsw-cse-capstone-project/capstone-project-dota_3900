@@ -53,6 +53,15 @@ class Book:
         db_result = read_sql(sql=query, con=conn)
         return db_result.iloc[0].num
 
+    @staticmethod
+    def book_search_regex(input):
+        ans = ""
+        for ch in input:
+            if not(ch.isdigit() or ch.isalpha()):
+                ch = "%"
+            ans += ch
+        return ans
+
     # Is book exist by book_id
     @staticmethod
     def is_book_exists_by_id(id):
