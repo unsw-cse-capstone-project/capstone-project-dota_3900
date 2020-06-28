@@ -13,4 +13,4 @@ SECRET_KEY = 'lIjoiYWRtaW4iLCJjcmVhdGlvbl90aW1lIjoxNTg1ODcyNT'
 
 # EXPIRE_IN: the time delay for logging out an account automatically
 # unit: second
-EXPIRE_IN = 1800
+EXPIRE_IN = 2592000
