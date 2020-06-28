@@ -8,8 +8,8 @@
 					Read · Recommend · Review.
 				</div>
 				<div class="search-bar">
-					<input type="text" placeholder="Book name / Author / ISBN">
-					<button class="btn-default btn-style-wheat">Search</button>
+					<input type="text" placeholder="Book name / Author / ISBN" v-model="searchContent">
+					<button class="btn-default btn-style-wheat" @click.prevent="goToSearchPage()">Search</button>
 				</div>
 				<div class="categories-list">
 					<div class="popular-books">
@@ -94,6 +94,21 @@ export default {
 	components: {
 		Header,
 		Footer
+	},
+	data: function() {
+		return {
+			searchContent: ''
+		}
+	},
+	methods:{
+		goToSearchPage(){
+			if(this.searchContent !== ''){
+				this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1}})
+			}
+			else{
+				alert('search content cannot be empty.')
+			}
+		}
 	}
 }
 </script>

@@ -36,8 +36,8 @@
 											<img src="../../../public/icon/plus.png" title="Add to my collection" v-if="!isMyDashboard() && $store.state.token" @click="openCollectionAddBookForm(book.book_id, book.title)">
 											<img src="../../../public/icon/minus.png" title="Delete from this collection" v-if="isMyDashboard()" @click="removeBookFromCollection(collection.id, collection.name, book.book_id, book.title)" >
 											<img src="../../../public/icon/move.png" title="Move to another collection" v-if="isMyDashboard()" @click="openCollectionMoveBookForm(collection.id, book.book_id, book.title)">
-											<button class="btn-default btn-style-green" style="cursor: default;" v-if="isMyDashboard() && book.finish_datetime !== undefined">Finished</button>
-											<button class="btn-default btn-style-wheat" style="cursor: default;" v-if="isMyDashboard() && book.finish_datetime === undefined">Unfinished</button>
+											<span class="read" v-if="isMyDashboard() && book.finish_datetime !== undefined">Finished</span>
+											<span class="unread" v-if="isMyDashboard() && book.finish_datetime === undefined">Unfinished</span>
 										</div>
 									</div>
 									<span><b>Author: </b>{{book.authors}}</span>

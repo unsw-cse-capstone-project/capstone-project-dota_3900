@@ -5,8 +5,8 @@
 				<div class="title">「 Read Recommendation Pro」</div>
 			</router-link>
 			<div class="search" v-if="isHome !== true">
-				<input class="search_bar" type="text" placeholder="Book title / Author / ISBN">
-				<button class="search_btn">
+				<input class="search_bar" type="text" placeholder="Book title / Author / ISBN" v-model="searchContent">
+				<button class="search_btn" @click.prevent="goToSearchPage()">
 					Search
 				</button>
 			</div>
@@ -46,7 +46,8 @@
 					username: '',
 					email: '',
 					admin: ''
-				}
+				},
+				searchContent: '',
 			}
 		},
 		components:{
@@ -96,6 +97,14 @@
 					admin: ''
 				}
 			},
+			goToSearchPage(){
+				if(this.searchContent !== ''){
+					this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1}})
+				}
+				else{
+					alert('search content cannot be empty.')
+				}
+			}
 		},
 		mounted: function(){
 			// get User info from token
