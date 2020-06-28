@@ -8,6 +8,7 @@ from config import SECRET_KEY
 from flask import request
 import jwt
 import pymysql
+import re
 
 api = Namespace('user', description='User account setting')
 user_password_model = api.model('user_password_model', {'old_password': fields.String, 'new_password': fields.String})
@@ -37,6 +38,12 @@ class UserRegister(Resource):
         # input cannot be empty string
         if username == "" or password == "" or email == "":
             return {'message': 'Register failed. Username, password or email cannot be empty'}, 201
+        if len(username) < 4 or len(username) > 12:
+            return {'message': 'The length of username should between 5 and 12.'},401
+        if len(password) < 8 or len(password) > 32:
+            return {'message': 'The length of password should between 8 and 32'}, 401
+        if not (re.search('[a-z]', password) or re.search('[A-Z]', password)):
+            return {'message': 'The password should contain at least one letter'}, 401
         try:
             success, errmsg = User.register_account(username, password, 0, email)
             if not success:

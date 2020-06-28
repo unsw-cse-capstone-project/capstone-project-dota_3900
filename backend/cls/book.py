@@ -107,7 +107,7 @@ class Book:
         # reviews = Book.book_search(content)
         reviews_num = Book.book_search_length(content)
         if(reviews_num == 0):
-            return [] 
+            return []
         if page_num == curr_page:
             if last_page_num != 0:
                 index_from = reviews_num - last_page_num + 1
