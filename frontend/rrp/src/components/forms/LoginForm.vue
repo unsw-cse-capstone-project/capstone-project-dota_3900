@@ -66,8 +66,24 @@
 				  data: this.account
 				}).then((res)=>{
 				  this.updateToken(res.data.token)
-					alert("Login successfully")
-					location.reload()
+					this.axios({
+					  method: 'get',
+					  url: `${API_URL}/user/my_user_id`,
+						headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						}
+					}).then((res)=>{
+						alert("Login successfully")
+						if(this.$route.name === 'UserCollection' && this.$route.query.id == res.data.id){
+							location.reload()
+						}else{
+							this.$router.push({name: 'UserCollection', query: res.data})
+						}
+					}).catch((error)=>{
+					  alert(error.response.data.message)
+						this.clearForm()
+					})
 				}).catch((error)=>{
 				  alert(error.response.data.message)
 					this.clearForm()

@@ -67,7 +67,7 @@
 			  if(confirm('Are you sure to logout?')){
 			    this.$store.commit('clearToken')
 					this.clearAccountInfo()
-					location.reload()
+					this.$router.push({name: 'Home'})
 			  }
 			},
 			getAccountInfo(){

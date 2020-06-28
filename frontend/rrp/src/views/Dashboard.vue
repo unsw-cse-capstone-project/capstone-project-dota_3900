@@ -16,7 +16,7 @@
 					<div class="title" v-else>
 						User page - {{ account.username }}
 					</div>
-					<button class="btn-default btn-style-white animation-fadein-top delay_04s" v-if="isMyDashboard() && $route.name === 'UserCollection'" @click="$refs['collection'].openNewCollectionForm()">New Collection</button>
+					<button class="btn-default btn-style-white animation-fadein-top delay_04s" v-if="isMyDashboard() && $route.name === 'UserCollection'" @click="$refs['collection'].openNewCollectionForm()">Create New Collection</button>
 				</div>
 				<div class="content">
 					<DashboardNavi :account="account" :myAccount="myAccount"></DashboardNavi>
