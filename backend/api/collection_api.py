@@ -58,14 +58,14 @@ class CollectionApi(Resource):
         name = args.get('collection_name')
         # Name input cannot be empty string
         if name == "Main collection" or name == "Read":
-            return {'message': "Collection's name cannot be 'Main Collection' or 'Read'"}, 201
+            return {'message': "Collection's name cannot be 'Main Collection' or 'Read'"}, 400
         if name == "":
-            return {'message': "Collection's name cannot be empty"}, 201
+            return {'message': "Collection's name cannot be empty"}, 400
         try:
             if Collection.post_new_collection(user_id, name):
                 return {'message': 'Create new collection successfully'}, 200
             else:
-                return {'message': 'This collection already exist'}, 201
+                return {'message': 'This collection already exist'}, 400
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
 
@@ -149,7 +149,7 @@ class CollectionApi(Resource):
         read_collection_id = Collection.get_readcollection_id(user_id)
         main_collection_id = read_collection_id - 1
         if collection_id == read_collection_id or collection_id == main_collection_id:
-            return {'message': 'Read History and Main collection cannot be deleted'}, 201
+            return {'message': 'Read History and Main collection cannot be deleted'}, 400
         try:
             Collection.delete_collection(collection_id)
             return {'message': 'Delete collection successfully'}, 200
