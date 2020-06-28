@@ -287,3 +287,17 @@ background: linear-gradient(to left, #FFFFFF, #FFF9FE); /* W3C, IE 10+/ Edge, Fi
 	background-color: aliceblue;
 	transition: background-color 0.3s;
 }
+
+.read{
+	font-size: 0.875rem!important;
+	color: green!important;
+	font-weight: bold;
+	margin-top: 0.25rem;
+}
+
+.unread{
+	font-size: 0.875rem!important;
+	color: rosybrown!important;
+	font-weight: bold;
+	margin-top: 0.25rem;
+}
