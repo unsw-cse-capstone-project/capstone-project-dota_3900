@@ -11,10 +11,10 @@
 				<div class="search-title">
 					Search result for "{{$route.query.content}}":
 				</div>
-				<ul class="no-result" v-if="searchResult.length == 0">
+				<ul class="no-result" v-if="!hasSearchResult">
 					No Search Result.
 				</ul>
-				<ul v-for="book in searchResult" :key="book.id">
+				<ul v-for="book in searchResult" :key="book.id" v-else>
 					<li>
 						<!-- <li v-for="book from searchResult"> -->
 						<div class="info">
@@ -122,7 +122,9 @@
 				isReadList: {},
 				
 				toAddBookID: '',
-				toAddBookName: ''
+				toAddBookName: '',
+				
+				hasSearchResult: true,
 			}
 		},
 		methods: {
@@ -178,6 +180,9 @@
 						}
 					}
 					this.searchResult = res.data.result
+					if(this.searchResult.length == 0){
+						this.hasSearchResult = false
+					}
 					this.curPageNum = res.data.current_page
 					this.totalPageNum = res.data.total_page_num
 				}).catch((error) => {
