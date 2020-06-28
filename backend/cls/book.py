@@ -28,6 +28,7 @@ class Book:
     @staticmethod
     def book_search(input):
         # SQL
+        print("test")
         conn = connect_sys_db()
         query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
             input=input
@@ -40,6 +41,17 @@ class Book:
             ds[index]['average'] = Book.get_book_average_rating(ds[index]['id'])
             result.append(ds[index])
         return result
+
+    # Search result of input content
+    @staticmethod
+    def book_search_length(input):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT count(*) as num FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
+            input=input
+        )
+        db_result = read_sql(sql=query, con=conn)
+        return db_result.iloc[0].num
 
     # Is book exist by book_id
     @staticmethod
@@ -61,8 +73,8 @@ class Book:
         # SQL
         conn = connect_sys_db()
         query = 'SELECT * FROM collects Where (book_id = \'{book_id}\' AND collection_id = \'{collection_id}\')'.format(
-            book_id = book_id,
-            collection_id = collection_id
+            book_id=book_id,
+            collection_id=collection_id
         )
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
@@ -73,9 +85,9 @@ class Book:
     # Get total number of search result page
     @staticmethod
     def get_book_search_page_num(content, result_each_page):
-        results = Book.book_search(content)
+        # results = Book.book_search_length(content)
         # print(len(results))
-        num_results = len(results)
+        num_results = Book.book_search_length(content)
         # If total number of review < number of review on each page
         if num_results <= result_each_page:
             num_page = 1
@@ -92,8 +104,8 @@ class Book:
     @staticmethod
     def get_book_search_page(content, result_each_page, curr_page):
         page_num, last_page_num = Book.get_book_search_page_num(content, result_each_page)
-        reviews = Book.book_search(content)
-        reviews_num = len(reviews)
+        # reviews = Book.book_search(content)
+        reviews_num = Book.book_search_length(content)
         if page_num == curr_page:
             if last_page_num != 0:
                 index_from = reviews_num - last_page_num + 1
@@ -106,21 +118,39 @@ class Book:
             index_to = result_each_page * (curr_page)
         return Book.get_book_search_from_to(content, index_from - 1, index_to - 1)
 
-    # Get search result from index_from to index_to
+    # # Get search result from index_from to index_to
+    # @staticmethod
+    # def get_book_search_from_to(content, index_from, index_to):
+    #     results = Book.book_search(content)
+    #     # If there is no result
+    #     if len(results) == 0:
+    #         return []
+    #     # If index_to is over range
+    #     if len(results) < (index_to + 1):
+    #         index_to = len(results) - 1
+    #     result = []
+    #     index = index_from
+    #     while index <= index_to:
+    #         result.append(results[index])
+    #         index = index + 1
+    #     return result
     @staticmethod
     def get_book_search_from_to(content, index_from, index_to):
-        results = Book.book_search(content)
-        # If there is no result
-        if len(results) == 0:
-            return []
-        # If index_to is over range
-        if len(results) < (index_to + 1):
-            index_to = len(results) - 1
+        num = index_to - index_from + 1
+        conn = connect_sys_db()
+        query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\' limit {index_from},{num}".format(
+            input=content,
+            index_from=index_from,
+            num=num
+        )
+        # print(query)
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
         result = []
-        index = index_from
-        while index <= index_to:
-            result.append(results[index])
-            index = index + 1
+        for index in ds:
+            ds[index]['average'] = Book.get_book_average_rating(ds[index]['id'])
+            result.append(ds[index])
         return result
 
     # Get average rating of book
