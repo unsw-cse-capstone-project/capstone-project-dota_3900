@@ -34,6 +34,7 @@ review_page_parser.add_argument('page', type=int, required=True)
 
 read_parser = reqparse.RequestParser()
 read_parser.add_argument('book_id', type=int, required=True)
+read_parser.add_argument('date', required=True)
 
 
 # # Api: Get search result
@@ -273,12 +274,13 @@ class BookReadApi(Resource):
         # Get book_id from parser
         args = read_parser.parse_args()
         book_id = args.get('book_id')
+        date = args.get('date')
         if Collection.is_book_read(user_id, book_id):
             return {'message': 'This book is already been marked as read'}
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
         try:
-            Collection.mark_as_read(user_id,book_id)
+            Collection.mark_as_read(user_id,book_id, date)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Mark successfully'}, 200
