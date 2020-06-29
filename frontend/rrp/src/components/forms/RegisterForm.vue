@@ -54,7 +54,8 @@
 				}
 				if(this.account.password !== this.confirmPassword){
 					alert('Two input password must be consistent.')
-					this.clearForm()
+					this.account.password = ''
+					this.confirmPassword = ''
 					return
 				}
 				if(!this.validateEmail(this.account.email)){
