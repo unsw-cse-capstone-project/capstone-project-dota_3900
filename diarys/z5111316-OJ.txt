@@ -6,3 +6,5 @@ draw er diagram by myself, create sql schema by myself, search for dataset(kaggl
 wk3
 schema modified to ensure consistency.
 create trigger for create new user, when user instance been created, automatically create default and read collection for them.
+wk4
+write some query for collection related operation, test function for sprint 1.

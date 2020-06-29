@@ -11,19 +11,26 @@
 				<div class="search-title">
 					Search result for "{{$route.query.content}}":
 				</div>
-				<ul v-for="book in searchResult" :key="book.id">
+				<ul class="no-result" v-if="!hasSearchResult">
+					No Search Result.
+				</ul>
+				<ul v-for="book in searchResult" :key="book.id" v-else>
 					<li>
 						<!-- <li v-for="book from searchResult"> -->
 						<div class="info">
-							<img :src="book.book_cover_url">
+							<router-link :to="{name: 'Book', query: {id: book.id}}">
+								<img :src="book.book_cover_url">
+							</router-link>
 							<div class="book-detail">
 								<div class="title-operation">
-									<span><b>{{book.title}}</b></span>
+									<router-link :to="{name: 'Book', query: {id: book.id}}">
+										<span><b>{{book.title}}</b></span>
+									</router-link>
 									<div class="operation">
 										<img src="../../public/icon/star.png">
 										<span v-if="book.average == 0">--</span>
 										<span v-else>{{book.average}}</span>
-										<button class="btn-default btn-style-orange" @click="openAddBookForm(book.id, book.title)">Add to collection</button>
+										<button class="btn-default btn-style-orange" v-if="$store.state.token" @click="openAddBookForm(book.id, book.title)">Add to collection</button>
 										<button class="btn-default btn-style-softgreen" v-if="$store.state.token && !book.bookStatus.read" @click="markAsRead(book.id)">Mark as read</button>
 										<button class="btn-default btn-style-softwheat" v-if="$store.state.token && book.bookStatus.read" @click="markAsUnread(book.id)">Mark as unread</button>
 									</div>
@@ -37,7 +44,7 @@
 					</li>
 				</ul>
 
-				<div class="pages-bar">
+				<div class="pages-bar" v-if="searchResult.length != 0">
 					<router-link v-if="lastPage >= 1" :to="{name: 'SearchResult', query: {content: $route.query.content, page: lastPage}}">
 						<div><< previous page</div>
 					</router-link>
@@ -115,7 +122,9 @@
 				isReadList: {},
 				
 				toAddBookID: '',
-				toAddBookName: ''
+				toAddBookName: '',
+				
+				hasSearchResult: true,
 			}
 		},
 		methods: {
@@ -171,6 +180,9 @@
 						}
 					}
 					this.searchResult = res.data.result
+					if(this.searchResult.length == 0){
+						this.hasSearchResult = false
+					}
 					this.curPageNum = res.data.current_page
 					this.totalPageNum = res.data.total_page_num
 				}).catch((error) => {
