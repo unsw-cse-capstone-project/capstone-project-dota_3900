@@ -14,7 +14,7 @@
 								<span>{{review.book_title}}</span>
 							</router-link>
 							<div class="operation" v-if="isMyDashboard()">
-								<img src="../../../../static_html/img/icon/edit.png" @click="openReveiwRatingForm(review.book_id, review.book_title)" >
+								<img src="../../../../static_html/img/icon/edit.png" @click="openReveiwRatingForm(review.book_id, review.book_title, review.review_content, review.rating)" >
 								<img src="../../../../static_html/img/icon/delete.png" @click="deleteReview(review.book_id, review.book_title)">
 							</div>
 						</div>
@@ -27,12 +27,12 @@
 							<span v-if="review.rating === 5">Masterpiece</span>
 						</div>
 						<span><b>Review date: </b>{{timeStamp2datetime(review.review_time)}}</span>
-						<span v-html="review.review_content"></span>
+						<span v-html="review.review_content.replace(/\n/g, '<br />')"></span>
 					</div>
 				</li>	
 			</ul>
 		</div>
-		<ReviewRatingForm :method="'PUT'" :bookID="toEditBookID" :bookName="toEditBookTitle"></ReviewRatingForm>
+		<ReviewRatingForm ref="reviewRatingForm" :method="'PUT'" :bookID="toEditBookID" :bookName="toEditBookTitle"></ReviewRatingForm>
 	</div>
 </template>
 
@@ -49,6 +49,9 @@
 			
 				toEditBookID: '',
 				toEditBookTitle: '',
+				
+				curReview: '',
+				curRating: ''
 			}
 		},
 		components: {
@@ -74,7 +77,7 @@
 				this.axios.get(`${API_URL}/user/${this.$route.query.id}/reviews`).then((res) => {
 					this.reviews = res.data.list
 					for(let i = 0; i < this.reviews.length; i++){
-						this.reviews[i].review_content = this.reviews[i].review_content.replace(/\n/g, '<br />')
+						this.reviews[i].review_content = this.reviews[i].review_content
 					}
 				}).catch((err) => {
 					console.log(error.response.data.message)
@@ -107,7 +110,11 @@
 					})
 				}
 			},
-			openReveiwRatingForm(bookID, bookTitle){
+			openReveiwRatingForm(bookID, bookTitle, curReview, curRating){
+				this.curRating = curRating
+				this.curReview = curReview
+				this.$refs['reviewRatingForm'].rating = this.curRating
+				this.$refs['reviewRatingForm'].review = this.curReview
 				this.toEditBookID = bookID
 				this.toEditBookTitle = bookTitle
 				let reviewRatingForm = document.getElementById('reviewRatingForm')

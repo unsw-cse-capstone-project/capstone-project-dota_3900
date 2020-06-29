@@ -133,8 +133,8 @@
 		</main>
 
 		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
-		<ReviewRatingForm :method="reviewRatingMethod" :bookID="book.book_id" :bookName="book.title"></ReviewRatingForm>
-		<MarkReadForm :bookID="toMarkReadBookID" :bookName="toMarkReadBookName" @updateData="getBookStatus"></MarkReadForm>
+		<ReviewRatingForm ref="reviewRatingForm" :method="reviewRatingMethod" :bookID="book.book_id" :oldRating="myRating"></ReviewRatingForm>
+		<MarkReadForm :bookID="toMarkReadBookID" :bookName="toMarkReadBookName" @updateData="getBookStatus" ></MarkReadForm>
 		<Footer></Footer>
 	</div>
 </template>
@@ -159,6 +159,8 @@
 					email: '',
 					admin: ''
 				},
+				myReview: '',
+				myRating: '',
 				bookStatus: {
 					read: false,
 					review: false
@@ -247,6 +249,21 @@
 						}
 					}).then((res) => {
 						this.myAccount = res.data
+						this.axios({
+								method: 'get',
+								url: `${API_URL}/book/review`,
+								params: {
+									book_id: this.$route.query.id,
+									user_id: this.myAccount.user_id
+								}
+							}).then((resp) => {
+								if(resp.data.reviews.length > 0){
+									this.myReview = resp.data.reviews[0].review_content
+									this.myRating = resp.data.reviews[0].rating
+								}
+							}).catch((error1) => {
+								console.log(error1.response.data.message)
+							})
 					}).catch((error) => {
 						this.$store.commit('clearToken')
 					})
@@ -286,6 +303,8 @@
 					}).then((res) => {
 						this.getBookStatus()
 						this.getBookDetails()
+						this.myRating = ''
+						this.myReview = ''
 					}).catch((error) => {
 						console.log(error.response.data.message)
 					})
@@ -293,6 +312,8 @@
 			},
 			openAddReviewForm(method){
 				this.reviewRatingMethod = method
+				this.$refs['reviewRatingForm'].review = this.myReview
+				this.$refs['reviewRatingForm'].rating = this.myRating
 				let reviewRatingForm = document.getElementById('reviewRatingForm')
 				reviewRatingForm.style.display = 'block'
 			},
@@ -301,7 +322,7 @@
 				this.toMarkReadBookName = bookName
 				let reviewRatingForm = document.getElementById('markReadForm')
 				reviewRatingForm.style.display = 'block'
-			}
+			},
 		},
 		created: function() {
 			this.getAccountsInfo()
