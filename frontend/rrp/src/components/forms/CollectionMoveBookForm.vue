@@ -40,8 +40,7 @@
 				newCollectionForm.style.display = 'none'
 			},
 			clearForm(){
-				this.toMoveCollectionID = '',
-				this.myCollections = []
+				this.toMoveCollectionID = ''
 			},
 			submit(){
 				if(this.toMoveCollectionID === ""){
@@ -61,6 +60,8 @@
 					},
 				}).then((res) => {
 					alert(res.data.message)
+					this.clearForm()
+					this.closeForm()
 				}).catch((error) => {
 					alert(error.response.data.message)
 				})
