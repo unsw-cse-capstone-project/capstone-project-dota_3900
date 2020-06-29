@@ -280,9 +280,9 @@ class CollectionReadHistoryApi(Resource):
         user_id = args.get('user_id')
         if not User.is_user_exists_by_id(user_id):
             return {'message': 'Resource not found'}, 404
-        collection_id = Collection.get_readcollection_id(user_id)
-        collection = Collection(collection_id)
-        books = collection.get_book_in_collection()
+        # collection_id = Collection.get_readcollection_id(user_id)
+        # collection = Collection(collection_id)
+        books = Collection.get_read_history(user_id)
         return {'books': books}, 200
 
 # Api: Get user's 10 most recently added books

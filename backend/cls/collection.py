@@ -35,6 +35,8 @@ class Collection:
             cursor.execute(query)
         return True, 'Collection update successfully'
 
+
+
     # Get list of books in collection
     def get_book_in_collection(self):
         # SQL
@@ -344,3 +346,25 @@ class Collection:
         )
         with mysql(conn) as cursor:
             cursor.execute(query)
+
+    @staticmethod
+    # Get list of books in collection
+    def get_read_history(user_id):
+        collection_id = Collection.get_readcollection_id(user_id)
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT book_id FROM collects WHERE collection_id = \'{collection_id}\'".format(
+            collection_id=collection_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            finish_date = Collection.get_book_read_date(user_id, ds[index]['book_id'])
+            ds[index]['finish_time'] = finish_date
+            book = Book(ds[index]['book_id'])
+            ds[index]['book_title'] = book.get_info().title
+            ds[index]['book_cover_url'] = book.get_info().book_cover_url
+            result.append(ds[index])
+        return result
