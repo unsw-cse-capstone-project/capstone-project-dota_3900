@@ -337,3 +337,13 @@ class BookReadReviewCheck(Resource):
         return {'read': read_flag,
                 'review': review_flag}, 200
 
+@api.route("/most_popular")
+class BookMostPopular(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get the most popular 10 books")
+    def get(self):
+        return {'books': Book.get_popular_book()}, 200
+

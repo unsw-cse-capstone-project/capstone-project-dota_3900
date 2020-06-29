@@ -129,22 +129,6 @@ class Book:
             index_to = result_each_page * (curr_page)
         return Book.get_book_search_from_to(content, index_from - 1, index_to - 1)
 
-    # # Get search result from index_from to index_to
-    # @staticmethod
-    # def get_book_search_from_to(content, index_from, index_to):
-    #     results = Book.book_search(content)
-    #     # If there is no result
-    #     if len(results) == 0:
-    #         return []
-    #     # If index_to is over range
-    #     if len(results) < (index_to + 1):
-    #         index_to = len(results) - 1
-    #     result = []
-    #     index = index_from
-    #     while index <= index_to:
-    #         result.append(results[index])
-    #         index = index + 1
-    #     return result
     @staticmethod
     def get_book_search_from_to(content, index_from, index_to):
         num = index_to - index_from + 1
@@ -186,3 +170,16 @@ class Book:
         for i in result:
             sum = sum + i['rating']
         return float(sum / len(result))
+
+    @staticmethod
+    def get_popular_book():
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT id, title, book_cover_url from books order by rand() limit 10"
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            result.append(ds[index])
+        return result
