@@ -1,3 +1,5 @@
+import datetime
+
 import jwt
 import pymysql
 from flask import request
@@ -34,7 +36,8 @@ review_page_parser.add_argument('page', type=int, required=True)
 
 read_parser = reqparse.RequestParser()
 read_parser.add_argument('book_id', type=int, required=True)
-read_parser.add_argument('date', required=True)
+read_parser.add_argument('year', type=int, required=True)
+read_parser.add_argument('month', type=int, required=True)
 
 
 # # Api: Get search result
@@ -274,7 +277,15 @@ class BookReadApi(Resource):
         # Get book_id from parser
         args = read_parser.parse_args()
         book_id = args.get('book_id')
-        date = args.get('date')
+        now_year = int(datetime.datetime.now().strftime("%Y"))
+        now_month = int(datetime.datetime.now().strftime("%m"))
+        if args.get('year') > now_year or args.get('year') < 1900:
+            return {'message': 'Invalid year'}, 401
+        if args.get('month') > 12 or args.get('month') < 1:
+            return {'message': 'Invalid month'}, 401
+        if args.get('year') == now_year and args.get('month') > now_month:
+            return {'message': 'Invalid month'}, 401
+        date = str(args.get('year')) + "-" + str(args.get('month'))
         if Collection.is_book_read(user_id, book_id):
             return {'message': 'This book is already been marked as read'}
         if not Book.is_book_exists_by_id(book_id):
