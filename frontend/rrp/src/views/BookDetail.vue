@@ -134,7 +134,7 @@
 
 		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
 		<ReviewRatingForm :method="reviewRatingMethod" :bookID="book.book_id" :bookName="book.title"></ReviewRatingForm>
-		<MarkReadForm :bookID="toMarkReadBookID" :bookName="toMarkReadBookName"></MarkReadForm>
+		<MarkReadForm :bookID="toMarkReadBookID" :bookName="toMarkReadBookName" @updateData="getBookStatus"></MarkReadForm>
 		<Footer></Footer>
 	</div>
 </template>
@@ -285,7 +285,7 @@
 						}
 					}).then((res) => {
 						this.getBookStatus()
-						location.reload()
+						this.getBookDetails()
 					}).catch((error) => {
 						console.log(error.response.data.message)
 					})

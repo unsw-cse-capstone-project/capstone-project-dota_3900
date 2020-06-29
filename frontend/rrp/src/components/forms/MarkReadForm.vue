@@ -60,13 +60,14 @@
 						'AUTH-TOKEN': this.$store.state.token
 					},
 					params: {
-						book_id: this.$route.query.id,
+						book_id: this.bookID,
 						year: this.year,
 						month: this.month
 					}
 				}).then((res) => {
 					alert("Mark as read successfully")
-					location.reload()
+					this.$emit('updateData')
+					this.closeForm()
 				}).catch((error) => {
 					console.log(error.response.data.message)
 				})
