@@ -13,48 +13,14 @@
 				</div>
 				<div class="categories-list">
 					<div class="popular-books">
-						<div class="title">The Most Popular Books</div>
+						<div class="title">The Most Popular Books (Random now)</div>
 						<ul>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
-							<li>
-								<img src="http://books.google.com/books/content?id=HjI0BgAAQBAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api">
-								<span><b>Attack on Titan - Volume 14</b></span>
-							</li>
+							<router-link v-for="book in popularBooks" :key="book.id" :to="{name: 'Book', query: {id: book.id}}">
+								<li>
+									<img :src="book.book_cover_url">
+									<span><b>{{book.title}}</b></span>
+								</li>
+							</router-link>
 						</ul>
 					</div>
 
@@ -87,6 +53,7 @@
 </template>
 
 <script>
+import API_URL from '../serviceAPI.config.js'
 import Header from '../components/common/Header.vue'
 import Footer from '../components/common/Footer.vue'
 export default {
@@ -97,7 +64,8 @@ export default {
 	},
 	data: function() {
 		return {
-			searchContent: ''
+			searchContent: '',
+			popularBooks: [],
 		}
 	},
 	methods:{
@@ -108,7 +76,21 @@ export default {
 			else{
 				alert('search content cannot be empty.')
 			}
-		}
+		},
+		getPopularBooks(){
+			this.axios({
+				method: 'get',
+				url: `${API_URL}/book/most_popular`,
+			}).then((res) => {
+				this.popularBooks = res.data.books
+			}).catch((error) => {
+				console.log(error.response.data.message)
+				this.pageNotFound = true
+			})
+		},
+	},
+	mounted: function(){
+		this.getPopularBooks()
 	}
 }
 </script>
