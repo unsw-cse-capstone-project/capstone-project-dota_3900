@@ -177,8 +177,7 @@ class ReviewApi(Resource):
             return {'message': 'book_id and user_id cannot be both empty'}, 400
 
     @api.response(200, 'Success')
-    @api.response(201, 'Failed, review already existed')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Post new review")
@@ -197,15 +196,15 @@ class ReviewApi(Resource):
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
         if not Collection.is_book_read(user_id, book_id):
-            return {'message': 'You can only review and rate after you read the book'}, 201
+            return {'message': 'You can only review and rate after you read the book'}, 401
         # input cannot be empty string
         if book_id is None or rating is None or content == "":
-            return {'message': 'Rating or review content cannot be empty'}, 201
+            return {'message': 'Rating or review content cannot be empty'}, 401
         try:
             if Review.new_review(user_id, book_id, rating, content):
                 return {'message': 'Post new review successfuly'}, 200
             else:
-                return {'message': 'Review already existed'}, 201
+                return {'message': 'Review already existed'}, 401
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
 
@@ -228,7 +227,7 @@ class ReviewApi(Resource):
         rating = info['rating']
         # input cannot be empty string
         if book_id is None or rating is None or content == "":
-            return {'message': 'Rating or review content cannot be empty'}, 201
+            return {'message': 'Rating or review content cannot be empty'}, 401
         try:
             if Review.edit_review(user_id, book_id, rating, content):
                 return {'message': 'Update review successfully'}, 200

@@ -25,7 +25,7 @@ user_register_model = api.model('user_register_model', {
 @api.route('')
 class UserRegister(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Register a new user account.")
     @api.expect(user_register_model, validate=True)
@@ -37,7 +37,7 @@ class UserRegister(Resource):
         email = info['email']
         # input cannot be empty string
         if username == "" or password == "" or email == "":
-            return {'message': 'Register failed. Username, password or email cannot be empty'}, 201
+            return {'message': 'Register failed. Username, password or email cannot be empty'}, 401
         if len(username) < 4 or len(username) > 12:
             return {'message': 'The length of username should between 5 and 12.'},401
         if len(password) < 8 or len(password) > 32:
@@ -47,7 +47,7 @@ class UserRegister(Resource):
         try:
             success, errmsg = User.register_account(username, password, 0, email)
             if not success:
-                return {'message': errmsg}, 201
+                return {'message': errmsg}, 401
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Register new user account successfully'}, 200
@@ -57,8 +57,7 @@ class UserRegister(Resource):
 @api.route('/password')
 class UserUpdatePassword(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Change user account password ")
     @api.expect(user_password_model, validate=True)
@@ -69,7 +68,7 @@ class UserUpdatePassword(Resource):
         old_password = info['old_password']
         # new password cannot be empty string
         if new_password == "" or old_password == "":
-            return {'message': 'Update failed. Both old password and new password cannot be empty'}, 201
+            return {'message': 'Update failed. Both old password and new password cannot be empty'}, 401
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
@@ -78,7 +77,7 @@ class UserUpdatePassword(Resource):
         user = User(id)
         try:
             if not user.update_password(old_password, new_password):
-                return {'message': 'Old password is wrong'}, 201
+                return {'message': 'Old password is wrong'}, 401
             else:
                 return {'message': 'Change password successfully'}, 200
         except pymysql.Error as e:
@@ -89,8 +88,7 @@ class UserUpdatePassword(Resource):
 @api.route('/username')
 class UserUpdateUsername(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Rename the account")
     @api.expect(user_username_model, validate=True)
@@ -100,9 +98,9 @@ class UserUpdateUsername(Resource):
         new_username = info['username']
         # input cannot be empty string
         if new_username == "":
-            return {'message': 'Update failed. new username cannot be empty'}, 201
+            return {'message': 'Update failed. new username cannot be empty'}, 401
         if User.is_user_exists_by_username(new_username):
-            return {'message': 'This user already existed'}, 201
+            return {'message': 'This user already existed'}, 401
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
@@ -119,8 +117,7 @@ class UserUpdateUsername(Resource):
 @api.route('/email')
 class UserUpdateEmail(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Update the user's email")
     @api.expect(user_email_model, validate=True)
@@ -130,9 +127,9 @@ class UserUpdateEmail(Resource):
         new_email = info['email']
         # input cannot be empty string
         if new_email == "":
-            return {'message': 'Update failed. new username cannot be empty'}, 201
+            return {'message': 'Update failed. new username cannot be empty'}, 401
         if User.is_user_exists_by_email(new_email):
-            return {'message': 'This email already been registered'}, 201
+            return {'message': 'This email already been registered'}, 401
         # Get user's detail from token
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')

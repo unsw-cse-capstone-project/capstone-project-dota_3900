@@ -42,8 +42,7 @@ collection_move_parser.add_argument('book_id', type = int, required = True)
 @api.route('')
 class CollectionApi(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Create new collection")
     @api.expect(collection_name_parser, validate=True)
@@ -70,8 +69,7 @@ class CollectionApi(Resource):
             return {'message': e.args[1]}, 500
 
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Update collection's name")
     @api.expect(collection_update_name_parser, validate=True)
@@ -95,7 +93,7 @@ class CollectionApi(Resource):
 
         # Name input cannot be empty
         if new_name == "":
-            return {'message': "Collection's name cannot be empty"}, 201
+            return {'message': "Collection's name cannot be empty"}, 401
 
         # Is collection existed
         if not Collection.is_collection_exists_by_both_id(user_id, collection_id):
@@ -104,7 +102,7 @@ class CollectionApi(Resource):
             collection = Collection(collection_id)
             flag, message = collection.update_collection_name(user_id, new_name)
             if not flag:
-                return {'message': message}, 201
+                return {'message': message}, 401
             else:
                 return {'message': message}, 200
         except pymysql.Error as e:
@@ -160,8 +158,7 @@ class CollectionApi(Resource):
 @api.route('/books')
 class CollectionBooksApi(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get books in collection")
     @api.expect(collection_get_book_parser, validate=True)
@@ -178,8 +175,7 @@ class CollectionBooksApi(Resource):
         return {'books': books}, 200
 
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Add books to collection")
     @api.expect(collection_add_book_parser, validate=True)
@@ -204,8 +200,7 @@ class CollectionBooksApi(Resource):
         return {'message': message}, flag
 
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Delete book in collection")
     @api.expect(collection_add_book_parser, validate=True)
@@ -230,8 +225,7 @@ class CollectionBooksApi(Resource):
             return {'message': 'Resource not found'}, 404
 
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Move book to another collection")
     @api.expect(collection_move_parser, validate=True)
@@ -253,9 +247,9 @@ class CollectionBooksApi(Resource):
         if not Book.is_book_exists_in_collection(old_collection_id, book_id):
             return {'message': 'Resource not found'}, 404
         if Book.is_book_exists_in_collection(new_collection_id, book_id):
-            return {'message': 'This book already existed in the collection you want to move to'}, 201
+            return {'message': 'This book already existed in the collection you want to move to'}, 401
         if old_collection_id == Collection.get_readcollection_id(user_id) or new_collection_id == Collection.get_readcollection_id(user_id):
-            return {'message': 'You cannot move in or out books in Read collection'}, 201
+            return {'message': 'You cannot move in or out books in Read collection'}, 401
         try:
             collection = Collection(old_collection_id)
             collection.move_book_to_another_collection(new_collection_id, book_id)
@@ -268,8 +262,7 @@ class CollectionBooksApi(Resource):
 @api.route('/read_history')
 class CollectionReadHistoryApi(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get books in collection")
     @api.expect(collection_user_id_parser, validate=True)
@@ -289,7 +282,7 @@ class CollectionReadHistoryApi(Resource):
 @api.route('/recently_added')
 class CollectionRecentlyAddedApi(Resource):
     @api.response(200, 'Success')
-    @api.response(201, 'Invalid input')
+    @api.response(401, 'Invalid input')
     @api.response(401, 'Authenticate Failed')
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's 10 most recently added books")
