@@ -49,7 +49,6 @@
 			submit(){
 				if(this.account.username === '' || this.account.password === '' || this.account.email === '' || this.confirmPassword === ''){
 					alert("Please fill in all blanks.")
-					this.clearForm()
 					return
 				}
 				if(this.account.password !== this.confirmPassword){
@@ -60,7 +59,7 @@
 				}
 				if(!this.validateEmail(this.account.email)){
 					alert('Invalid Email address.')
-					this.clearForm()
+					this.account.email = ''
 					return
 				}
 				this.account.email = String(this.account.email).toLowerCase()

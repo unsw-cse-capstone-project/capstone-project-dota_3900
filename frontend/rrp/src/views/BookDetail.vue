@@ -53,7 +53,7 @@
 					</div>
 					<div class="operation-bar" v-if="$store.state.token">
 						<button class="btn-default btn-style-orange" @click="openAddBookForm(book.book_id, book.title)">Add to collection</button>
-						<button class="btn-default btn-style-softgreen" v-if="!bookStatus.read" @click="markAsRead()">Mark as read</button>
+						<button class="btn-default btn-style-softgreen" v-if="!bookStatus.read" @click="openMarkReadForm(book.book_id, book.title)">Mark as read</button>
 						<button class="btn-default btn-style-softwheat" v-if="bookStatus.read" @click="markAsUnread()">Mark as unread</button>
 						<button class="btn-default btn-style-blue" v-if="bookStatus.read && !bookStatus.review" @click="openAddReviewForm('POST')">Write a review</button>
 						<button class="btn-default btn-style-blue" v-if="bookStatus.read && bookStatus.review" @click="openAddReviewForm('PUT')">Modify review</button>
@@ -134,6 +134,7 @@
 
 		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
 		<ReviewRatingForm :method="reviewRatingMethod" :bookID="book.book_id" :bookName="book.title"></ReviewRatingForm>
+		<MarkReadForm :bookID="toMarkReadBookID" :bookName="toMarkReadBookName"></MarkReadForm>
 		<Footer></Footer>
 	</div>
 </template>
@@ -147,6 +148,7 @@
 	import Review from '../components/book/Review.vue'
 	import AddBookForm from '../components/forms/AddBookForm.vue'
 	import ReviewRatingForm from '../components/forms/ReviewRatingForm.vue'
+	import MarkReadForm from '../components/forms/MarkReadForm.vue'
 	export default {
 		name: 'BookDetail',
 		data: function() {
@@ -184,6 +186,9 @@
 				toAddBookName: '',
 				
 				reviewRatingMethod: '',
+				
+				toMarkReadBookID: '',
+				toMarkReadBookName: '',
 			}
 		},
 		components: {
@@ -194,6 +199,7 @@
 			Review,
 			AddBookForm,
 			ReviewRatingForm,
+			MarkReadForm,
 		},
 		methods: {
 			getBookDetails() {
@@ -256,7 +262,7 @@
 							'AUTH-TOKEN': this.$store.state.token
 						},
 						params: {
-							book_id: this.$route.query.id
+							book_id: this.$route.query.id,
 						}
 					}).then((res) => {
 						this.bookStatus = res.data
@@ -264,23 +270,6 @@
 						console.log(error.response.data.message)
 					})
 				}
-			},
-			markAsRead() {
-				this.axios({
-					method: 'post',
-					url: `${API_URL}/book/read`,
-					headers: {
-						'Content-Type': 'application/json',
-						'AUTH-TOKEN': this.$store.state.token
-					},
-					params: {
-						book_id: this.$route.query.id
-					}
-				}).then((res) => {
-					this.getBookStatus()
-				}).catch((error) => {
-					console.log(error.response.data.message)
-				})
 			},
 			markAsUnread() {
 				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
@@ -292,7 +281,7 @@
 							'AUTH-TOKEN': this.$store.state.token
 						},
 						params: {
-							book_id: this.$route.query.id
+							book_id: this.$route.query.id,
 						}
 					}).then((res) => {
 						this.getBookStatus()
@@ -305,6 +294,12 @@
 			openAddReviewForm(method){
 				this.reviewRatingMethod = method
 				let reviewRatingForm = document.getElementById('reviewRatingForm')
+				reviewRatingForm.style.display = 'block'
+			},
+			openMarkReadForm(bookID, bookName){
+				this.toMarkReadBookID = bookID
+				this.toMarkReadBookName = bookName
+				let reviewRatingForm = document.getElementById('markReadForm')
 				reviewRatingForm.style.display = 'block'
 			}
 		},

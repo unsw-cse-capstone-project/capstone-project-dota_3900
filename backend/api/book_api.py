@@ -34,11 +34,13 @@ review_page_parser = reqparse.RequestParser()
 review_page_parser.add_argument('book_id', type=int, required=True)
 review_page_parser.add_argument('page', type=int, required=True)
 
+read_id_parser = reqparse.RequestParser()
+read_id_parser.add_argument('book_id', type=int, required=True)
+
 read_parser = reqparse.RequestParser()
 read_parser.add_argument('book_id', type=int, required=True)
 read_parser.add_argument('year', type=int, required=True)
 read_parser.add_argument('month', type=int, required=True)
-
 
 # # Api: Get search result
 # @api.route('/search_result')
@@ -303,7 +305,7 @@ class BookUnreadApi(Resource):
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Mark book as unread")
-    @api.expect(read_parser, validate=True)
+    @api.expect(read_id_parser, validate=True)
     @requires_login
     def post(self):
         # Get user_id from token
@@ -311,7 +313,7 @@ class BookUnreadApi(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
         # Get book_id from parser
-        args = read_parser.parse_args()
+        args = read_id_parser.parse_args()
         book_id = args.get('book_id')
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
@@ -331,8 +333,8 @@ class BookReadReviewCheck(Resource):
     @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Check wheather this book has been read or reviewd before")
-    @api.expect(read_parser, validate=True)
+    @api.doc(description="Check wheather this book has been read or reviewed before")
+    @api.expect(read_id_parser, validate=True)
     @requires_login
     def get(self):
         # Get user_id from token
@@ -340,7 +342,7 @@ class BookReadReviewCheck(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
         # Get book_id from parser
-        args = read_parser.parse_args()
+        args = read_id_parser.parse_args()
         book_id = args.get('book_id')
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404

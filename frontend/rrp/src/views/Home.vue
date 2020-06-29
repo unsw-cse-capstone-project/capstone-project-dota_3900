@@ -9,7 +9,7 @@
 				</div>
 				<div class="search-bar">
 					<input type="text" placeholder="Book name / Author / ISBN" v-model="searchContent">
-					<button class="btn-default btn-style-wheat" @click.prevent="goToSearchPage()">Search</button>
+					<button type="submit" class="btn-default btn-style-wheat" @click="goToSearchPage()">Search</button>
 				</div>
 				<div class="categories-list">
 					<div class="popular-books">

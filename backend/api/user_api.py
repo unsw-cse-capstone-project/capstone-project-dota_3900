@@ -39,7 +39,7 @@ class UserRegister(Resource):
         if username == "" or password == "" or email == "":
             return {'message': 'Register failed. Username, password or email cannot be empty'}, 401
         if len(username) < 4 or len(username) > 12:
-            return {'message': 'The length of username should between 5 and 12.'},401
+            return {'message': 'The length of username should between 4 and 12.'},401
         if len(password) < 8 or len(password) > 32:
             return {'message': 'The length of password should between 8 and 32'}, 401
         if not (re.search('[a-z]', password) or re.search('[A-Z]', password)):

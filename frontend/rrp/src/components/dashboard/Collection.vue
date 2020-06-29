@@ -9,16 +9,16 @@
 							<div class="status">
 								<span>Books: {{ collection.books.length }}</span>
 								<span>Finished: {{ countReadBooks(collection.books) }}</span>
-								<span v-if="collection.name !== 'Main collection'">Creation time: {{ timeStamp2datetime(collection.creation_time) }}</span>
+								<span v-if="collection.name !== 'Main collection'">Creation time: {{ timeStamp2yearMonthDay(collection.creation_time) }}</span>
 							</div>
 						</div>
 						<div class="operation">
-							<img src="../../../public/icon/edit.png" title="Edit collection name" v-if="isMyDashboard() && collection.name !== 'Main collection'"
+							<img src="../../../public/icon/edit.png" class="animation-fadein-top" title="Edit collection name" v-if="isMyDashboard() && collection.name !== 'Main collection'"
 							 @click="openModifyCollectionNameForm(collection.id, collection.name)">
-							<img src="../../../public/icon/delete.png" title="Delete collection" v-if="isMyDashboard() && collection.name !== 'Main collection'"
+							<img src="../../../public/icon/delete.png" class="animation-fadein-top" title="Delete collection" v-if="isMyDashboard() && collection.name !== 'Main collection'"
 							 @click="deleteCollection(collection.id, collection.name)">
-							<img src="../../../public/icon/copy.png" title="Copy collection" v-if="$store.state.token">
-							<img src="../../../public/icon/open.png" title="Open collection" @click="closeBookList(collection.id)">
+							<img src="../../../public/icon/copy.png" class="animation-fadein-top" title="Copy collection" v-if="$store.state.token">
+							<img src="../../../public/icon/open.png" class="animation-fadein-top" title="Open collection" @click="closeBookList(collection.id)">
 						</div>
 					</div>
 					<div class="book-list" :id="'collection' + collection.id">
@@ -45,7 +45,7 @@
 									<span><b>Publisher & publication date: </b>{{book.publisher}} ({{book.published_date}})</span>
 									<span><b>Category: </b>{{book.categories}}</span>
 									<span><b>Collect date: </b>{{timeStamp2datetime(book.collect_datetime)}}</span>
-									<span v-if="book.finish_datetime !== undefined"><b>Date read: </b>{{timeStamp2datetime(book.finish_datetime)}}</span>
+									<span v-if="book.finish_datetime !== undefined"><b>Date read: </b>{{timeStamp2yearMonth(book.finish_datetime)}}</span>
 								</div>
 							</div>
 						</div>
@@ -117,7 +117,7 @@
 					})
 				})
 				return collections
-			}
+			},
 		},
 		components: {
 			NewCollectionForm,
@@ -220,6 +220,21 @@
 				if (minute < 10) minute = '0' + minute
 				if (second < 10) second = '0' + second
 				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
+			},
+			timeStamp2yearMonthDay(timeStamp) {
+				let datetime = new Date();
+				datetime.setTime(timeStamp);
+				let year = datetime.getFullYear()
+				let month = datetime.getMonth() + 1
+				let date = datetime.getDate()
+				return year + "-" + month + "-" + date
+			},
+			timeStamp2yearMonth(timeStamp) {
+				let datetime = new Date();
+				datetime.setTime(timeStamp);
+				let year = datetime.getFullYear()
+				let month = datetime.getMonth() + 1
+				return year + "-" + month
 			},
 			closeBookList(collectionID) {
 				let bookList = document.getElementById('collection' + collectionID)
