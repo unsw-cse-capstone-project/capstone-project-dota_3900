@@ -76,7 +76,7 @@ background: linear-gradient(to top, #eaafc8, #654ea3); /* W3C, IE 10+/ Edge, Fir
 .search-mainpage .categories-list .popular-books ul {
 	display: flex;
 	justify-content: flex-start;
-	align-items: flex-start;
+	align-items: center;
 	flex-wrap: wrap;
 	margin: 0;
 	padding: 0;
