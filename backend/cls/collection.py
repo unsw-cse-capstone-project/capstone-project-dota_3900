@@ -221,7 +221,7 @@ class Collection:
         # if not Book.is_book_exists_by_id(book_id):
         #     return False
         read_collection_id = Collection.get_readcollection_id(user_id)
-        date = date + "-01 10:00:00"
+        date = date + "-10 10:00:00"
         print(date)
         # SQL
         conn = connect_sys_db()
