@@ -30,13 +30,58 @@ Week3:
 Since we have some modifications about user story, so some parts of dashboard page need to be updated.
 
 - Frontend
-Monday: Update dashboard pages to satisfy new requirements
-Monday: Search static html page finished
+Monday: 
+Frontend: Update dashboard pages to satisfy new requirements
+Frontend: Search static html page finished
 Thursday: Add functions on book-detail page
 
 Week4:
 This week I will continue to work on frontend-backend connection.
 
+Tuesday: 
+Partly finished review part and initialise user-collection page
+
+Thursday: 
+- Frontend: 
+Add, remove, modify collection operations finished, User dashboard codes refactored. Fixed book list sorting problem.
+Finished dashboard-collection: recently added books and UpdateEmailForm.
+Finished Update password function.
+Build a dist directory for public server testing. 
+Removed unecessary blank in ModifyCollectionNameForm
+
+- Backend: 
+Fixed duplicate class name bug in collection_api.py
+
+Friday:
+- Backend:
+Fixed bugs in recently added books function
+
+- Frontend:
+Fixed: small browser width display bug.
+Finished mark as read, mark as unread, create review, modify review functions.
+Finished dashboard-reviews page.
+
+Sunday:
+- Backend:
+Fixed wrong html.status code
+
 - Frontend
-Tuesday: Partly finished review part and initialise user-collection page
+Added links on search page, update some details related to the user-story
+Fixed bug: search page will display 404 page first when network speed is slow
+
+Monday:
+- Backend:
+Fixed some bugs
+
+- Frontend:
+Added random books under homepage-popular books to make homepage looks better :)
+Updated some details on homepage and register forms.
+Updated mark as read function.
+Fixed bug: move book to another collection form cannot closed automatically.
+Fixed bug: review cannot display line feed and single/double qoute normally.
+Now modify review-rating form can display old review-rating.
+
+
+
+
 
