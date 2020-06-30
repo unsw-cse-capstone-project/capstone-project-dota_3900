@@ -69,7 +69,11 @@
 					this.$emit('updateData')
 					this.closeForm()
 				}).catch((error) => {
-					console.log(error.response.data.message)
+					if (error.response.data.message === 'Invalid month'){
+						alert('Invalid read date.')
+					}else{
+						alert(error.response.data.message)
+					}
 				})
 			},
 			getcurYearMonth(){
