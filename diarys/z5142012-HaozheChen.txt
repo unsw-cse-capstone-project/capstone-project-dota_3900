@@ -25,10 +25,16 @@ Coding:
     5. Compare frontend requirement with backend Api √
 ------------WK04-----------
 Other:
-    1. Jira check
-    2. Ready for demo1
+    1. Jira check √
+    2. Ready for demo1 √
 Coding:
-    1. Collection Api
-    2. Code format
-    3. Finish sprint 1
-    4. Establish environment for frontend
+    1. Collection Api √
+    2. Code format √
+    3. Finish sprint 1 √
+    4. Establish environment for frontend √
+------------WK05-----------
+Other:
+    1. Code formate and comment
+Coding:
+    1. Recommand book in homepage
+    2. Monthly goal
