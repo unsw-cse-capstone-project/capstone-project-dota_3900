@@ -38,11 +38,10 @@
 				<span>Update Password</span>
 			</li>
 			
-			<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
-			<UpdatePasswordForm></UpdatePasswordForm>
 		</ul>
 		
-		
+		<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
+		<UpdatePasswordForm></UpdatePasswordForm>	
 	</div>
 </template>
 
