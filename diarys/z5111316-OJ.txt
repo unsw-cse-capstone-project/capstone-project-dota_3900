@@ -8,5 +8,3 @@ schema modified to ensure consistency.
 create trigger for create new user, when user instance been created, automatically create default and read collection for them.
 wk4
 write some query for collection related operation, test function for sprint 1.
-wk5 
-prepare for demoA
