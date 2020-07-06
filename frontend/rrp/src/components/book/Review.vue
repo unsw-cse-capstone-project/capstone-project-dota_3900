@@ -9,9 +9,7 @@
 				{{ timeStamp2datetime(review.review_time) }}
 			</div>
 		</div>
-		<div class="comment">
-			{{ review.review_content }}
-		</div>
+		<span class="comment" v-html="review.review_content.replace(/\n/g, '<br />')"></span>
 	</li>
 </template>
 

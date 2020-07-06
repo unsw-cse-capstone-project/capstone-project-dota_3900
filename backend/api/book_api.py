@@ -1,3 +1,5 @@
+import datetime
+
 import jwt
 import pymysql
 from flask import request
@@ -32,9 +34,13 @@ review_page_parser = reqparse.RequestParser()
 review_page_parser.add_argument('book_id', type=int, required=True)
 review_page_parser.add_argument('page', type=int, required=True)
 
+read_id_parser = reqparse.RequestParser()
+read_id_parser.add_argument('book_id', type=int, required=True)
+
 read_parser = reqparse.RequestParser()
 read_parser.add_argument('book_id', type=int, required=True)
-
+read_parser.add_argument('year', type=int, required=True)
+read_parser.add_argument('month', type=int, required=True)
 
 # # Api: Get search result
 # @api.route('/search_result')
@@ -173,8 +179,7 @@ class ReviewApi(Resource):
             return {'message': 'book_id and user_id cannot be both empty'}, 400
 
     @api.response(200, 'Success')
-    @api.response(201, 'Failed, review already existed')
-    @api.response(401, 'Authenticate Failed')
+    @api.response(401, 'Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Post new review")
@@ -193,15 +198,15 @@ class ReviewApi(Resource):
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
         if not Collection.is_book_read(user_id, book_id):
-            return {'message': 'You can only review and rate after you read the book'}, 201
+            return {'message': 'You can only review and rate after you read the book'}, 401
         # input cannot be empty string
         if book_id is None or rating is None or content == "":
-            return {'message': 'Rating or review content cannot be empty'}, 201
+            return {'message': 'Rating or review content cannot be empty'}, 401
         try:
             if Review.new_review(user_id, book_id, rating, content):
                 return {'message': 'Post new review successfuly'}, 200
             else:
-                return {'message': 'Review already existed'}, 201
+                return {'message': 'Review already existed'}, 401
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
 
@@ -224,7 +229,7 @@ class ReviewApi(Resource):
         rating = info['rating']
         # input cannot be empty string
         if book_id is None or rating is None or content == "":
-            return {'message': 'Rating or review content cannot be empty'}, 201
+            return {'message': 'Rating or review content cannot be empty'}, 401
         try:
             if Review.edit_review(user_id, book_id, rating, content):
                 return {'message': 'Update review successfully'}, 200
@@ -273,12 +278,21 @@ class BookReadApi(Resource):
         # Get book_id from parser
         args = read_parser.parse_args()
         book_id = args.get('book_id')
+        now_year = int(datetime.datetime.now().strftime("%Y"))
+        now_month = int(datetime.datetime.now().strftime("%m"))
+        if args.get('year') > now_year or args.get('year') < 1900:
+            return {'message': 'Invalid year'}, 401
+        if args.get('month') > 12 or args.get('month') < 1:
+            return {'message': 'Invalid month'}, 401
+        if args.get('year') == now_year and args.get('month') > now_month:
+            return {'message': 'Invalid month'}, 401
+        date = str(args.get('year')) + "-" + str(args.get('month'))
         if Collection.is_book_read(user_id, book_id):
             return {'message': 'This book is already been marked as read'}
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
         try:
-            Collection.mark_as_read(user_id,book_id)
+            Collection.mark_as_read(user_id,book_id, date)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Mark successfully'}, 200
@@ -291,7 +305,7 @@ class BookUnreadApi(Resource):
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     @api.doc(description="Mark book as unread")
-    @api.expect(read_parser, validate=True)
+    @api.expect(read_id_parser, validate=True)
     @requires_login
     def post(self):
         # Get user_id from token
@@ -299,7 +313,7 @@ class BookUnreadApi(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
         # Get book_id from parser
-        args = read_parser.parse_args()
+        args = read_id_parser.parse_args()
         book_id = args.get('book_id')
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
@@ -319,8 +333,8 @@ class BookReadReviewCheck(Resource):
     @api.response(401, 'Authenticate Failed')
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
-    @api.doc(description="Check wheather this book has been read or reviewd before")
-    @api.expect(read_parser, validate=True)
+    @api.doc(description="Check wheather this book has been read or reviewed before")
+    @api.expect(read_id_parser, validate=True)
     @requires_login
     def get(self):
         # Get user_id from token
@@ -328,7 +342,7 @@ class BookReadReviewCheck(Resource):
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
         # Get book_id from parser
-        args = read_parser.parse_args()
+        args = read_id_parser.parse_args()
         book_id = args.get('book_id')
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404

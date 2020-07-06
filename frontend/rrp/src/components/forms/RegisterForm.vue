@@ -49,17 +49,17 @@
 			submit(){
 				if(this.account.username === '' || this.account.password === '' || this.account.email === '' || this.confirmPassword === ''){
 					alert("Please fill in all blanks.")
-					this.clearForm()
 					return
 				}
 				if(this.account.password !== this.confirmPassword){
 					alert('Two input password must be consistent.')
-					this.clearForm()
+					this.account.password = ''
+					this.confirmPassword = ''
 					return
 				}
 				if(!this.validateEmail(this.account.email)){
 					alert('Invalid Email address.')
-					this.clearForm()
+					this.account.email = ''
 					return
 				}
 				this.account.email = String(this.account.email).toLowerCase()

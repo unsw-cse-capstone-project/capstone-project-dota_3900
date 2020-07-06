@@ -31,7 +31,7 @@
 										<span v-if="book.average == 0">--</span>
 										<span v-else>{{book.average}}</span>
 										<button class="btn-default btn-style-orange" v-if="$store.state.token" @click="openAddBookForm(book.id, book.title)">Add to collection</button>
-										<button class="btn-default btn-style-softgreen" v-if="$store.state.token && !book.bookStatus.read" @click="markAsRead(book.id)">Mark as read</button>
+										<button class="btn-default btn-style-softgreen" v-if="$store.state.token && !book.bookStatus.read" @click="openMarkReadForm(book.id, book.title)">Mark as read</button>
 										<button class="btn-default btn-style-softwheat" v-if="$store.state.token && book.bookStatus.read" @click="markAsUnread(book.id)">Mark as unread</button>
 									</div>
 								</div>
@@ -66,6 +66,7 @@
 			</div>
 			
 			<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
+			<MarkReadForm :bookID="toMarkReadBookID" :bookName="toMarkReadBookName" @updateData="getSearchResult"></MarkReadForm>
 
 		</main>
 
@@ -79,13 +80,15 @@
 	import Header from '../components/common/Header.vue'
 	import Footer from '../components/common/Footer.vue'
 	import AddBookForm from '../components/forms/AddBookForm.vue'
+	import MarkReadForm from '../components/forms/MarkReadForm.vue'
 	export default {
 		name: 'HomePage',
 		components: {
 			Header,
 			Footer,
 			NotFound,
-			AddBookForm
+			AddBookForm,
+			MarkReadForm
 		},
 		computed: {
 			indexs: function() {
@@ -124,7 +127,11 @@
 				toAddBookID: '',
 				toAddBookName: '',
 				
+				toMarkReadBookID: '',
+				toMarkReadBookName: '',
+				
 				hasSearchResult: true,
+				
 			}
 		},
 		methods: {
@@ -199,23 +206,29 @@
 			isCurrentPage(num){
 				return num == this.curPageNum
 			},
-			markAsRead(bookID) {
-				this.axios({
-					method: 'post',
-					url: `${API_URL}/book/read`,
-					headers: {
-						'Content-Type': 'application/json',
-						'AUTH-TOKEN': this.$store.state.token
-					},
-					params: {
-						book_id: bookID
-					}
-				}).then((res) => {
-					this.getSearchResult()
-				}).catch((error) => {
-					console.log(error.response.data.message)
-				})
+			openMarkReadForm(bookID, bookName){
+				this.toMarkReadBookID = bookID
+				this.toMarkReadBookName = bookName
+				let reviewRatingForm = document.getElementById('markReadForm')
+				reviewRatingForm.style.display = 'block'
 			},
+			// markAsRead(bookID) {
+			// 	this.axios({
+			// 		method: 'post',
+			// 		url: `${API_URL}/book/read`,
+			// 		headers: {
+			// 			'Content-Type': 'application/json',
+			// 			'AUTH-TOKEN': this.$store.state.token
+			// 		},
+			// 		params: {
+			// 			book_id: bookID
+			// 		}
+			// 	}).then((res) => {
+			// 		this.getSearchResult()
+			// 	}).catch((error) => {
+			// 		console.log(error.response.data.message)
+			// 	})
+			// },
 			markAsUnread(bookID) {
 				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
 					this.axios({

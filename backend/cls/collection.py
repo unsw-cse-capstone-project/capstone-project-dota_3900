@@ -35,8 +35,6 @@ class Collection:
             cursor.execute(query)
         return True, 'Collection update successfully'
 
-
-
     # Get list of books in collection
     def get_book_in_collection(self):
         # SQL
@@ -215,7 +213,7 @@ class Collection:
 
     # Mark certain book as read
     @staticmethod
-    def mark_as_read(user_id, book_id):
+    def mark_as_read(user_id, book_id, date):
         # # Is user exist
         # if not User.is_user_exists_by_id(user_id):
         #     return False
@@ -223,13 +221,17 @@ class Collection:
         # if not Book.is_book_exists_by_id(book_id):
         #     return False
         read_collection_id = Collection.get_readcollection_id(user_id)
+        date = date + "-10 10:00:00"
+        print(date)
         # SQL
         conn = connect_sys_db()
         query = "INSERT INTO collects VALUES(\'{book_id}\', \'{collection_id}\', \'{collect_time}\')".format(
             book_id=book_id,
             collection_id=read_collection_id,
-            collect_time=datetime.datetime.utcnow()
+            # collect_time="2020-06-29 06:06:18.423409"
+            collect_time=date
         )
+        # print(datetime.datetime.utcnow())
         with mysql(conn) as cursor:
             cursor.execute(query)
 

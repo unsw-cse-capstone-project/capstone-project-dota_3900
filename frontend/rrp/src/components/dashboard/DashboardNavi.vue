@@ -1,6 +1,6 @@
 <template>
 	<div class="left">
-		<ul>
+		<ul class="animation-fadein-top" >
 			<router-link :to="{name: 'UserCollection', query: {id: $route.query.id}}">
 				<li :class="{selected: $route.name === 'UserCollection'}">
 					<img src="../../../public/icon/Collection.png">
@@ -13,11 +13,13 @@
 				<span>Monthly Goal</span>
 				<div>-</div>
 			</li>
-			<li>
-				<img src="../../../public/icon/already-read.png">
-				<span>Read History</span>
-				<div>{{tags.ReadHistory_num}}</div>
-			</li>
+			<router-link :to="{name: 'UserReadHistory', query: {id: $route.query.id}}">
+				<li :class="{selected: $route.name === 'UserReadHistory'}">
+					<img src="../../../public/icon/already-read.png">
+					<span>Read History</span>
+					<div>{{tags.ReadHistory_num}}</div>
+				</li>
+			</router-link>
 			<router-link :to="{name: 'UserReviews', query: {id: $route.query.id}}">
 				<li :class="{selected: $route.name === 'UserReviews'}">
 					<img src="../../../public/icon/my-reviews.png">
@@ -26,7 +28,7 @@
 				</li>
 			</router-link>
 		</ul>
-		<ul v-if="isMyDashboard()">
+		<ul v-if="isMyDashboard()" class="animation-fadein-top" >
 			<li @click="openUpdateEmailForm()">
 				<img src="../../../public/icon/modify-email.png">
 				<span>Update Email</span>
@@ -36,11 +38,10 @@
 				<span>Update Password</span>
 			</li>
 			
-			<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
-			<UpdatePasswordForm></UpdatePasswordForm>
 		</ul>
 		
-		
+		<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
+		<UpdatePasswordForm></UpdatePasswordForm>	
 	</div>
 </template>
 

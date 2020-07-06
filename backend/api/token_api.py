@@ -58,4 +58,4 @@ class Token(Resource):
                 return {'token': auth.generate_token(account_id, username, password_encrypt, 0, email).decode(),
                         }
         conn.close()
-        return {'message': 'Useless login info'}, 401
+        return {'message': 'Invalid login username or password, please try again.'}, 401

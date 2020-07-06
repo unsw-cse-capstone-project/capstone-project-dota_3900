@@ -42,6 +42,14 @@
 				review: '',
 			}
 		},
+		computed: {
+			trueContent: function(){
+				if(this.review !== '' && this.review !== undefined){
+					return this.review.replace(/\'/g, "\\\'").replace(/\"/g,"\\\"")
+				}
+				return ''
+			}
+		},
 		methods: {
 			closeForm() {
 				this.clearForm()
@@ -67,7 +75,7 @@
 					data: {
 						"book_id": this.bookID,
 						"rating": this.rating,
-						"content": this.review
+						"content": this.trueContent
 					}
 				}).then((res) => {
 					if (res.status === 200) {
@@ -80,10 +88,10 @@
 					}
 					location.reload()
 				}).catch((err) => {
-					location.reload()
+					console.log(err.response.data.message)
 				})
 			}
-		}
+		},
 	}
 </script>
 
