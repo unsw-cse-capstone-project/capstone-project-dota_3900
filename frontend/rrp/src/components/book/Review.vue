@@ -1,7 +1,9 @@
 <template>
 	<li v-if="review">
 		<div class="user-info">
-			<span>{{ review.username }}</span>
+			<router-link :to="{ name: 'UserCollection', query: {id: review.user_id}}">
+				<span>{{ review.username }}</span>
+			</router-link>
 			<div class="ratings">
 				<StarBar :rating="review.rating"></StarBar>
 			</div>
@@ -35,7 +37,7 @@
 				if (minute < 10) minute = '0' + minute
 				if (second < 10) second = '0' + second
 				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
-			}
+			},
 		}
 	}
 </script>
