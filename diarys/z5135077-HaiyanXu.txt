@@ -29,3 +29,4 @@ Wk5
 
 Wk6
 1. Arrange retrospective meeting on monday and submit the retrospective meeting document.
+2. Click the jira user story "done" once the user story are complected and been fully tested.
