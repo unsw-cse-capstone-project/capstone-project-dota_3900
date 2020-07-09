@@ -28,7 +28,6 @@ class Book:
     @staticmethod
     def book_search(input):
         # SQL
-        print("test")
         conn = connect_sys_db()
         query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
             input=input
@@ -42,7 +41,7 @@ class Book:
             result.append(ds[index])
         return result
 
-    # Search result of input content
+    # Length of search result of input content
     @staticmethod
     def book_search_length(input):
         # SQL
@@ -109,7 +108,7 @@ class Book:
                 num_page = num_results / result_each_page
         return num_page, num_last_page
 
-    # Get review list on certain review page
+    # Get book list on certain search page
     @staticmethod
     def get_book_search_page(content, result_each_page, curr_page):
         page_num, last_page_num = Book.get_book_search_page_num(content, result_each_page)
