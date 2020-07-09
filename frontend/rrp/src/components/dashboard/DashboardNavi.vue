@@ -13,11 +13,13 @@
 				<span>Monthly Goal</span>
 				<div>-</div>
 			</li>
-			<li>
-				<img src="../../../public/icon/already-read.png">
-				<span>Read History</span>
-				<div>{{tags.ReadHistory_num}}</div>
-			</li>
+			<router-link :to="{name: 'UserReadHistory', query: {id: $route.query.id}}">
+				<li :class="{selected: $route.name === 'UserReadHistory'}">
+					<img src="../../../public/icon/already-read.png">
+					<span>Read History</span>
+					<div>{{tags.ReadHistory_num}}</div>
+				</li>
+			</router-link>
 			<router-link :to="{name: 'UserReviews', query: {id: $route.query.id}}">
 				<li :class="{selected: $route.name === 'UserReviews'}">
 					<img src="../../../public/icon/my-reviews.png">
@@ -36,11 +38,10 @@
 				<span>Update Password</span>
 			</li>
 			
-			<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
-			<UpdatePasswordForm></UpdatePasswordForm>
 		</ul>
 		
-		
+		<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>
+		<UpdatePasswordForm></UpdatePasswordForm>	
 	</div>
 </template>
 

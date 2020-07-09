@@ -22,6 +22,7 @@
 					<DashboardNavi :account="account" :myAccount="myAccount"></DashboardNavi>
 					<Collection v-if="$route.name === 'UserCollection'" ref="collection" :account="account" :myAccount="myAccount"></Collection>
 					<Reviews v-if="$route.name === 'UserReviews'" :account="account" :myAccount="myAccount"></Reviews>
+					<ReadHistory v-if="$route.name === 'UserReadHistory'" :account="account" :myAccount="myAccount"></ReadHistory>
 				</div>
 			</div>
 			
@@ -39,6 +40,7 @@
 	import NotFound from '../components/common/NotFound.vue'
 	import Collection from '../components/dashboard/Collection.vue'
 	import Reviews from '../components/dashboard/Reviews.vue'
+	import ReadHistory from '../components/dashboard/ReadHistory.vue'
 	export default {
 		name: 'Dashboard',
 		data: function() {
@@ -65,6 +67,7 @@
 			DashboardNavi,
 			Collection,
 			Reviews,
+			ReadHistory
 		},
 		methods: {
 			getAccountsInfo() {

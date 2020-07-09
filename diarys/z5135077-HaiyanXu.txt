@@ -1,6 +1,32 @@
 Wk1
-1. Choose a topic, the group formed and deciding programming language.
+1. Choose team project topic, the group formed and deciding programming language.
 2. I set up Jira accounts and wrote a draft of the user story section of the proposal. 
 3. Draw a prototype of user interface on paper and discussed with the developer to ensure front-end HTML design
-matched with a user story.
+matched with the user story.
 4. I planned to finished proposal next week, post everything to Jira and assign the task to developers.
+
+Wk2
+1. Finished the proposal --- background, User story, prototype
+2. Wrote accpetance creteria for each user story to guide developers how to coding. 
+2. Arranged meeting with team members and go through the proposal, make sure everyone knows the 
+
+
+Wk3
+1. Setting up the envionment
+2. Dicsussing with yefeng niu, ensure the HTML static design contains the neccessary functions we need. 
+3. Double check if the required functionality are met and submit the proposal. 
+
+Wk4
+1. Introduced the accpetance creteria of the user story in sprint 1.
+2. Arrange daily meeting and follow up the progress.
+3. 
+2. Prepare for demo A on Tuesday, planned to test all functionality for sprint1 after it completed.
+
+Wk5
+1.  Got fever on tuesday, so Siyao Jiang presented the demoA instead of me. 
+2.  Test the functionality for sprint2 by week 6 monday, so we can have retro meeting and discuss what went well, what should be improved on monday 6:00pm.
+3.  Told developers the problmes that i found out, and ask them to update. 
+
+Wk6
+1. Arrange retrospective meeting on monday and submit the retrospective meeting document.
+2. Click the jira user story "done" once the user story are complected and been fully tested.

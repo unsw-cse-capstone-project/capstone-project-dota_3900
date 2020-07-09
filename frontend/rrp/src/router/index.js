@@ -26,6 +26,11 @@ Vue.use(VueRouter)
 		component: Dashboard
 	},
 	{
+		path: '/user/read_history',
+		name: 'UserReadHistory',
+		component: Dashboard
+	},
+	{
 		path: '/user/reviews',
 		name: 'UserReviews',
 		component: Dashboard

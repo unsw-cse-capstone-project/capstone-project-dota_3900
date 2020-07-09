@@ -49,7 +49,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="no-book" v-if="collection.book_num === 0">
+						<div class="no-book" v-if="collection.books.length === 0">
 							<img src="../../../public/icon/hint.png">
 							<span>Oops, there is no book yet!</span>
 						</div>
