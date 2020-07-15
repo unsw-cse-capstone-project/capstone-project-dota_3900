@@ -33,9 +33,13 @@ collection_user_id_parser = reqparse.RequestParser()
 collection_user_id_parser.add_argument('user_id', type=int, required=True)
 
 collection_move_parser = reqparse.RequestParser()
-collection_move_parser.add_argument('new_collection_id', type = int, required = True)
-collection_move_parser.add_argument('old_collection_id', type = int, required = True)
-collection_move_parser.add_argument('book_id', type = int, required = True)
+collection_move_parser.add_argument('new_collection_id', type=int, required=True)
+collection_move_parser.add_argument('old_collection_id', type=int, required=True)
+collection_move_parser.add_argument('book_id', type=int, required=True)
+
+collection_copy_parser = reqparse.RequestParser()
+collection_copy_parser.add_argument('collection_id', type=int, required=True)
+collection_copy_parser.add_argument('new_collection_name')
 
 
 # Api: change to Collection
@@ -154,6 +158,7 @@ class CollectionApi(Resource):
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
 
+
 # Api: changes to books in collection
 @api.route('/books')
 class CollectionBooksApi(Resource):
@@ -240,7 +245,9 @@ class CollectionBooksApi(Resource):
         new_collection_id = args.get('new_collection_id')
         old_collection_id = args.get('old_collection_id')
         book_id = args.get('book_id')
-        if not (Collection.is_collection_exists_by_both_id(user_id, new_collection_id) and Collection.is_collection_exists_by_both_id(user_id, old_collection_id)):
+        if not (Collection.is_collection_exists_by_both_id(user_id,
+                                                           new_collection_id) and Collection.is_collection_exists_by_both_id(
+                user_id, old_collection_id)):
             return {'message': 'Resource not found'}, 404
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
@@ -248,7 +255,8 @@ class CollectionBooksApi(Resource):
             return {'message': 'Resource not found'}, 404
         if Book.is_book_exists_in_collection(new_collection_id, book_id):
             return {'message': 'This book already existed in the collection you want to move to'}, 401
-        if old_collection_id == Collection.get_readcollection_id(user_id) or new_collection_id == Collection.get_readcollection_id(user_id):
+        if old_collection_id == Collection.get_readcollection_id(
+                user_id) or new_collection_id == Collection.get_readcollection_id(user_id):
             return {'message': 'You cannot move in or out books in Read collection'}, 401
         try:
             collection = Collection(old_collection_id)
@@ -278,6 +286,7 @@ class CollectionReadHistoryApi(Resource):
         books = Collection.get_read_history(user_id)
         return {'books': books}, 200
 
+
 # Api: Get user's 10 most recently added books
 @api.route('/recently_added')
 class CollectionRecentlyAddedApi(Resource):
@@ -295,3 +304,47 @@ class CollectionRecentlyAddedApi(Resource):
             return {'message': 'Resource not found'}, 404
         result = Collection.get_recent_added_books(user_id)
         return {'books': result}, 200
+
+
+@api.route('/copy')
+class CollectionCopy(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Invalid input')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's 10 most recently added books")
+    @api.expect(collection_copy_parser, validate=True)
+    @requires_login
+    def get(self):
+        # Get collection_id and book_id from parser
+        token = request.headers.get('AUTH-TOKEN')
+        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+        user_id = token_info['id']
+        # Get info from parser
+        args = collection_copy_parser.parse_args()
+        collection_id = args.get('collection_id')
+        new_collection_name = args.get('new_collection_name')
+        # Target collection existed check
+        if not Collection.is_collection_exists_by_id(collection_id):
+            return {'message': 'Resource not found'}, 404
+        if Collection.is_collection_exists_by_both_id(user_id, collection_id):
+            return {'message': 'You cannot copy your own collection'}, 201
+        collection = Collection(collection_id)
+        collection_name = collection.get_collection_name()
+
+        # Target collection has same name with certain collection owned by user
+        if (Collection.is_collection_exists_by_name(user_id, collection_name)) and (new_collection_name is None):
+            return {'message': 'You already has a collection with same name.'}, 201
+        if not new_collection_name is None:
+            if Collection.is_collection_exists_by_name(user_id, new_collection_name):
+                return {'message': 'You already has a collection with same name'}, 201
+        else:
+            new_collection_name = collection_name
+
+
+        Collection.post_new_collection(user_id, new_collection_name)
+        Collection.copy_collection(collection_id, Collection.get_collection_id_by_name(user_id, new_collection_name))
+        return {'message' : 'Copy collection successfully'}, 200
+
+
+
