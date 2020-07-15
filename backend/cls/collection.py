@@ -119,6 +119,27 @@ class Collection:
         with mysql(conn) as cursor:
             cursor.execute(query)
 
+    # Get collection's name
+    def get_collection_name(self):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT name as collection_name FROM collections WHERE id = \'{id}\'".format(
+            id=self._id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        # print(db_result.iloc[0].collection_name)
+        return db_result.iloc[0].collection_name
+
+    @staticmethod
+    def get_collection_id_by_name(user_id, collection_name):
+        conn = connect_sys_db()
+        query = "SELECT id FROM collections WHERE (user_id = \'{user_id}\' AND name = \'{collection_name}\')".format(
+            user_id=user_id,
+            collection_name=collection_name
+        )
+        db_result = read_sql(sql=query, con=conn)
+        return db_result.iloc[0].id
+
     # Is collection existed by user_id and collection_id
     @staticmethod
     def is_collection_exists_by_both_id(user_id, collection_id):
@@ -141,6 +162,21 @@ class Collection:
         conn = connect_sys_db()
         query = "SELECT * FROM collections WHERE id = \'{id}\'".format(
             id=collection_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True
+
+    # Is collection existed by user_id and collection_name
+    @staticmethod
+    def is_collection_exists_by_name(user_id, collection_name):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT * FROM collections WHERE (user_id = \'{user_id}\' AND name = \'{collection_name}\')".format(
+            user_id=user_id,
+            collection_name=collection_name
         )
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
@@ -370,3 +406,13 @@ class Collection:
             ds[index]['book_cover_url'] = book.get_info().book_cover_url
             result.append(ds[index])
         return result
+
+    @staticmethod
+    def copy_collection(source_id, target_id):
+        source_collection = Collection(source_id)
+        target_collection = Collection(target_id)
+        source_book = source_collection.get_book_in_collection()
+        for book in source_book:
+            print(book)
+            target_collection.add_book_to_collection(book['book_id'])
+
