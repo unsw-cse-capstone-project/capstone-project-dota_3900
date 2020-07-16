@@ -8,8 +8,13 @@
 					Read · Recommend · Review.
 				</div>
 				<div class="search-bar">
-					<input type="text" placeholder="Book name / Author / ISBN" v-model="searchContent">
-					<button type="submit" class="btn-default btn-style-wheat" @click="goToSearchPage()">Search</button>
+					<select class="selection" v-model="searchMode">
+						<option value="books">Books</option>
+						<option value="users">Users</option>
+					</select>
+					<input type="text" placeholder="Book name / Author / ISBN" v-model="searchContent" id="HomePageSearchArea">
+					<button type="submit" class="btn-default btn-style-wheat" @click="goToBookSearchPage()" v-if="searchMode === 'books'">Search</button>
+					<button type="submit" class="btn-default btn-style-wheat" @click="goToUserSearchPage()" v-if="searchMode === 'users'">Search</button>
 				</div>
 				<div class="categories-list">
 					<div class="popular-books">
@@ -66,15 +71,24 @@ export default {
 		return {
 			searchContent: '',
 			popularBooks: [],
+			searchMode: 'books',
 		}
 	},
 	methods:{
-		goToSearchPage(){
+		goToBookSearchPage(){
 			if(this.searchContent !== ''){
 				this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1}})
 			}
 			else{
-				alert('search content cannot be empty.')
+				alert('Search content cannot be empty.')
+			}
+		},
+		goToUserSearchPage(){
+			if(this.searchContent !== ''){
+				this.$router.push({name: 'UserSearchResult', query: {content: this.searchContent}})
+			}
+			else{
+				alert('Search content cannot be empty.')
 			}
 		},
 		getPopularBooks(){
@@ -91,10 +105,33 @@ export default {
 	},
 	mounted: function(){
 		this.getPopularBooks()
+	},
+	watch: {
+		searchMode(){
+			let searchArea = document.getElementById('HomePageSearchArea')
+			if(this.searchMode === 'books'){
+				searchArea.setAttribute('placeholder', 'Book name / Author / ISBN')
+			}
+			else if(this.searchMode === 'users'){
+				searchArea.setAttribute('placeholder', 'User name / ID / Email')
+			}	
+		}
 	}
 }
 </script>
 
 <style scoped>
 	@import url("../assets/css/search.css");
+	.selection{
+		color: white;
+		font-weight: bold;
+		border: none;
+		background: none;
+		font-size: 1rem;
+		margin-top: 0.125rem;
+		cursor: pointer;
+		padding: 0.5rem;
+		margin-left: -1rem;
+		margin-right: 1rem;
+	}
 </style>

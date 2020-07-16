@@ -17,7 +17,7 @@
 							 @click="openModifyCollectionNameForm(collection.id, collection.name)">
 							<img src="../../../public/icon/delete.png" class="animation-fadein-top" title="Delete collection" v-if="isMyDashboard() && collection.name !== 'Main collection'"
 							 @click="deleteCollection(collection.id, collection.name)">
-							<img src="../../../public/icon/copy.png" class="animation-fadein-top" title="Copy collection" v-if="$store.state.token">
+							<img src="../../../public/icon/copy.png" class="animation-fadein-top" title="Copy collection" v-if="$store.state.token && !isMyDashboard()" @click="openCopyCollectionFrom(collection.id)">
 							<img src="../../../public/icon/open.png" class="animation-fadein-top" title="Open collection" @click="closeBookList(collection.id)">
 						</div>
 					</div>
@@ -80,6 +80,7 @@
 		<ModifyCollectionNameForm :collectionID="collectionID2Modify" :collectionName="collectionName2Modify"></ModifyCollectionNameForm>
 		<CollectionMoveBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toMoveBookID" :toMoveBookName="toMoveBookName" :curCollectionID="curCollectionID"></CollectionMoveBookForm>
 		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
+		<CopyCollectionForm :collection_id="toCopyCollectionID"></CopyCollectionForm>
 	</div>
 </template>
 
@@ -89,6 +90,7 @@
 	import ModifyCollectionNameForm from '../../components/forms/ModifyCollectionNameForm.vue'
 	import CollectionMoveBookForm from '../forms/CollectionMoveBookForm.vue'
 	import AddBookForm from '../forms/AddBookForm.vue'
+	import CopyCollectionForm from '../forms/CopyCollectionForm.vue'
 	
 	export default {
 		name: 'UserCollection',
@@ -106,6 +108,8 @@
 				
 				toAddBookID: '',
 				toAddBookName: '',
+				
+				toCopyCollectionID: '',
 			}
 		},
 		computed: {
@@ -124,6 +128,7 @@
 			ModifyCollectionNameForm,
 			CollectionMoveBookForm,
 			AddBookForm,
+			CopyCollectionForm,
 		},
 		methods: {
 			markAsRead() {
@@ -326,6 +331,11 @@
 				this.toAddBookName = bookName
 				let collectionAddBookForm = document.getElementById('addBookForm')
 				collectionAddBookForm.style.display = 'block'
+			},
+			openCopyCollectionFrom(collection_id){
+				this.toCopyCollectionID = collection_id
+				let copyCollectionForm  = document.getElementById('copyCollectionForm')
+				copyCollectionForm.style.display = 'block'
 			}
 		},
 		mounted: function() {

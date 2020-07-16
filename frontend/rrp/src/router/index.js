@@ -5,6 +5,8 @@ import BookDetail from '../views/BookDetail.vue'
 import NotFoundPage from '../views/404.vue'
 import Dashboard from '../views/Dashboard.vue'
 import SearchResult from '../views/SearchResult.vue'
+import UserSearchResult from '../views/SearchResultUser.vue'
+import BookReviews from '../views/ReviewList.vue'
 
 Vue.use(VueRouter)
 
@@ -36,9 +38,19 @@ Vue.use(VueRouter)
 		component: Dashboard
 	},
 	{
+		path: '/book/reviews',
+		name: 'BookReviews',
+		component: BookReviews
+	},
+	{
 		path: '/search',
 		name: 'SearchResult',
 		component: SearchResult
+	},
+	{
+		path: '/user-search',
+		name: 'UserSearchResult',
+		component: UserSearchResult
 	},
 	{
 		path: '*',

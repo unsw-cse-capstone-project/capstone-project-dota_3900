@@ -72,9 +72,11 @@
 						<Review :review="book.review_preview[1]"></Review>
 						<Review :review="book.review_preview[2]"></Review>
 					</ul>
-					<div class="show-more">
-						Show all {{ book.num_rated }} comments >
-					</div>
+					<router-link :to="{name: 'BookReviews', query: {id: $route.query.id, page: 1}}">
+						<div class="show-more">
+							Show all {{ book.num_rated }} comments >
+						</div>
+					</router-link>
 				</div>
 			</div>
 

@@ -5,10 +5,13 @@
 				<div class="title">「 Read Recommendation Pro」</div>
 			</router-link>
 			<div class="search" v-if="isHome !== true">
-				<input class="search_bar" type="text" placeholder="Book title / Author / ISBN" v-model="searchContent">
-				<button class="search_btn" @click.prevent="goToSearchPage()">
-					Search
-				</button>
+				<select class="selection" v-model="searchMode">
+					<option value="books">Books</option>
+					<option value="users">Users</option>
+				</select>
+				<input class="search_bar" type="text" placeholder="Book title / Author / ISBN" v-model="searchContent" id="headerSearchArea">
+				<button class="search_btn" @click.prevent="goToBookSearchPage()" v-if="searchMode === 'books'">Search</button>
+				<button class="search_btn" @click.prevent="goToUserSearchPage()" v-if="searchMode === 'users'">Search</button>
 			</div>
 		</div>
 		
@@ -48,6 +51,7 @@
 					admin: ''
 				},
 				searchContent: '',
+				searchMode: 'books'
 			}
 		},
 		components:{
@@ -97,14 +101,22 @@
 					admin: ''
 				}
 			},
-			goToSearchPage(){
+			goToBookSearchPage(){
 				if(this.searchContent !== ''){
 					this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1}})
 				}
 				else{
 					alert('search content cannot be empty.')
 				}
-			}
+			},
+			goToUserSearchPage(){
+				if(this.searchContent !== ''){
+					this.$router.push({name: 'UserSearchResult', query: {content: this.searchContent}})
+				}
+				else{
+					alert('Search content cannot be empty.')
+				}
+			},
 		},
 		mounted: function(){
 			// get User info from token
@@ -113,10 +125,32 @@
 		watch: {
 			'$route' (){
 				location.reload()
+			},
+			searchMode(){
+				let searchArea = document.getElementById('headerSearchArea')
+				if(this.searchMode === 'books'){
+					searchArea.setAttribute('placeholder', 'Book name / Author / ISBN')
+				}
+				else if(this.searchMode === 'users'){
+					searchArea.setAttribute('placeholder', 'User name / ID / Email')
+				}	
 			}
 		}
 	}
 </script>
 
-<style>
+<style scoped>
+	.selection{
+		color: white;
+		font-weight: bold;
+		border: none;
+		background: none;
+		font-size: 0.875rem;
+		margin-top: 0.125rem;
+		cursor: pointer;
+		padding: 0.5rem;
+		margin-left: -1rem;
+		margin-right: 0.5rem;
+		margin-left: 0.625rem;
+	}
 </style>

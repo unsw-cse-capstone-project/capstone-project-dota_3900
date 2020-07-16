@@ -7,11 +7,11 @@
 				</div>
 				<div class="row">
 					<span>Username:</span>
-					<input type="text" placeholder="Enter username" v-model="account.username">
+					<input type="text" placeholder="Enter username (4 - 12 characters)" v-model="account.username">
 				</div>
 				<div class="row">
 					<span>Password:</span>
-					<input type="password" placeholder="Enter password" v-model="account.password">
+					<input type="password" placeholder="Enter password (6 - 12 characters)" v-model="account.password">
 				</div>
 				<div class="row">
 					<span>Confirm Password:</span>

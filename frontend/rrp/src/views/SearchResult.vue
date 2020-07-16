@@ -11,6 +11,17 @@
 				<div class="search-title">
 					Search result for "{{$route.query.content}}":
 				</div>
+				<div class="filter">
+					<span>Filter:</span>
+					<span>Rating:</span>
+					<select>
+						rating: <option value="123">123</option>
+					</select>
+					<span>Category:</span>
+					<select>
+						rating: <option value="123">123</option>
+					</select>
+				</div>
 				<ul class="no-result" v-if="!hasSearchResult">
 					No Search Result.
 				</ul>
@@ -44,7 +55,7 @@
 					</li>
 				</ul>
 
-				<div class="pages-bar" v-if="searchResult.length != 0">
+				<div class="pages-bar" v-if="searchResult.length > 0">
 					<router-link v-if="lastPage >= 1" :to="{name: 'SearchResult', query: {content: $route.query.content, page: lastPage}}">
 						<div><< previous page</div>
 					</router-link>
@@ -92,7 +103,7 @@
 		},
 		computed: {
 			indexs: function() {
-				var indexs = [];
+				let indexs = [];
 				for(let i = this.curPageNum - 4; i <= this.curPageNum + 4; i++){
 					if(i > 1 && i < this.totalPageNum){
 						indexs.push(i)
@@ -212,23 +223,6 @@
 				let reviewRatingForm = document.getElementById('markReadForm')
 				reviewRatingForm.style.display = 'block'
 			},
-			// markAsRead(bookID) {
-			// 	this.axios({
-			// 		method: 'post',
-			// 		url: `${API_URL}/book/read`,
-			// 		headers: {
-			// 			'Content-Type': 'application/json',
-			// 			'AUTH-TOKEN': this.$store.state.token
-			// 		},
-			// 		params: {
-			// 			book_id: bookID
-			// 		}
-			// 	}).then((res) => {
-			// 		this.getSearchResult()
-			// 	}).catch((error) => {
-			// 		console.log(error.response.data.message)
-			// 	})
-			// },
 			markAsUnread(bookID) {
 				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
 					this.axios({
@@ -262,6 +256,24 @@
 	}
 </script>
 
-<style>
+<style scoped>
 	@import url("../assets/css/search_result.css");
+	.filter{
+		margin-top: 0.625rem;
+		font-size: 0.875rem;
+	}
+	.filter span{
+		margin-left: 0.625rem;
+		margin-right: 0.3125rem;
+	}
+	.filter span:nth-child(1){
+		margin-left: 0rem;
+		margin-right: 0.625rem;
+	}
+	.filter select{
+		border: none;
+		border-bottom: 0.0625rem #333333 solid;
+		background: none;
+		margin-right: 1.25rem;
+	}
 </style>

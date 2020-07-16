@@ -1,6 +1,6 @@
 <template>
 	<div class="left">
-		<ul class="animation-fadein-top" >
+		<ul>
 			<router-link :to="{name: 'UserCollection', query: {id: $route.query.id}}">
 				<li :class="{selected: $route.name === 'UserCollection'}">
 					<img src="../../../public/icon/Collection.png">
@@ -28,7 +28,7 @@
 				</li>
 			</router-link>
 		</ul>
-		<ul v-if="isMyDashboard()" class="animation-fadein-top" >
+		<ul v-if="isMyDashboard()">
 			<li @click="openUpdateEmailForm()">
 				<img src="../../../public/icon/modify-email.png">
 				<span>Update Email</span>

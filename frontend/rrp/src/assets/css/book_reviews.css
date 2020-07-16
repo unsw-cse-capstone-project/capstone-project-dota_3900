@@ -62,30 +62,6 @@
 	line-height: 1.125rem;
 }
 
-.book-reviews-container .left .pages-bar{
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	padding: 1.25rem 0;
-}
-
-.book-reviews-container .left .pages-bar li{
-	list-style: none;
-	border: 1px lightblue solid;
-	margin-right: 0.625rem;
-	padding: 0.1875rem 0.5rem;
-	background-color: aliceblue;
-	font-size: 0.875rem;
-	color: #485563;
-	cursor: pointer;
-}
-
-.book-reviews-container .left .pages-bar span{
-	font-size: 0.875rem;
-	margin-right: 0.625rem;
-}
-
-
 .book-reviews-container .right{
 	padding-top: 2rem;
 	width: 24%;
@@ -120,4 +96,65 @@
 
 .book-reviews-container .right .operation-bar{
 	margin-top: 1.875rem
+}
+
+
+
+
+
+
+.book-reviews-container .left .pages-bar{
+	margin-top: 1.25rem;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	padding: 1.25rem 0;
+}
+
+.book-reviews-container .left .pages-bar div{
+	list-style: none;
+	margin-right: 0.625rem;
+	font-size: 0.875rem;
+	color: steelblue;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 0.125rem 0.25rem;
+	border-radius: 0.3125rem;
+	margin: 0.125rem;
+}
+
+.book-reviews-container .left .pages-bar div:hover{
+	background-color: steelblue;
+	cursor: pointer;
+	color: white;
+}
+
+
+.book-reviews-container .left .pages-bar li{
+	list-style: none;
+	margin-right: 0.625rem;
+	font-size: 0.875rem;
+	color: mediumvioletred;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 0.125rem 0.25rem;
+	border-radius: 0.3125rem;
+	margin: 0.125rem;
+}
+
+.book-reviews-container .left .pages-bar .selected{
+	color: #222222;
+	pointer-events: none;
+}
+
+.book-reviews-container .left .pages-bar li:hover{
+	background-color: mediumvioletred;
+	cursor: pointer;
+	color: white;
+}
+
+.book-reviews-container .left .pages-bar span{
+	font-size: 0.875rem;
+	color: steelblue;
 }
