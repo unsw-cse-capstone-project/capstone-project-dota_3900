@@ -172,16 +172,16 @@ class User:
             ans += ch
         return ans
 
-    # Search result of input content
-    @staticmethod
-    def user_search_length(input):
-        # SQL
-        conn = connect_sys_db()
-        query = "SELECT count(*) as num FROM users WHERE username like \'%{input}%\' or email like \'%{input}%\'".format(
-            input=input
-        )
-        db_result = read_sql(sql=query, con=conn)
-        return db_result.iloc[0].num
+    # # Search result of input content
+    # @staticmethod
+    # def user_search_length(input):
+    #     # SQL
+    #     conn = connect_sys_db()
+    #     query = "SELECT count(*) as num FROM users WHERE username like \'%{input}%\' or email like \'%{input}%\'".format(
+    #         input=input
+    #     )
+    #     db_result = read_sql(sql=query, con=conn)
+    #     return db_result.iloc[0].num
 
     # Search result of input content
     @staticmethod
@@ -199,56 +199,56 @@ class User:
             result.append(ds[index])
         return result
 
-    # Get total number of search result page
-    @staticmethod
-    def get_user_search_page_num(content, result_each_page):
-        num_results = User.user_search_length(content)
-        # If total number of review < number of review on each page
-        if num_results <= result_each_page:
-            num_page = 1
-            num_last_page = num_results
-        else:
-            num_last_page = num_results % result_each_page
-            if num_last_page != 0:
-                num_page = (num_results - num_last_page) / result_each_page + 1
-            else:
-                num_page = num_results / result_each_page
-        return num_page, num_last_page
-
-    # Get user list on certain user page
-    @staticmethod
-    def get_user_search_page(content, result_each_page, curr_page):
-        page_num, last_page_num = User.get_user_search_page_num(content, result_each_page)
-        # reviews = Book.book_search(content)
-        reviews_num = User.user_search_length(content)
-        if (reviews_num == 0):
-            return []
-        if page_num == curr_page:
-            if last_page_num != 0:
-                index_from = reviews_num - last_page_num + 1
-                index_to = reviews_num
-            else:
-                index_from = reviews_num - result_each_page + 1
-                index_to = reviews_num
-        else:
-            index_from = result_each_page * (curr_page - 1) + 1
-            index_to = result_each_page * (curr_page)
-        return User.get_user_search_from_to(content, index_from - 1, index_to - 1)
-
-    @staticmethod
-    def get_user_search_from_to(content, index_from, index_to):
-        num = index_to - index_from + 1
-        conn = connect_sys_db()
-        query = "SELECT id, username, email FROM users WHERE username like \'%{input}%\' or email like \'%{input}%\' limit {index_from},{num}".format(
-            input=content,
-            index_from=index_from,
-            num=num
-        )
-        # print(query)
-        db_result = read_sql(sql=query, con=conn)
-        json_str = db_result.to_json(orient='index')
-        ds = json.loads(json_str)
-        result = []
-        for index in ds:
-            result.append(ds[index])
-        return result
+    # # Get total number of search result page
+    # @staticmethod
+    # def get_user_search_page_num(content, result_each_page):
+    #     num_results = User.user_search_length(content)
+    #     # If total number of review < number of review on each page
+    #     if num_results <= result_each_page:
+    #         num_page = 1
+    #         num_last_page = num_results
+    #     else:
+    #         num_last_page = num_results % result_each_page
+    #         if num_last_page != 0:
+    #             num_page = (num_results - num_last_page) / result_each_page + 1
+    #         else:
+    #             num_page = num_results / result_each_page
+    #     return num_page, num_last_page
+    #
+    # # Get user list on certain user page
+    # @staticmethod
+    # def get_user_search_page(content, result_each_page, curr_page):
+    #     page_num, last_page_num = User.get_user_search_page_num(content, result_each_page)
+    #     # reviews = Book.book_search(content)
+    #     reviews_num = User.user_search_length(content)
+    #     if (reviews_num == 0):
+    #         return []
+    #     if page_num == curr_page:
+    #         if last_page_num != 0:
+    #             index_from = reviews_num - last_page_num + 1
+    #             index_to = reviews_num
+    #         else:
+    #             index_from = reviews_num - result_each_page + 1
+    #             index_to = reviews_num
+    #     else:
+    #         index_from = result_each_page * (curr_page - 1) + 1
+    #         index_to = result_each_page * (curr_page)
+    #     return User.get_user_search_from_to(content, index_from - 1, index_to - 1)
+    #
+    # @staticmethod
+    # def get_user_search_from_to(content, index_from, index_to):
+    #     num = index_to - index_from + 1
+    #     conn = connect_sys_db()
+    #     query = "SELECT id, username, email FROM users WHERE username like \'%{input}%\' or email like \'%{input}%\' limit {index_from},{num}".format(
+    #         input=content,
+    #         index_from=index_from,
+    #         num=num
+    #     )
+    #     # print(query)
+    #     db_result = read_sql(sql=query, con=conn)
+    #     json_str = db_result.to_json(orient='index')
+    #     ds = json.loads(json_str)
+    #     result = []
+    #     for index in ds:
+    #         result.append(ds[index])
+    #     return result

@@ -66,14 +66,14 @@ class SearchPage(Resource):
         if rating_to < rating_from:
             return {'message': 'Wrong rating range'}, 201
         content = Book.book_search_regex(args.get('search_content'))
-        page_num, last_page_num = Book.get_book_search_page_num(content, rating_from, rating_to, 15)
+        page_num, last_page_num, total_result_num, all_result= Book.get_book_search_page_num(content, rating_from, rating_to, 15)
         # Index out of range
         if page <= 0 or page > page_num:
             return {'message': 'Resource not found'}, 404
-        result = Book.get_book_search_page(content, rating_from, rating_to, 15, page)
+        result = Book.get_book_search_page(content, 15, page, page_num, last_page_num, total_result_num, all_result)
         return {'total_page_num': page_num,
                 'current_page': page,
-                'total_result_num': int(Book.book_search_length(content, rating_from, rating_to)),
+                'total_result_num': int(total_result_num),
                 'result': result
                 }, 200
 
