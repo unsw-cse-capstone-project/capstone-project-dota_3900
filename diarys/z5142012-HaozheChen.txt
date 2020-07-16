@@ -34,7 +34,20 @@ Coding:
     4. Establish environment for frontend √
 ------------WK05-----------
 Other:
-    1. Code formate and comment
+    1. Code formate and comment √
 Coding:
-    1. Recommand book in homepage
+    1. Recommand book in homepage √
+    2. Monthly goal -> move to sprint 4
+------------WK06-----------
+Other:
+    1. Retrorespecitive A √
+Coding:
+    1. Book search optimistic √
+    2. Book search filter √
+    3. User search √
+------------Wk07-----------
+Other:
+    1. Prepare demoB
+Coding:
+    1. Book search filter by categories
     2. Monthly goal
