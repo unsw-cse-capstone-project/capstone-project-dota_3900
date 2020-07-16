@@ -83,36 +83,57 @@ class Book:
 
     # Length of search result of input content
     @staticmethod
-    def book_search_length(input, rating_from, rating_to):
+    def book_search_length(input, category, rating_from, rating_to):
         # SQL
         conn = connect_sys_db()
-        query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
-            input=input
+        # print(rating_to, rating_from)
+        # query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
+        #     input=input
+        # )
+        query = "select id, authors, title, ISBN13, book_cover_url, description, publisher, published_date, categories, average from \
+                (select books.id, books.title, books.authors, books.ISBN13, books.book_cover_url, books.description, books.publisher, books.published_date, books.categories, avg(review_rate.rating) as average \
+                from books left join review_rate on books.id = review_rate.book_id  \
+                where books.title like \'%{input}%\' or books.authors like \'%{input}%\' or books.isbn13 like \'%{input}%\' \
+                group by books.id \
+                order by average desc) as subquery \
+                where ((average >= \'{rating_from}\' and average <= \'{rating_to}\'))".format(
+            input=input,
+            rating_from=rating_from,
+            rating_to=rating_to
         )
+        if rating_from == 0:
+            query = query.rstrip(")")
+            query += ") or average is null)"
+        if category is not "":
+            query += " and categories = \"" + category + "\""
+        # print(query)
         db_result = read_sql(sql=query, con=conn)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            avg_rating = Book.get_book_average_rating(ds[index]['id'])
-            ds[index]['average'] = avg_rating
-            if rating_from <= avg_rating <= rating_to:
-                result.append(ds[index])
+            # avg_rating = Book.get_book_average_rating(ds[index]['id'])
+            # ds[index]['average'] = avg_rating
+            # if rating_from <= avg_rating <= rating_to:
+            result.append(ds[index])
         return len(result), result
 
     @staticmethod
-    def book_search_regex(input):
-        ans = ""
-        for ch in input:
+    def book_search_regex(content, category):
+        content_ans = ""
+        category_ans = ""
+        for ch in content:
             if not (ch.isdigit() or ch.isalpha()):
                 ch = "%"
-            ans += ch
-        return ans
+            content_ans += ch
+        if category is not None:
+            category_ans = "['" + category + "']"
+        return content_ans, category_ans
 
     # Get total number of search result page
     @staticmethod
-    def get_book_search_page_num(content, rating_from, rating_to, result_each_page):
-        num_results, result = Book.book_search_length(content, rating_from, rating_to)
+    def get_book_search_page_num(content, category, rating_from, rating_to, result_each_page):
+        num_results, result = Book.book_search_length(content, category, rating_from, rating_to)
         # If total number of review < number of review on each page
         if num_results <= result_each_page:
             num_page = 1

@@ -21,8 +21,9 @@ review_content_model = api.model('review_content_model', {
 search_parser = reqparse.RequestParser()
 search_parser.add_argument('search_content', required=True)
 search_parser.add_argument('page', type=int, required=True)
-search_parser.add_argument('rating_from', type=int);
-search_parser.add_argument('rating_to', type=int);
+search_parser.add_argument('rating_from', type=int)
+search_parser.add_argument('rating_to', type=int)
+search_parser.add_argument('category')
 
 review_parser = reqparse.RequestParser()
 review_parser.add_argument('book_id', type=int)
@@ -59,14 +60,15 @@ class SearchPage(Resource):
         page = args.get('page')
         rating_from = args.get('rating_from')
         rating_to = args.get('rating_to')
+        category = args.get('category')
         if rating_from is None:
             rating_from = 0
         if rating_to is None:
             rating_to = 5
         if rating_to < rating_from:
             return {'message': 'Wrong rating range'}, 201
-        content = Book.book_search_regex(args.get('search_content'))
-        page_num, last_page_num, total_result_num, all_result= Book.get_book_search_page_num(content, rating_from, rating_to, 15)
+        content, category = Book.book_search_regex(args.get('search_content'), args.get('category'))
+        page_num, last_page_num, total_result_num, all_result= Book.get_book_search_page_num(content, category, rating_from, rating_to, 15)
         # Index out of range
         if page <= 0 or page > page_num:
             return {'message': 'Resource not found'}, 404
