@@ -21,4 +21,10 @@ Wk4
 
 wk5 
 1. prepare for demoA, 
-2. Check the sprint1 functionality matched with acceptance criteria or not. 
+2. Check the sprint1 functionality matched with acceptance criteria or not.
+
+wk6
+flexibility week
+
+wk7
+1. write query for filtering from search result. 
