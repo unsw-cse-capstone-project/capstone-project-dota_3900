@@ -20,6 +20,10 @@ user_register_model = api.model('user_register_model', {
     'email': fields.String(required=True),
 })
 
+search_parser = reqparse.RequestParser()
+search_parser.add_argument('search_content', required=True)
+# search_parser.add_argument('page', type=int, required=True)
+
 
 # Api: Register a new user account
 @api.route('')
@@ -253,4 +257,21 @@ class UserDashboardTag(Resource):
         return {'collections_num': collection_num,
                 'ReadHistory_num': readhistory_num,
                 'MyReview_num': myreviews_num
+                }, 200
+
+@api.route('/search_page')
+class SearchPage(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get search result page")
+    @api.expect(search_parser, validate=True)
+    def get(self):
+        # Get page and search content from parser
+        args = search_parser.parse_args()
+        content = User.user_search_regex(args.get('search_content'))
+        result = User.user_search(User.user_search_regex(content))
+        return {
+                'result': result
                 }, 200

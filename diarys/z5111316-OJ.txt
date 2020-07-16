@@ -1,10 +1,24 @@
-3900 weekly diary
-wk1
-project choose, proposal, db tools(mysql) and language(python) selection with group,.
-wk2
-draw er diagram by myself, create sql schema by myself, search for dataset(kaggle) with Max, db init by myself.
-wk3
-schema modified to ensure consistency.
-create trigger for create new user, when user instance been created, automatically create default and read collection for them.
-wk4
-write some query for collection related operation, test function for sprint 1.
+3900 weekly diary --- Siyao Jiang
+
+Wk1
+1. project choose
+2. Brainstorming of the project design and functionality, discuss the proposal with the team about the proposal) 
+3. Selection of developing tool with group --- DB tools(MySQL) & language(python) selection
+4. Choose the dataset with the team. 
+
+WK2
+1. Personally Responsible for drawing er diagram, create SQL schema, search for the dataset(kaggle) with Max, DB init.
+2. Helping other team members to set up the database environment. 
+
+WK3
+1. Schema modified to ensure consistency.
+2. create a trigger for creating new user when user instance been created
+3. Automatically create default and read collection for them.
+
+Wk4
+1. write queries for all collection related operation.
+2. Test functionality for sprint 1.
+
+wk5 
+1. prepare for demoA, 
+2. Check the sprint1 functionality matched with acceptance criteria or not. 

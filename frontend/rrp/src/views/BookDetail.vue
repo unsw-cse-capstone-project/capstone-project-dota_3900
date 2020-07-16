@@ -52,11 +52,12 @@
 						</div>
 					</div>
 					<div class="operation-bar" v-if="$store.state.token">
-						<button class="btn-default btn-style-orange" @click="openAddBookForm(book.book_id, book.title)">Add to collection</button>
+						<button class="btn-default btn-style-orange" style="background-color: orangered; color: white;" @click="openAddBookForm(book.book_id, book.title)">Add to collection</button>
 						<button class="btn-default btn-style-softgreen" v-if="!bookStatus.read" @click="openMarkReadForm(book.book_id, book.title)">Mark as read</button>
 						<button class="btn-default btn-style-softwheat" v-if="bookStatus.read" @click="markAsUnread()">Mark as unread</button>
 						<button class="btn-default btn-style-blue" v-if="bookStatus.read && !bookStatus.review" @click="openAddReviewForm('POST')">Write a review</button>
 						<button class="btn-default btn-style-blue" v-if="bookStatus.read && bookStatus.review" @click="openAddReviewForm('PUT')">Modify review</button>
+						<button class="btn-default btn-style-orange" v-if="bookStatus.read && bookStatus.review" @click="deleteReview(book.book_id, book.title)">Delete review</button>
 					</div>
 				</div>
 			</div>
@@ -322,6 +323,30 @@
 				this.toMarkReadBookName = bookName
 				let reviewRatingForm = document.getElementById('markReadForm')
 				reviewRatingForm.style.display = 'block'
+			},
+			deleteReview(bookID, bookName) {
+				if(confirm(`Are you sure to remove your review and rating from \'${bookName}\'?`)){
+					this.axios({
+						method: 'delete',
+						url: `${API_URL}/book/review`,
+						headers: {
+							'Content-Type': 'application/json',
+							'AUTH-TOKEN': this.$store.state.token
+						},
+						params: { 
+							user_id: this.myAccount.user_id,
+							book_id: bookID
+						}
+					}).then((res) => {
+						if(res.status === 200){
+							alert('Remove successfully.')
+						}
+						location.reload()
+					}).catch((err) => {
+						console.log(error.response.data.message)
+						location.reload()
+					})
+				}
 			},
 		},
 		created: function() {

@@ -2,10 +2,10 @@
 # Project: Read Recommendation PRO
 
 ## Group members:
-##### Haiyan XU - z5135077
-##### Haozhe CHEN - z5142012
-##### Siyao JIANG - z5111316
-##### Yefeng NIU - z5149500
+##### Haiyan XU - z5135077 (Scrum master）
+##### Haozhe CHEN - z5142012 （Backend)
+##### Siyao JIANG - z5111316 (Database)
+##### Yefeng NIU - z5149500 (Front-end)
 
 ## Structure:
 ##### /backend: Software backend folder.

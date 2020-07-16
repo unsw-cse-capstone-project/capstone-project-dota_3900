@@ -229,6 +229,20 @@
 	color: #666666;
 }
 
+.comment-list ul li .user-info .operation{
+	font-size: 0.75rem;
+	margin-left: 0.625rem;
+	border-left: 1px lightgray solid;
+}
+
+.comment-list ul li .user-info .operation span{
+	font-size: 0.75rem;
+	margin-left: 0.625rem;
+	color: grey;
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 .comment-list ul li .comment{
 	font-size: 0.875rem;
 	color: #333333;

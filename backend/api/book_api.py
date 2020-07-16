@@ -21,6 +21,8 @@ review_content_model = api.model('review_content_model', {
 search_parser = reqparse.RequestParser()
 search_parser.add_argument('search_content', required=True)
 search_parser.add_argument('page', type=int, required=True)
+search_parser.add_argument('rating_from', type=int);
+search_parser.add_argument('rating_to', type=int);
 
 review_parser = reqparse.RequestParser()
 review_parser.add_argument('book_id', type=int)
@@ -42,20 +44,6 @@ read_parser.add_argument('book_id', type=int, required=True)
 read_parser.add_argument('year', type=int, required=True)
 read_parser.add_argument('month', type=int, required=True)
 
-# # Api: Get search result
-# @api.route('/search_result')
-# class BookSearch(Resource):
-#     @api.response(200, 'Success')
-#     @api.response(401, 'Authenticate Failed')
-#     @api.response(500, 'Internal server error')
-#     @api.doc(description="Search books")
-#     @api.expect(search_parser, validate=True)
-#     def get(self):
-#         # Get search_content by parser
-#         args = search_parser.parse_args()
-#         result = Book.book_search(args.get('search_content'))
-#         return {'list': result}, 200
-# Api: Get info of review_page
 
 @api.route('/search_page')
 class SearchPage(Resource):
@@ -69,16 +57,23 @@ class SearchPage(Resource):
         # Get page and book_id from parser
         args = search_parser.parse_args()
         page = args.get('page')
+        rating_from = args.get('rating_from')
+        rating_to = args.get('rating_to')
+        if rating_from is None:
+            rating_from = 0
+        if rating_to is None:
+            rating_to = 5
+        if rating_to < rating_from:
+            return {'message': 'Wrong rating range'}, 201
         content = Book.book_search_regex(args.get('search_content'))
-        # Book.book_search_regex(content)
-        page_num, last_page_num = Book.get_book_search_page_num(content, 15)
+        page_num, last_page_num, total_result_num, all_result= Book.get_book_search_page_num(content, rating_from, rating_to, 15)
         # Index out of range
         if page <= 0 or page > page_num:
             return {'message': 'Resource not found'}, 404
-        result = Book.get_book_search_page(content, 15, page)
+        result = Book.get_book_search_page(content, 15, page, page_num, last_page_num, total_result_num, all_result)
         return {'total_page_num': page_num,
                 'current_page': page,
-                'total_result_num': int(Book.book_search_length(content)),
+                'total_result_num': int(total_result_num),
                 'result': result
                 }, 200
 
@@ -117,6 +112,7 @@ class BookGetDetailByID(Resource):
                     'review_preview': review_preview
                     }, 200
 
+
 # Api: Get info of review_page
 @api.route('/review_page')
 class ReviewPage(Resource):
@@ -140,6 +136,7 @@ class ReviewPage(Resource):
                 'current_page': page,
                 'reviews': result
                 }, 200
+
 
 # Api: get book's review
 @api.route('/review')
@@ -260,6 +257,7 @@ class ReviewApi(Resource):
             return {'message': e.args[1]}, 500
         return {'message': 'Delete review successfully'}, 200
 
+
 # Api: Mark certain book as read
 @api.route('/read')
 class BookReadApi(Resource):
@@ -292,10 +290,11 @@ class BookReadApi(Resource):
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
         try:
-            Collection.mark_as_read(user_id,book_id, date)
+            Collection.mark_as_read(user_id, book_id, date)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Mark successfully'}, 200
+
 
 # Api: Mark certain book as unread
 @api.route('/unread')
@@ -320,12 +319,13 @@ class BookUnreadApi(Resource):
         if not Collection.is_book_read(user_id, book_id):
             return {'message': 'This book is not been marked as read yet'}
         try:
-            Collection.mark_as_unread(user_id,book_id)
+            Collection.mark_as_unread(user_id, book_id)
             if Review.is_review_exist_by_both_id(user_id, book_id):
                 Review.delete_review(user_id, book_id)
         except pymysql.Error as e:
             return {'message': e.args[1]}, 500
         return {'message': 'Mark successfully'}, 200
+
 
 @api.route("/read_review_check")
 class BookReadReviewCheck(Resource):
@@ -351,6 +351,7 @@ class BookReadReviewCheck(Resource):
         return {'read': read_flag,
                 'review': review_flag}, 200
 
+
 @api.route("/most_popular")
 class BookMostPopular(Resource):
     @api.response(200, 'Success')
@@ -360,4 +361,3 @@ class BookMostPopular(Resource):
     @api.doc(description="Get the most popular 10 books")
     def get(self):
         return {'books': Book.get_popular_book()}, 200
-
