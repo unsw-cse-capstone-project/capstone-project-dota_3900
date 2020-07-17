@@ -115,6 +115,15 @@ class Book:
             # avg_rating = Book.get_book_average_rating(ds[index]['id'])
             # ds[index]['average'] = avg_rating
             # if rating_from <= avg_rating <= rating_to:
+            query = "select book_id,count(*) as num from review_rate where book_id = \'{book_id}\' group by book_id".format(
+                book_id=ds[index]['id']
+            )
+            db_result = read_sql(sql=query, con=conn)
+            if db_result.empty:
+                ds[index]['review_num'] = 0
+            else:
+                review_num = db_result.iloc[0].num
+                ds[index]['review_num'] = int(review_num)
             result.append(ds[index])
         return len(result), result
 
