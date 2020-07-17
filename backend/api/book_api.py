@@ -363,3 +363,12 @@ class BookMostPopular(Resource):
     @api.doc(description="Get the most popular 10 books")
     def get(self):
         return {'books': Book.get_popular_book()}, 200
+
+@api.route("/categories_list")
+class BookCategoriesList(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    def get(self):
+        return {'categories list': Book.get_categories_list()}, 200

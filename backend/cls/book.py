@@ -250,3 +250,18 @@ class Book:
         for index in ds:
             result.append(ds[index])
         return result
+
+    @staticmethod
+    def get_categories_list():
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT DISTINCT categories FROM books ORDER BY categories ASC"
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            temp = ds[index]['categories'].rstrip("']")
+            temp = temp.lstrip("['")
+            result.append(temp)
+        return result
