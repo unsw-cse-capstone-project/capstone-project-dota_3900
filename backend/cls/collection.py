@@ -408,6 +408,41 @@ class Collection:
         return result
 
     @staticmethod
+    # Get list of books in collection
+    def get_read_history_by_date(user_id, year, month):
+        start_date = str(year) + "-" + str(month) + "-01 00:00:00"
+        if month is 12:
+            finish_date = str(year) + "-" + str(1) + "-01 00:00:00"
+        else:
+            finish_date = str(year) + "-" + str(month + 1) + "-01 00:00:00"
+        # print(start_date)
+        # print(finish_date)
+        start_timestamp = int(time.mktime(time.strptime(start_date, "%Y-%m-%d %H:%M:%S")))*1000
+        finish_timestamp = int(time.mktime(time.strptime(finish_date, "%Y-%m-%d %H:%M:%S")))*1000
+        # print(start_timestamp)
+        # print(finish_timestamp)
+        collection_id = Collection.get_readcollection_id(user_id)
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT book_id FROM collects WHERE collection_id = \'{collection_id}\'".format(
+            collection_id=collection_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            finish_date = Collection.get_book_read_date(user_id, ds[index]['book_id'])
+            if start_timestamp <= finish_date < finish_timestamp:
+                ds[index]['finish_time'] = finish_date
+                book = Book(ds[index]['book_id'])
+                ds[index]['book_title'] = book.get_info().title
+                ds[index]['book_cover_url'] = book.get_info().book_cover_url
+                result.append(ds[index])
+        # return result
+        return result
+
+    @staticmethod
     def copy_collection(source_id, target_id):
         source_collection = Collection(source_id)
         target_collection = Collection(target_id)

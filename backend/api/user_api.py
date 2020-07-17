@@ -1,6 +1,9 @@
+from datetime import datetime
+
 from flask_restplus import Resource, Namespace, reqparse, fields
 
 from cls.collection import Collection
+from cls.goal import Goal
 from cls.review import Review
 from cls.user import User
 from lib.validation_decorator import requires_login
@@ -275,3 +278,16 @@ class SearchPage(Resource):
         return {
                 'result': result
                 }, 200
+
+@api.route('/<int:user_id>/goal')
+class UserMonthlyGoal(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Authenticate Failed')
+    @api.response(404, 'Resource not found')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get user's monthly goal")
+    def get(self, user_id):
+        # Collection.get_read_history_by_date(user_id,int(datetime.now().year), int(datetime.now().month))
+        if not User.is_user_exists_by_id(user_id):
+            return {'message': 'Resource not found'}, 404
+        return {'monthly goal': Goal.get_goal(user_id)}, 200
