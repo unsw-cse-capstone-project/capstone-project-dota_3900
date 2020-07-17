@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import jwt
 import pymysql
 from flask import request
@@ -5,6 +7,7 @@ from flask_restplus import Resource, Namespace, fields, reqparse, inputs
 
 from cls.book import Book
 from cls.collection import Collection
+from cls.goal import Goal
 from cls.review import Review
 from cls.user import User
 from config import SECRET_KEY
@@ -40,6 +43,11 @@ collection_move_parser.add_argument('book_id', type=int, required=True)
 collection_copy_parser = reqparse.RequestParser()
 collection_copy_parser.add_argument('collection_id', type=int, required=True)
 collection_copy_parser.add_argument('new_collection_name')
+
+collection_readHistory_tag_parser = reqparse.RequestParser()
+collection_readHistory_tag_parser.add_argument('user_id', type=int, required=True)
+collection_readHistory_tag_parser.add_argument('year', type=int, required=True)
+collection_readHistory_tag_parser.add_argument('month', type=int, required=True)
 
 
 # Api: change to Collection
@@ -286,6 +294,32 @@ class CollectionReadHistoryApi(Resource):
         books = Collection.get_read_history(user_id)
         return {'books': books}, 200
 
+# Api: Get user's read history
+@api.route('/read_history_tag')
+class CollectionReadHistoryTagApi(Resource):
+    @api.response(200, 'Success')
+    @api.response(401, 'Failed')
+    @api.response(500, 'Internal server error')
+    @api.doc(description="Get books in collection")
+    @api.expect(collection_readHistory_tag_parser, validate=True)
+    # @requires_login
+    def get(self):
+        # Get collection_id from parser
+        args = collection_readHistory_tag_parser.parse_args()
+        user_id = args.get('user_id')
+        year = args.get('year')
+        month = args.get('month')
+        if( month <= 0 or month > 12):
+            return {'message': 'Invalid month'}, 404
+        if (year > int(datetime.now().year)):
+            return {'message': 'Invalid year'}, 404
+        if not User.is_user_exists_by_id(user_id):
+            return {'message': 'Resource not found'}, 404
+
+        target, finish_book, finish_num, finish_flag = Goal.get_goal_record(user_id, year, month)
+        return {'target': target,
+                'finish_num': finish_num,
+                'finish_flag': finish_flag}, 200
 
 # Api: Get user's 10 most recently added books
 @api.route('/recently_added')
