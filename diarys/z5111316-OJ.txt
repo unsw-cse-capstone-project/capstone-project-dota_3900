@@ -27,4 +27,6 @@ wk6
 flexibility week
 
 wk7
-1. write query for filtering from search result. 
+1. write query for filtering from search result.
+2. create new table for monthly reading goal.
+ 
