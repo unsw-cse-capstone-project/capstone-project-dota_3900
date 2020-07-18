@@ -17,12 +17,14 @@
 						User page - {{ account.username }}
 					</div>
 					<button class="btn-default btn-style-white animation-fadein-top delay_04s" v-if="isMyDashboard() && $route.name === 'UserCollection'" @click="$refs['collection'].openNewCollectionForm()">Create New Collection</button>
+					<button class="btn-default btn-style-orange animation-fadein-top delay_04s" v-if="isMyDashboard() && $route.name === 'UserMonthlyGoal'" @click="$refs['monthlyGoal'].openUpdateMonthlyGoalForm()">Set / Update monthly goal</button>
 				</div>
 				<div class="content">
 					<DashboardNavi :account="account" :myAccount="myAccount"></DashboardNavi>
 					<Collection v-if="$route.name === 'UserCollection'" ref="collection" :account="account" :myAccount="myAccount"></Collection>
 					<Reviews v-if="$route.name === 'UserReviews'" :account="account" :myAccount="myAccount"></Reviews>
 					<ReadHistory v-if="$route.name === 'UserReadHistory'" :account="account" :myAccount="myAccount"></ReadHistory>
+					<MonthlyGoal v-if="$route.name === 'UserMonthlyGoal'" ref="monthlyGoal" ></MonthlyGoal>
 				</div>
 			</div>
 			
@@ -41,6 +43,7 @@
 	import Collection from '../components/dashboard/Collection.vue'
 	import Reviews from '../components/dashboard/Reviews.vue'
 	import ReadHistory from '../components/dashboard/ReadHistory.vue'
+	import MonthlyGoal from '../components/dashboard/MonthlyGoal.vue'
 	export default {
 		name: 'Dashboard',
 		data: function() {
@@ -67,7 +70,8 @@
 			DashboardNavi,
 			Collection,
 			Reviews,
-			ReadHistory
+			ReadHistory,
+			MonthlyGoal,
 		},
 		methods: {
 			getAccountsInfo() {

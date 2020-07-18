@@ -28,6 +28,11 @@ Vue.use(VueRouter)
 		component: Dashboard
 	},
 	{
+		path: '/user/monthly_goal',
+		name: 'UserMonthlyGoal',
+		component: Dashboard
+	},
+	{
 		path: '/user/read_history',
 		name: 'UserReadHistory',
 		component: Dashboard
