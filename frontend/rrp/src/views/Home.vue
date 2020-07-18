@@ -71,7 +71,7 @@ export default {
 		return {
 			searchContent: '',
 			popularBooks: [],
-			searchMode: 'books',
+			searchMode: 'books'
 		}
 	},
 	methods:{

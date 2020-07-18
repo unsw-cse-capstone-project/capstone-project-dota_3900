@@ -35,11 +35,12 @@
 					</div>
 					<div class="num_books">
 						<img src="../../../public/icon/copy.png" >
-						<span>{{yearMonth.books.length}} / -</span>
+						<span v-if="yearMonth.tags.target !== 0">{{yearMonth.books.length}} / {{yearMonth.tags.target}} </span>
+						<span v-else>{{yearMonth.books.length}} / -- </span>
 					</div>	
-<!-- 					<div class="finish-goal">
+					<div v-if="yearMonth.tags.finish_flag === true && yearMonth.tags.target !== 0" class="finish-goal">
 						<img src="../../../public/icon/trues-active.png" title="You have reached monthly goal!" >
-					</div> -->
+					</div>
 						<div class="books">
 							<router-link v-for="book in yearMonth.books" :key="book.book_id" :to="{name: 'Book', query: {id: book.book_id}}">
 								<div class="book">
@@ -67,6 +68,7 @@
 		data: function() {
 			return {
 				timeline: [],
+				tags: {},
 				year: '',
 				month: '',
 				hasBookFlag: true,
@@ -94,18 +96,18 @@
 						let yearMonth = books[i].finish_time.split('-')
 						let year = parseInt(yearMonth[0])
 						let month = parseInt(yearMonth[1])
+						let tag = books[i].tag
 						if(timeline.length === 0 || timeline[timeline.length - 1].year !== year || timeline[timeline.length - 1].month !== month){
 							timeline.push({
-								year: parseInt(year), month: parseInt(month), books:[]
+								year: parseInt(year), month: parseInt(month), books:[], tags: tag
 							})
 						}
 						timeline[timeline.length - 1].books.push(books[i])
 					}
 					this.timeline = timeline
-					console.log(this.timeline)
 					this.hasBookInCurMonth()
 				}).catch((err) => {
-					console.log(error.response.data.message)
+					console.log(err.response.data.message)
 				})
 			},
 			timeStamp2yearMonth(timeStamp) {
@@ -120,7 +122,6 @@
 				datetime.setTime((new Date()).getTime());
 				let year = datetime.getFullYear()
 				let month = datetime.getMonth() + 1
-				console.log(this.timeline)
 				if(this.timeline.length !== 0 && this.timeline[0].year === year && this.timeline[0].month === month){
 					this.hasBookFlag = true
 				}else{
@@ -128,12 +129,28 @@
 					this.month = month
 					this.hasBookFlag = false
 				}
-				console.log(this.hasBookFlag)
 			},
 			translateMonthToText(month){
 				let monthText = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 				return monthText[month - 1]
-			}
+			},
+			getTags(year, month){
+				for(let i = 0; i < this.timeline.length; i++){
+					this.axios({
+						method: 'GET',
+						url: `${API_URL}/collection/read_history_tag`,
+						params: { 
+							user_id: this.$route.query.id,
+							year: year,
+							month: month
+						}
+					}).then((res) => {
+						this.tags[this.timeline[i].month + ' ' + this.timeline[i].year] = res.data
+					}).catch((err) => {
+						console.log(error.response.data.message)
+					})
+				}
+			},
 		},
 		mounted: function() {
 			this.getReadHistory()

@@ -105,7 +105,7 @@
 						}
 						location.reload()
 					}).catch((err) => {
-						console.log(error.response.data.message)
+						console.log(err.response.data.message)
 						location.reload()
 					})
 				}

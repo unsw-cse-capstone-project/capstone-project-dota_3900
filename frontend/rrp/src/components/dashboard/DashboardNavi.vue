@@ -8,11 +8,14 @@
 					<div>{{tags.collections_num}}</div>
 				</li>
 			</router-link>
-			<li>
-				<img src="../../../public/icon/goal.png">
-				<span>Monthly Goal</span>
-				<div>-</div>
-			</li>
+			<router-link :to="{name: 'UserMonthlyGoal', query: {id: $route.query.id}}">
+				<li :class="{selected: $route.name === 'UserMonthlyGoal'}">
+					<img src="../../../public/icon/goal.png">
+					<span>Monthly Goal</span>
+					<div style="font-size: 0.6875rem;" v-if="parseInt(tags.MonthlyGoal_num) > 0">{{parseInt(tags.MonthlyGoal_num)}}%</div>
+					<div style="font-size: 0.6875rem;" v-else>-- %</div>
+				</li>
+			</router-link>
 			<router-link :to="{name: 'UserReadHistory', query: {id: $route.query.id}}">
 				<li :class="{selected: $route.name === 'UserReadHistory'}">
 					<img src="../../../public/icon/already-read.png">
