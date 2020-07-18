@@ -404,6 +404,11 @@ class Collection:
             book = Book(ds[index]['book_id'])
             ds[index]['book_title'] = book.get_info().title
             ds[index]['book_cover_url'] = book.get_info().book_cover_url
+
+            # timeArray = time.strptime(finish_date, "%Y-%m-%d %H:%M:%S")
+            date = datetime.datetime.fromtimestamp(int(finish_date)/1000)
+            target, finish_num, finish_flag = Collection.get_tag(user_id, date.year, date.month)
+            ds[index]['tag'] = {'target': target,'finish_num': finish_num, 'finish_flag': finish_flag}
             result.append(ds[index])
         return result
 
@@ -451,3 +456,23 @@ class Collection:
             print(book)
             target_collection.add_book_to_collection(book['book_id'])
 
+    @staticmethod
+    def get_tag(user_id, year, month):
+        conn = connect_sys_db()
+        query = "SELECT goal FROM monthly_goal WHERE (user_id = \'{user_id}\' AND year = \'{year}\' AND month = \'{month}\')".format(
+            user_id=user_id,
+            year=year,
+            month=month,
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            target = 0;
+        else:
+            target = int(db_result.iloc[0].goal)
+        finish_book = Collection.get_read_history_by_date(user_id, year, month)
+        finish_num = len(finish_book)
+        if finish_num >= target:
+            finish_flag = True
+        else:
+            finish_flag = False
+        return target, finish_num, finish_flag
