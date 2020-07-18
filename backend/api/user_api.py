@@ -257,8 +257,14 @@ class UserDashboardTag(Resource):
         collection_num = Collection.get_num_collection(user_id)
         readhistory_num = Collection.get_num_read_collection(user_id, Collection.get_readcollection_id(user_id))
         myreviews_num = Review.get_user_num_review(user_id)
+        target, finish_book, finish_num, finish_flag = Goal.get_goal_record(user_id, int(datetime.now().year), int(datetime.now().month))
+        if target != 0:
+            finish_ratio = "%.2f%%" % (float(finish_num) / float(target) * 100)
+        else:
+            finish_ratio = "--";
         return {'collections_num': collection_num,
                 'ReadHistory_num': readhistory_num,
+                'MonthlyGoal_num': finish_ratio,
                 'MyReview_num': myreviews_num
                 }, 200
 
