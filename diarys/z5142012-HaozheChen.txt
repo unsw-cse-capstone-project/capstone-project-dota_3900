@@ -51,3 +51,5 @@ Other:
 Coding:
     1. Book search filter by categories
     2. Monthly goal
+    3. Combine Pull & Push
+    4. user's homepage dashboard tag
