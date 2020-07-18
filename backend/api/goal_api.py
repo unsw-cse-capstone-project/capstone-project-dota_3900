@@ -43,43 +43,57 @@ class GoalApi(Resource):
         year = int(datetime.now().year)
         month = int(datetime.now().month)
         print(year, month, goal, user_id)
-        if goal <= 0:
+        if goal < 0:
             return {'message': 'Invalid monthly goal'}, 401
+        # if Goal.is_goal_exists(user_id, year, month):
+        #     return {'message': 'Monthly goal already existed'}, 401
+        # try:
+        #     Goal.set_goal(user_id, year, month, goal)
+        # except pymysql.Error as e:
+        #     return {'message': e.args[1]}, 500
+        # return {'message': 'Monthly goal set successfully'}, 200
         if Goal.is_goal_exists(user_id, year, month):
-            return {'message': 'Monthly goal already existed'}, 401
-        try:
-            Goal.set_goal(user_id, year, month, goal)
-        except pymysql.Error as e:
-            return {'message': e.args[1]}, 500
+            if Goal.is_goal_exists_by_goal(user_id, year, month, goal):
+                return {'message': 'You need to set a new monthly goal'}, 401
+            try:
+                Goal.update_goal(user_id, year, month, goal)
+            except pymysql.Error as e:
+                return {'message': e.args[1]}, 500
+        else:
+            try:
+                Goal.set_goal(user_id, year, month, goal)
+            except pymysql.Error as e:
+                return {'message': e.args[1]}, 500
         return {'message': 'Monthly goal set successfully'}, 200
 
-    @api.response(200, 'Success')
-    @api.response(401, 'Failed')
-    @api.response(500, 'Internal server error')
-    @api.doc(description="Update monthly goal")
-    @api.expect(goal_post_parser, validate=True)
-    @requires_login
-    def put(self):
-        # Get user's id from Token
-        token = request.headers.get('AUTH-TOKEN')
-        token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
-        user_id = token_info['id']
-        # Get parameter from parser
-        args = goal_post_parser.parse_args()
-        goal = args.get('goal')
-        year = int(datetime.now().year)
-        month = int(datetime.now().month)
-        if goal <= 0:
-            return {'message': 'Invalid monthly goal'}, 401
-        if not Goal.is_goal_exists(user_id, year, month):
-            return {'message': 'Monthly goal does not exist'}, 401
-        if Goal.is_goal_exists_by_goal(user_id, year, month, goal):
-            return {'message': 'You need input a new goal for this month'}, 401
-        try:
-            Goal.update_goal(user_id, year, month, goal)
-        except pymysql.Error as e:
-            return {'message': e.args[1]}, 500
-        return {'message': 'Monthly goal update successfully'}, 200
+
+    # @api.response(200, 'Success')
+    # @api.response(401, 'Failed')
+    # @api.response(500, 'Internal server error')
+    # @api.doc(description="Update monthly goal")
+    # @api.expect(goal_post_parser, validate=True)
+    # @requires_login
+    # def put(self):
+    #     # Get user's id from Token
+    #     token = request.headers.get('AUTH-TOKEN')
+    #     token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
+    #     user_id = token_info['id']
+    #     # Get parameter from parser
+    #     args = goal_post_parser.parse_args()
+    #     goal = args.get('goal')
+    #     year = int(datetime.now().year)
+    #     month = int(datetime.now().month)
+    #     if goal <= 0:
+    #         return {'message': 'Invalid monthly goal'}, 401
+    #     if not Goal.is_goal_exists(user_id, year, month):
+    #         return {'message': 'Monthly goal does not exist'}, 401
+    #     if Goal.is_goal_exists_by_goal(user_id, year, month, goal):
+    #         return {'message': 'You need input a new goal for this month'}, 401
+    #     try:
+    #         Goal.update_goal(user_id, year, month, goal)
+    #     except pymysql.Error as e:
+    #         return {'message': e.args[1]}, 500
+    #     return {'message': 'Monthly goal update successfully'}, 200
 
     @api.response(200, 'Success')
     @api.response(401, 'Failed')
