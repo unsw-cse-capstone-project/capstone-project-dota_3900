@@ -25,7 +25,7 @@ class RecommendByCategory(Resource):
         book_id = args.get('book_id')
         book = Book(book_id)
         category = book.get_info().categories
-        result = Recommend.recommend_by_category(category, 5, book_id)
+        result = Recommend.recommend_by_category(category, 6, book_id)
         if not result:
             return {'message': 'There is no more book similar with this book, try another mode'}, 200
         return {'books': result}, 200
@@ -39,7 +39,7 @@ class RecommendByAuthor(Resource):
         book_id = args.get('book_id')
         book = Book(book_id)
         author = book.get_info().authors
-        result = Recommend.recommend_by_author(author, 5, book_id)
+        result = Recommend.recommend_by_author(author, 6, book_id)
         if not result:
             return {'message': 'There is no more book similar with this book, try another mode'}, 200
         return {'books': result}, 200
@@ -57,9 +57,9 @@ class RecommendApi(Resource):
         category = book.get_info().categories
         result = []
         if author_flag is True and category_flag is False:
-            result = Recommend.recommend_by_author(author, 5, book_id)
+            result = Recommend.recommend_by_author(author, 6, book_id)
         elif category_flag is True and author_flag is False:
-            result = Recommend.recommend_by_category(category, 5, book_id)
+            result = Recommend.recommend_by_category(category, 6, book_id)
         elif category_flag is True and author_flag is True:
             result = Recommend.recommend_by_author_category(category, author, 5, book_id)
         else:
