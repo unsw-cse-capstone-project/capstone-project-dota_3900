@@ -264,7 +264,7 @@ class Book:
     def get_categories_list():
         # SQL
         conn = connect_sys_db()
-        query = "SELECT DISTINCT categories FROM books ORDER BY categories ASC"
+        query = "select categories, count(*) as count from books group by categories order by count desc limit 12"
         db_result = read_sql(sql=query, con=conn)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
@@ -273,4 +273,5 @@ class Book:
             temp = ds[index]['categories'].rstrip("']")
             temp = temp.lstrip("['")
             result.append(temp)
+        # Book.get_collect_num()
         return result
