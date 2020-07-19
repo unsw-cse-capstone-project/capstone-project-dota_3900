@@ -371,4 +371,4 @@ class BookCategoriesList(Resource):
     @api.response(404, 'Resource not found')
     @api.response(500, 'Internal server error')
     def get(self):
-        return {'categories list': Book.get_categories_list()}, 200
+        return {'categories': Book.get_categories_list()}, 200
