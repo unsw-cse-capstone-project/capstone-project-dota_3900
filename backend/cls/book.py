@@ -302,6 +302,7 @@ class Book:
         for index in ds:
             temp = ds[index]['categories'].rstrip("']")
             temp = temp.lstrip("['")
-            result.append(temp)
+            # temp = temp + " - " + str(ds[index]['count'])
+            result.append({'category': temp, 'book_num': ds[index]['count']})
         # Book.get_collect_num()
         return result
