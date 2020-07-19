@@ -354,7 +354,7 @@ class BookReadReviewCheck(Resource):
                 'review': review_flag}, 200
 
 
-@api.route("/most_popular")
+@api.route("/most_popular_book")
 class BookMostPopular(Resource):
     @api.response(200, 'Success')
     @api.response(401, 'Authenticate Failed')
@@ -364,7 +364,7 @@ class BookMostPopular(Resource):
     def get(self):
         return {'books': Book.get_popular_book()}, 200
 
-@api.route("/categories_list")
+@api.route("/most_popular_categories")
 class BookCategoriesList(Resource):
     @api.response(200, 'Success')
     @api.response(401, 'Authenticate Failed')

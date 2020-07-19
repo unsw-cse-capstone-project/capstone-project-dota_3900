@@ -1,5 +1,6 @@
 import json
 from pandas import read_sql
+
 from lib.sql_linker import connect_sys_db, mysql
 
 
@@ -247,17 +248,46 @@ class Book:
             sum = sum + i['rating']
         return float(sum / len(result))
 
+    # @staticmethod
+    # def get_popular_book():
+        # # SQL
+        # conn = connect_sys_db()
+        # query = "SELECT id, title, book_cover_url from books order by rand() limit 10"
+        # db_result = read_sql(sql=query, con=conn)
+        # json_str = db_result.to_json(orient='index')
+        # ds = json.loads(json_str)
+        # result = []
+        # for index in ds:
+        #     result.append(ds[index])
+        # return result
     @staticmethod
-    def get_popular_book():
+    def create_view_tables():
         # SQL
         conn = connect_sys_db()
-        query = "SELECT id, title, book_cover_url from books order by rand() limit 10"
+        query1 = "create or replace view view4 as select books.id, count(*) as collect_time from books join collects on books.id = collects.book_id group by books.id"
+        query2 = "create or replace view view2 as select books.id, count(*) as read_time from books join collects on books.id = collects.book_id join collections on collects.collection_id = collections.id where collections.name = 'read' group by books.id"
+        query3 = "create or replace view view3 as select books.id, avg(review_rate.rating) as avg_rating from books join review_rate on books.id = review_rate.book_id group by books.id"
+        with mysql(conn) as cursor:
+            cursor.execute(query1)
+            cursor.execute(query2)
+            cursor.execute(query3)
+
+    @staticmethod
+    def get_popular_book():
+        Book.create_view_tables()
+        conn = connect_sys_db()
+        query = 'select distinct books.id, books.title, books.book_cover_url, view4.collect_time, view2.read_time, view3.avg_rating, books.google_rating from books left join collects on books.id = collects.book_id left join review_rate on books.id = review_rate.book_id left join view4 on books.id = view4.id left join view2 on books.id = view2.id left join view3 on books.id = view3.id'
         db_result = read_sql(sql=query, con=conn)
+        db_result = db_result.fillna(0)
+        db_result.insert(6, 'popular',
+                         db_result.collect_time * 0.1 + db_result.read_time * 0.2 + db_result.avg_rating * 0.3 + db_result.google_rating * 0.4)
+        db_result = db_result.sort_values(by=['popular'],ascending=False)
+        db_result = db_result.head(10)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            result.append(ds[index])
+            result.append({'id':ds[index]['id'], 'title':ds[index]['title'], 'book_cover_url': ds[index]['book_cover_url']})
         return result
 
     @staticmethod
