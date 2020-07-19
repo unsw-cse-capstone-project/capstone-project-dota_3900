@@ -81,56 +81,28 @@
 			</div>
 
 			<div class="content-bar animation-fadein-top delay_06s">
-				<div class="title">「 Recommend similar books for you」</div>
+				<div class="title">「 Recommend Books by Author」</div>
 				<ul class="book_list">
-					<li>
-						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
-						<span>Attack on titan</span>
-						<div class="rating">
-							<img src="../../public/icon/star.png">
-							<span>4.3</span>
-						</div>
-					</li>
-					<li>
-						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
-						<span>Attack on titan</span>
-						<div class="rating">
-							<img src="../../public/icon/star.png">
-							<span>4.3</span>
-						</div>
-					</li>
-					<li>
-						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
-						<span>Attack on titan</span>
-						<div class="rating">
-							<img src="../../public/icon/star.png">
-							<span>4.3</span>
-						</div>
-					</li>
-					<li>
-						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
-						<span>Attack on titan</span>
-						<div class="rating">
-							<img src="../../public/icon/star.png">
-							<span>4.3</span>
-						</div>
-					</li>
-					<li>
-						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
-						<span>Attack on titan</span>
-						<div class="rating">
-							<img src="../../public/icon/star.png">
-							<span>4.3</span>
-						</div>
-					</li>
-					<li>
-						<img src="http://books.google.com/books/content?id=Opf3yeQixwQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api">
-						<span>Attack on titan</span>
-						<div class="rating">
-							<img src="../../public/icon/star.png">
-							<span>4.3</span>
-						</div>
-					</li>
+					<router-link v-for="book in booksRecommendbyAuthor" :key="book.book_id" :to="{name: 'Book', query: {id: book.book_id}}">
+						<li>
+							<img :src="book.book_cover_url">
+							<span><b>{{book.title}}</b></span>
+							<span style="margin-top: 0.1875rem; color: gray;">{{book.author.replace(/\[\'/, '').replace(/\'\]/, '').split("', '").join(", ")}}</span>
+						</li>
+					</router-link>
+				</ul>
+			</div>
+			
+			<div class="content-bar animation-fadein-top delay_06s">
+				<div class="title">「 Recommend Books by Category」</div>
+				<ul class="book_list">
+					<router-link v-for="book in booksRecommendbyCategory" :key="book.book_id" :to="{name: 'Book', query: {id: book.book_id}}">
+						<li>
+							<img :src="book.book_cover_url">
+							<span><b>{{book.title}}</b></span>
+							<span style="margin-top: 0.1875rem; color: gray;">{{book.author.replace(/\[\'/, '').replace(/\'\]/, '').split("', '").join(", ")}}</span>
+						</li>
+					</router-link>
 				</ul>
 			</div>
 		</main>
@@ -194,6 +166,9 @@
 				
 				toMarkReadBookID: '',
 				toMarkReadBookName: '',
+				
+				booksRecommendbyCategory: [],
+				booksRecommendbyAuthor: [],
 			}
 		},
 		components: {
@@ -350,11 +325,41 @@
 					})
 				}
 			},
+			getRecommendBooks(){
+				this.axios({
+					method: 'Get',
+					url: `${API_URL}/recommend/recommend_by_author`,
+					params: { 
+						book_id: this.$route.query.id
+					}
+				}).then((res) => {
+					if(res.data.message === undefined){
+						this.booksRecommendbyAuthor = res.data.books
+					}
+				}).catch((err) => {
+					console.log(error.response.data.message)
+				})
+				
+				this.axios({
+					method: 'Get',
+					url: `${API_URL}/recommend/recommend_by_category`,
+					params: { 
+						book_id: this.$route.query.id
+					}
+				}).then((res) => {
+					if(res.data.message === undefined){
+						this.booksRecommendbyCategory = res.data.books
+					}
+				}).catch((err) => {
+					console.log(error.response.data.message)
+				})
+			}
 		},
 		created: function() {
 			this.getAccountsInfo()
 			this.getBookDetails()
 			this.getBookStatus()
+			this.getRecommendBooks()
 		},
 	}
 </script>
