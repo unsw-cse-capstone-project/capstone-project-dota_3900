@@ -18,7 +18,7 @@
 				</div>
 				<div class="categories-list">
 					<div class="popular-books">
-						<div class="title">The Most Popular Books (Random now)</div>
+						<div class="title">The Most Popular Books</div>
 						<ul>
 							<router-link v-for="book in popularBooks" :key="book.id" :to="{name: 'Book', query: {id: book.id}}">
 								<li>
@@ -34,18 +34,7 @@
 							The Most Popular Categories
 						</div>
 						<ul>
-							<li>Fiction - 2528</li>
-							<li>Juvenile Fiction - 522</li>
-							<li>Biography & Autobiography - 382</li>
-							<li>History - 214</li>
-							<li>Philosophy - 132</li>
-							<li>Religion - 112</li>
-							<li>Comics & Graphic Novels - 110</li>
-							<li>Drama - 103</li>
-							<li>Literary Criticism - 96</li>
-							<li>Business & Economics - 80</li>
-							<li>Juvenile Nonfiction - 74</li>
-							<li>Science - 80</li>
+							<li v-for="category in categories" :key="category.category" @click="goToSearchPage(category.category)">{{category.category}} - {{category.book_num}}</li>
 						</ul>
 					</div>
 				</div>
@@ -71,7 +60,8 @@ export default {
 		return {
 			searchContent: '',
 			popularBooks: [],
-			searchMode: 'books'
+			searchMode: 'books',
+			categories: []
 		}
 	},
 	methods:{
@@ -94,17 +84,30 @@ export default {
 		getPopularBooks(){
 			this.axios({
 				method: 'get',
-				url: `${API_URL}/book/most_popular`,
+				url: `${API_URL}/book/most_popular_book`,
 			}).then((res) => {
 				this.popularBooks = res.data.books
 			}).catch((error) => {
 				console.log(error.response.data.message)
-				this.pageNotFound = true
 			})
 		},
+		getPopularCategories(){
+			this.axios({
+				method: 'get',
+				url: `${API_URL}/book/most_popular_categories`,
+			}).then((res) => {
+				this.categories = res.data.categories
+			}).catch((error) => {
+				console.log(error.response.data.message)
+			})
+		},
+		goToSearchPage(category){
+			this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1, category: category}})
+		}
 	},
 	mounted: function(){
 		this.getPopularBooks()
+		this.getPopularCategories()
 	},
 	watch: {
 		searchMode(){
@@ -116,7 +119,7 @@ export default {
 				searchArea.setAttribute('placeholder', 'User name / ID / Email')
 			}	
 		}
-	}
+	},
 }
 </script>
 

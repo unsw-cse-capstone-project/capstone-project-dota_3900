@@ -8,7 +8,7 @@
 
 		<main v-else>
 			<div class="search-results-list">
-				<div class="search-title">
+				<div v-if="$route.query.content !== ''" class="search-title">
 					Search result for "{{$route.query.content}}":
 				</div>
 				<div class="filter">
@@ -72,21 +72,21 @@
 				</ul>
 
 				<div class="pages-bar" v-if="searchResult.length > 0">
-					<router-link v-if="lastPage >= 1" :to="{name: 'SearchResult', query: {content: $route.query.content, page: lastPage}}">
+					<router-link v-if="lastPage >= 1" :to="{name: 'SearchResult', query: {content: $route.query.content, page: lastPage, ratingFrom: $route.query.ratingFrom, ratingTo: $route.query.ratingTo, category: $route.query.category}}">
 						<div><< previous page</div>
 					</router-link>
-					<router-link :to="{name: 'SearchResult', query: {content: $route.query.content, page: 1}}">
+					<router-link :to="{name: 'SearchResult', query: {content: $route.query.content, page: 1, ratingFrom: $route.query.ratingFrom, ratingTo: $route.query.ratingTo, category: $route.query.category}}">
 						<li :class="{'selected': isCurrentPage(1)}">1</li>
 					</router-link>
 					<span v-if="curPageNum > 6">...</span>
-					<router-link v-for="(n, key) in indexs" :key="key" :to="{name: 'SearchResult', query: {content: $route.query.content, page: n}}">
+					<router-link v-for="(n, key) in indexs" :key="key" :to="{name: 'SearchResult', query: {content: $route.query.content, page: n, ratingFrom: $route.query.ratingFrom, ratingTo: $route.query.ratingTo, category: $route.query.category}}">
 						<li :class="{'selected': isCurrentPage(n)}">{{n}}</li>
 					</router-link>
 					<span v-if="curPageNum < totalPageNum - 5">...</span>
-					<router-link :to="{name: 'SearchResult', query: {content: $route.query.content, page: totalPageNum}}">
+					<router-link :to="{name: 'SearchResult', query: {content: $route.query.content, page: totalPageNum, ratingFrom: $route.query.ratingFrom, ratingTo: $route.query.ratingTo, category: $route.query.category}}">
 						<li v-if="totalPageNum != 1" :class="{'selected': isCurrentPage(totalPageNum)}">{{totalPageNum}}</li>
 					</router-link>
-					<router-link v-if="nextPage <= totalPageNum" :to="{name: 'SearchResult', query: {content: $route.query.content, page: nextPage}}">
+					<router-link v-if="nextPage <= totalPageNum" :to="{name: 'SearchResult', query: {content: $route.query.content, page: nextPage, ratingFrom: $route.query.ratingFrom, ratingTo: $route.query.ratingTo, category: $route.query.category}}">
 						<div>next page >></div>
 					</router-link>
 				</div>
