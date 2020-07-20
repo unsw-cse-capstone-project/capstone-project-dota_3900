@@ -31,7 +31,7 @@
 				</li>
 			</router-link>
 		</ul>
-		<ul v-if="isMyDashboard()">
+		<ul v-if="isMyDashboard()" class="animation-fadein-top delay_06s">
 			<li @click="openUpdateEmailForm()">
 				<img src="../../../public/icon/modify-email.png">
 				<span>Update Email</span>
@@ -40,7 +40,6 @@
 				<img src="../../../public/icon/modify-password.png">
 				<span>Update Password</span>
 			</li>
-			
 		</ul>
 		
 		<UpdateEmailForm :currentEmail="myAccount.email"></UpdateEmailForm>

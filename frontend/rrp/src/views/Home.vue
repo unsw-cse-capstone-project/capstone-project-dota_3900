@@ -9,8 +9,8 @@
 				</div>
 				<div class="search-bar">
 					<select class="selection" v-model="searchMode">
-						<option value="books">Books</option>
-						<option value="users">Users</option>
+						<option value="books" style="background-color: purple;">Books</option>
+						<option value="users" style="background-color: purple;">Users</option>
 					</select>
 					<input type="text" placeholder="Book name / Author / ISBN" v-model="searchContent" id="HomePageSearchArea">
 					<button type="submit" class="btn-default btn-style-wheat" @click="goToBookSearchPage()" v-if="searchMode === 'books'">Search</button>
