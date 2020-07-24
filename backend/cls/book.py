@@ -114,16 +114,16 @@ class Book:
         result = []
         for index in ds:
 
-            #saasdasdasdasdasdasdasdasd
-            query = "select book_id,count(*) as num from review_rate where book_id = \'{book_id}\' group by book_id".format(
-                book_id=ds[index]['id']
-            )
-            db_result = read_sql(sql=query, con=conn)
-            if db_result.empty:
-                ds[index]['review_num'] = 0
-            else:
-                review_num = db_result.iloc[0].num
-                ds[index]['review_num'] = int(review_num)
+            # #saasdasdasdasdasdasdasdasd
+            # query = "select book_id,count(*) as num from review_rate where book_id = \'{book_id}\' group by book_id".format(
+            #     book_id=ds[index]['id']
+            # )
+            # db_result = read_sql(sql=query, con=conn)
+            # if db_result.empty:
+            #     ds[index]['review_num'] = 0
+            # else:
+            #     review_num = db_result.iloc[0].num
+            #     ds[index]['review_num'] = int(review_num)
 
             result.append(ds[index])
         return len(result), result
@@ -201,7 +201,7 @@ class Book:
     def get_book_search_from_to(content, index_from, index_to, result):
         # print(index_from, index_to)
         num = index_to - index_from + 1
-        # conn = connect_sys_db()
+        conn = connect_sys_db()
         # query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
         #     input=content,
         # )
@@ -219,6 +219,17 @@ class Book:
         i = 0
         for index in result:
             if index_from <= i <= index_to:
+
+                query = "select book_id,count(*) as num from review_rate where book_id = \'{book_id}\' group by book_id".format(
+                    book_id=index['id']
+                )
+                db_result = read_sql(sql=query, con=conn)
+                if db_result.empty:
+                    index['review_num'] = 0
+                else:
+                    review_num = db_result.iloc[0].num
+                    index['review_num'] = int(review_num)
+
                 ans.append(index)
                 i += 1
             else:
