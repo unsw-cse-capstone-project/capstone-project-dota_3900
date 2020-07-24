@@ -44,26 +44,40 @@ class RecommendByAuthor(Resource):
             return {'message': 'There is no more book similar with this book, try another mode'}, 200
         return {'books': result}, 200
 
-@api.route('/')
-class RecommendApi(Resource):
-    @api.expect(recommend_parser, validate=True)
+@api.route('/recommend_by_publishedDate')
+class RecommendByPublishedDate(Resource):
+    @api.expect(book_parser, validate=True)
     def get(self):
-        args = recommend_parser.parse_args()
+        args = book_parser.parse_args()
         book_id = args.get('book_id')
-        author_flag = args.get('author')
-        category_flag = args.get('category')
         book = Book(book_id)
-        author = book.get_info().authors
-        category = book.get_info().categories
-        result = []
-        if author_flag is True and category_flag is False:
-            result = Recommend.recommend_by_author(author, 6, book_id)
-        elif category_flag is True and author_flag is False:
-            result = Recommend.recommend_by_category(category, 6, book_id)
-        elif category_flag is True and author_flag is True:
-            result = Recommend.recommend_by_author_category(category, author, 5, book_id)
-        else:
-            return {'message': 'You need to choose a recommend parameter'}, 401
+        published_date = book.get_info().published_date
+        result = Recommend.recommend_by_publishedDate(published_date[0:3], 6, book_id)
         if not result:
             return {'message': 'There is no more book similar with this book, try another mode'}, 200
         return {'books': result}, 200
+
+
+# @api.route('/')
+# class RecommendApi(Resource):
+#     @api.expect(recommend_parser, validate=True)
+#     def get(self):
+#         args = recommend_parser.parse_args()
+#         book_id = args.get('book_id')
+#         author_flag = args.get('author')
+#         category_flag = args.get('category')
+#         book = Book(book_id)
+#         author = book.get_info().authors
+#         category = book.get_info().categories
+#         result = []
+#         if author_flag is True and category_flag is False:
+#             result = Recommend.recommend_by_author(author, 6, book_id)
+#         elif category_flag is True and author_flag is False:
+#             result = Recommend.recommend_by_category(category, 6, book_id)
+#         elif category_flag is True and author_flag is True:
+#             result = Recommend.recommend_by_author_category(category, author, 5, book_id)
+#         else:
+#             return {'message': 'You need to choose a recommend parameter'}, 401
+#         if not result:
+#             return {'message': 'There is no more book similar with this book, try another mode'}, 200
+#         return {'books': result}, 200
