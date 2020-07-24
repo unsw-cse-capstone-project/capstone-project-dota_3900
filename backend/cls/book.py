@@ -113,9 +113,8 @@ class Book:
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            # avg_rating = Book.get_book_average_rating(ds[index]['id'])
-            # ds[index]['average'] = avg_rating
-            # if rating_from <= avg_rating <= rating_to:
+
+            #saasdasdasdasdasdasdasdasd
             query = "select book_id,count(*) as num from review_rate where book_id = \'{book_id}\' group by book_id".format(
                 book_id=ds[index]['id']
             )
@@ -125,6 +124,7 @@ class Book:
             else:
                 review_num = db_result.iloc[0].num
                 ds[index]['review_num'] = int(review_num)
+
             result.append(ds[index])
         return len(result), result
 
@@ -218,7 +218,7 @@ class Book:
         ans = []
         i = 0
         for index in result:
-            if (index_from <= i <= index_to):
+            if index_from <= i <= index_to:
                 ans.append(index)
                 i += 1
             else:
