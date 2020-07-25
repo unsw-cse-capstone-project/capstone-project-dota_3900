@@ -71,26 +71,11 @@ class Book:
         else:
             return True
 
-    # # Length of search result of input content
-    # @staticmethod
-    # def book_search_length(input, rating_from, rating_to):
-    #     # SQL
-    #     conn = connect_sys_db()
-    #     query = "SELECT count(*) as num FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
-    #         input=input
-    #     )
-    #     db_result = read_sql(sql=query, con=conn)
-    #     return db_result.iloc[0].num
-
     # Length of search result of input content
     @staticmethod
     def book_search_length(input, category, rating_from, rating_to):
         # SQL
         conn = connect_sys_db()
-        # print(rating_to, rating_from)
-        # query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
-        #     input=input
-        # )
         query = "select id, authors, title, ISBN13, book_cover_url, description, publisher, published_date, categories, average from \
                 (select books.id, books.title, books.authors, books.ISBN13, books.book_cover_url, books.description, books.publisher, books.published_date, books.categories, avg(review_rate.rating) as average \
                 from books left join review_rate on books.id = review_rate.book_id  \
@@ -102,36 +87,27 @@ class Book:
             rating_from=rating_from,
             rating_to=rating_to
         )
+        # Reformat query if filter has no restriction of rating_from
         if rating_from == 0:
             query = query.rstrip(")")
             query += ") or average is null)"
+        # Reformat query if filter has no restriction of category
         if category is not "":
             query += " and categories = \"" + category + "\""
-        # print(query)
         db_result = read_sql(sql=query, con=conn)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
         for index in ds:
-
-            # #saasdasdasdasdasdasdasdasd
-            # query = "select book_id,count(*) as num from review_rate where book_id = \'{book_id}\' group by book_id".format(
-            #     book_id=ds[index]['id']
-            # )
-            # db_result = read_sql(sql=query, con=conn)
-            # if db_result.empty:
-            #     ds[index]['review_num'] = 0
-            # else:
-            #     review_num = db_result.iloc[0].num
-            #     ds[index]['review_num'] = int(review_num)
-
             result.append(ds[index])
         return len(result), result
 
+    # Reformat the search input content
     @staticmethod
     def book_search_regex(content, category):
         content_ans = ""
         category_ans = ""
+        # Change every other symbol to %
         for ch in content:
             if not (ch.isdigit() or ch.isalpha()):
                 ch = "%"
@@ -159,8 +135,6 @@ class Book:
     # Get book list on certain search page
     @staticmethod
     def get_book_search_page(content, result_each_page, curr_page, page_num, last_page_num, reviews_num, result):
-        # page_num, last_page_num, reviews_num= Book.get_book_search_page_num(content, rating_from, rating_to, result_each_page)
-        # reviews_num = Book.book_search_length(content, rating_from, rating_to)
         if (reviews_num == 0):
             return []
         if page_num == curr_page:
@@ -175,61 +149,25 @@ class Book:
             index_to = result_each_page * (curr_page)
         return Book.get_book_search_from_to(content, index_from - 1, index_to - 1, result)
 
-    # @staticmethod
-    # def get_book_search_from_to(content, rating_from, rating_to, index_from, index_to):
-    #     print(index_from, index_to)
-    #     num = index_to - index_from + 1
-    #     conn = connect_sys_db()
-    #     query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\' limit {index_from},{num}".format(
-    #         input=content,
-    #         index_from=index_from,
-    #         num=num
-    #     )
-    #     # print(query)
-    #     db_result = read_sql(sql=query, con=conn)
-    #     print(db_result)
-    #     json_str = db_result.to_json(orient='index')
-    #     ds = json.loads(json_str)
-    #     result = []
-    #     for index in ds:
-    #         ds[index]['average'] = Book.get_book_average_rating(ds[index]['id'])
-    #         if rating_from <= ds[index]['average'] <= rating_to:
-    #             result.append(ds[index])
-    #     return result
-
+    # Get search result from index_from to index_to
     @staticmethod
     def get_book_search_from_to(content, index_from, index_to, result):
-        # print(index_from, index_to)
         num = index_to - index_from + 1
         conn = connect_sys_db()
-        # query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
-        #     input=content,
-        # )
-        # # print(query)
-        # db_result = read_sql(sql=query, con=conn)
-        # # print(db_result)
-        # json_str = db_result.to_json(orient='index')
-        # ds = json.loads(json_str)
-        # result = []
-        # for index in ds:
-        #     ds[index]['average'] = Book.get_book_average_rating(ds[index]['id'])
-        #     if rating_from <= ds[index]['average'] <= rating_to:
-        #         result.append(ds[index])
         ans = []
         i = 0
         for index in result:
             if index_from <= i <= index_to:
-
                 query = "select book_id,count(*) as num from review_rate where book_id = \'{book_id}\' group by book_id".format(
                     book_id=index['id']
                 )
                 db_result = read_sql(sql=query, con=conn)
+                # Add book's number of review into result
                 if db_result.empty:
                     index['review_num'] = 0
                 else:
                     review_num = db_result.iloc[0].num
                     index['review_num'] = int(review_num)
-
                 ans.append(index)
                 i += 1
             else:
@@ -259,40 +197,41 @@ class Book:
             sum = sum + i['rating']
         return float(sum / len(result))
 
-    # @staticmethod
-    # def get_popular_book():
-        # # SQL
-        # conn = connect_sys_db()
-        # query = "SELECT id, title, book_cover_url from books order by rand() limit 10"
-        # db_result = read_sql(sql=query, con=conn)
-        # json_str = db_result.to_json(orient='index')
-        # ds = json.loads(json_str)
-        # result = []
-        # for index in ds:
-        #     result.append(ds[index])
-        # return result
+    # Get view table which will be need in below function
     @staticmethod
     def create_view_tables():
         # SQL
         conn = connect_sys_db()
-        query1 = "create or replace view view4 as select books.id, count(*) as collect_time from books join collects on books.id = collects.book_id group by books.id"
-        query2 = "create or replace view view2 as select books.id, count(*) as read_time from books join collects on books.id = collects.book_id join collections on collects.collection_id = collections.id where collections.name = 'read' group by books.id"
-        query3 = "create or replace view view3 as select books.id, avg(review_rate.rating) as avg_rating from books join review_rate on books.id = review_rate.book_id group by books.id"
+        query1 = "create or replace view view4 as select books.id, count(*) as collect_time from books join collects " \
+                 "on books.id = collects.book_id group by books.id "
+        query2 = "create or replace view view2 as select books.id, count(*) as read_time from books join collects on " \
+                 "books.id = collects.book_id join collections on collects.collection_id = collections.id where " \
+                 "collections.name = 'read' group by books.id "
+        query3 = "create or replace view view3 as select books.id, avg(review_rate.rating) as avg_rating from books " \
+                 "join review_rate on books.id = review_rate.book_id group by books.id "
         with mysql(conn) as cursor:
             cursor.execute(query1)
             cursor.execute(query2)
             cursor.execute(query3)
 
+    # Get the most popular book
     @staticmethod
     def get_popular_book():
         Book.create_view_tables()
+        # SQL
         conn = connect_sys_db()
-        query = 'select distinct books.id, books.title, books.book_cover_url, view4.collect_time, view2.read_time, view3.avg_rating, books.google_rating from books left join collects on books.id = collects.book_id left join review_rate on books.id = review_rate.book_id left join view4 on books.id = view4.id left join view2 on books.id = view2.id left join view3 on books.id = view3.id'
+        query = 'select distinct books.id, books.title, books.book_cover_url, view4.collect_time, view2.read_time, ' \
+                'view3.avg_rating, books.google_rating from books left join collects on books.id = collects.book_id ' \
+                'left join review_rate on books.id = review_rate.book_id left join view4 on books.id = view4.id left ' \
+                'join view2 on books.id = view2.id left join view3 on books.id = view3.id '
         db_result = read_sql(sql=query, con=conn)
         db_result = db_result.fillna(0)
+        # Popular grade formula
         db_result.insert(6, 'popular',
                          db_result.collect_time * 0.1 + db_result.read_time * 0.2 + db_result.avg_rating * 0.3 + db_result.google_rating * 0.4)
+        # Sort dataframe by popular
         db_result = db_result.sort_values(by=['popular'],ascending=False)
+        # Get first ten books in the list
         db_result = db_result.head(10)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
@@ -301,6 +240,7 @@ class Book:
             result.append({'id':ds[index]['id'], 'title':ds[index]['title'], 'book_cover_url': ds[index]['book_cover_url']})
         return result
 
+    # Get list of categories sort by number of books with this category
     @staticmethod
     def get_categories_list():
         # SQL
@@ -313,7 +253,5 @@ class Book:
         for index in ds:
             temp = ds[index]['categories'].rstrip("']")
             temp = temp.lstrip("['")
-            # temp = temp + " - " + str(ds[index]['count'])
             result.append({'category': temp, 'book_num': ds[index]['count']})
-        # Book.get_collect_num()
         return result

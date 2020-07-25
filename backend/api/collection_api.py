@@ -8,7 +8,6 @@ from flask_restplus import Resource, Namespace, fields, reqparse, inputs
 from cls.book import Book
 from cls.collection import Collection
 from cls.goal import Goal
-from cls.review import Review
 from cls.user import User
 from config import SECRET_KEY
 from lib.validation_decorator import requires_login
@@ -64,12 +63,16 @@ class CollectionApi(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get collection_name from parser
         args = collection_name_parser.parse_args()
         name = args.get('collection_name')
-        # Name input cannot be empty string
+
+        # Connot set collection's name as "Main Collection" or "Read"
         if name == "Main collection" or name == "Read":
             return {'message': "Collection's name cannot be 'Main Collection' or 'Read'"}, 400
+
+        # Name input cannot be empty string
         if name == "":
             return {'message': "Collection's name cannot be empty"}, 400
         try:
@@ -124,15 +127,11 @@ class CollectionApi(Resource):
     @api.response(401, 'Authenticate Failed')
     @api.doc(description="Get all collections of current user")
     @api.expect(collection_user_id_parser, validate=True)
-    # @requires_login
     def get(self):
         # Get user_id from parser
         args = collection_user_id_parser.parse_args()
         user_id = args.get('user_id')
         result = Collection.get_user_collection(user_id)
-        # collection_num = Collection.get_num_collection(user_id)
-        # readhistory_num = Collection.get_num_read_collection(user_id, Collection.get_readcollection_id(user_id))
-        # myreviews_num = Review.get_user_num_review(user_id)
         if result == None:
             return {'message': 'Resource not found'}, 404
         return {'Collections': result}, 200
@@ -149,12 +148,15 @@ class CollectionApi(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get collection_id from parser
         args = collection_delete_parser.parse_args()
         collection_id = args.get('collection_id')
+
         # If collection existed
         if not Collection.is_collection_exists_by_both_id(user_id, collection_id):
             return {'message': 'Resource not found'}, 404
+
         # Read History and Main collection cannot be deleted
         read_collection_id = Collection.get_readcollection_id(user_id)
         main_collection_id = read_collection_id - 1
@@ -175,11 +177,11 @@ class CollectionBooksApi(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get books in collection")
     @api.expect(collection_get_book_parser, validate=True)
-    # @requires_login
     def get(self):
         # Get collection_id from parser
         args = collection_get_book_parser.parse_args()
         collection_id = args.get('collection_id')
+
         # Is collection exist
         if not Collection.is_collection_exists_by_id(collection_id):
             return {'message': 'Resource not found'}, 404
@@ -198,13 +200,16 @@ class CollectionBooksApi(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get args from parser
         args = collection_add_book_parser.parse_args()
         collection_id = args.get('collection_id')
         book_id = args.get('book_id')
+
         # Check user is adding book to their own collections
         if not Collection.is_collection_exists_by_both_id(user_id, collection_id):
             return {'message': 'Resource not found'}, 404
+
         # Check if book existed
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
@@ -223,10 +228,12 @@ class CollectionBooksApi(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get collection_id and book_id from parser
         args = collection_add_book_parser.parse_args()
         collection_id = args.get('collection_id')
         book_id = args.get('book_id')
+
         if not Collection.is_collection_exists_by_both_id(user_id, collection_id):
             return {'message': 'Resource not found'}, 404
         if not Book.is_book_exists_by_id(book_id):
@@ -248,14 +255,14 @@ class CollectionBooksApi(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get args from parser
         args = collection_move_parser.parse_args()
         new_collection_id = args.get('new_collection_id')
         old_collection_id = args.get('old_collection_id')
         book_id = args.get('book_id')
         if not (Collection.is_collection_exists_by_both_id(user_id,
-                                                           new_collection_id) and Collection.is_collection_exists_by_both_id(
-                user_id, old_collection_id)):
+                                                           new_collection_id) and Collection.is_collection_exists_by_both_id(user_id, old_collection_id)):
             return {'message': 'Resource not found'}, 404
         if not Book.is_book_exists_by_id(book_id):
             return {'message': 'Resource not found'}, 404
@@ -289,10 +296,9 @@ class CollectionReadHistoryApi(Resource):
         user_id = args.get('user_id')
         if not User.is_user_exists_by_id(user_id):
             return {'message': 'Resource not found'}, 404
-        # collection_id = Collection.get_readcollection_id(user_id)
-        # collection = Collection(collection_id)
         books = Collection.get_read_history(user_id)
         return {'books': books}, 200
+
 
 # Api: Get user's read history
 @api.route('/read_history_tag')
@@ -309,7 +315,7 @@ class CollectionReadHistoryTagApi(Resource):
         user_id = args.get('user_id')
         year = args.get('year')
         month = args.get('month')
-        if( month <= 0 or month > 12):
+        if (month <= 0 or month > 12):
             return {'message': 'Invalid month'}, 404
         if (year > int(datetime.now().year)):
             return {'message': 'Invalid year'}, 404
@@ -320,6 +326,7 @@ class CollectionReadHistoryTagApi(Resource):
         return {'target': target,
                 'finish_num': finish_num,
                 'finish_flag': finish_flag}, 200
+
 
 # Api: Get user's 10 most recently added books
 @api.route('/recently_added')
@@ -339,7 +346,7 @@ class CollectionRecentlyAddedApi(Resource):
         result = Collection.get_recent_added_books(user_id)
         return {'books': result}, 200
 
-
+# Api: Copy collection
 @api.route('/copy')
 class CollectionCopy(Resource):
     @api.response(200, 'Success')
@@ -354,10 +361,12 @@ class CollectionCopy(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get info from parser
         args = collection_copy_parser.parse_args()
         collection_id = args.get('collection_id')
         new_collection_name = args.get('new_collection_name')
+
         # Target collection existed check
         if not Collection.is_collection_exists_by_id(collection_id):
             return {'message': 'Resource not found'}, 404
@@ -374,11 +383,6 @@ class CollectionCopy(Resource):
                 return {'message': 'You already has a collection with same name'}, 201
         else:
             new_collection_name = collection_name
-
-
         Collection.post_new_collection(user_id, new_collection_name)
         Collection.copy_collection(collection_id, Collection.get_collection_id_by_name(user_id, new_collection_name))
-        return {'message' : 'Copy collection successfully'}, 200
-
-
-
+        return {'message': 'Copy collection successfully'}, 200

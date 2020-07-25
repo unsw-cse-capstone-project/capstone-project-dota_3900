@@ -45,7 +45,7 @@ read_parser.add_argument('book_id', type=int, required=True)
 read_parser.add_argument('year', type=int, required=True)
 read_parser.add_argument('month', type=int, required=True)
 
-
+# Api: Book search
 @api.route('/search_page')
 class SearchPage(Resource):
     @api.response(200, 'Success')
@@ -61,12 +61,15 @@ class SearchPage(Resource):
         rating_from = args.get('rating_from')
         rating_to = args.get('rating_to')
         category = args.get('category')
+
+        # Default rating filter is 0 to 5
         if rating_from is None:
             rating_from = 0
         if rating_to is None:
             rating_to = 5
         if rating_to < rating_from:
             return {'message': 'Wrong rating range'}, 201
+
         content, category = Book.book_search_regex(args.get('search_content'), args.get('category'))
         page_num, last_page_num, total_result_num, all_result= Book.get_book_search_page_num(content, category, rating_from, rating_to, 15)
         # Index out of range
@@ -275,11 +278,15 @@ class BookReadApi(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get book_id from parser
         args = read_parser.parse_args()
         book_id = args.get('book_id')
+
+        # Get current year and month
         now_year = int(datetime.datetime.now().strftime("%Y"))
         now_month = int(datetime.datetime.now().strftime("%m"))
+
         if args.get('year') > now_year or args.get('year') < 1900:
             return {'message': 'Invalid year'}, 401
         if args.get('month') > 12 or args.get('month') < 1:
@@ -313,6 +320,7 @@ class BookUnreadApi(Resource):
         token = request.headers.get('AUTH-TOKEN')
         token_info = jwt.decode(token, SECRET_KEY, algorithms='HS256')
         user_id = token_info['id']
+
         # Get book_id from parser
         args = read_id_parser.parse_args()
         book_id = args.get('book_id')
@@ -328,7 +336,7 @@ class BookUnreadApi(Resource):
             return {'message': e.args[1]}, 500
         return {'message': 'Mark successfully'}, 200
 
-
+# Api: whether user has read or review this book
 @api.route("/read_review_check")
 class BookReadReviewCheck(Resource):
     @api.response(200, 'Success')
@@ -353,7 +361,7 @@ class BookReadReviewCheck(Resource):
         return {'read': read_flag,
                 'review': review_flag}, 200
 
-
+# Api: Get most popular books
 @api.route("/most_popular_book")
 class BookMostPopular(Resource):
     @api.response(200, 'Success')
@@ -364,6 +372,7 @@ class BookMostPopular(Resource):
     def get(self):
         return {'books': Book.get_popular_book()}, 200
 
+# Api: Get most popular categories
 @api.route("/most_popular_categories")
 class BookCategoriesList(Resource):
     @api.response(200, 'Success')
