@@ -25,8 +25,6 @@ user_register_model = api.model('user_register_model', {
 
 search_parser = reqparse.RequestParser()
 search_parser.add_argument('search_content', required=True)
-# search_parser.add_argument('page', type=int, required=True)
-
 
 # Api: Register a new user account
 @api.route('')
@@ -45,10 +43,13 @@ class UserRegister(Resource):
         # input cannot be empty string
         if username == "" or password == "" or email == "":
             return {'message': 'Register failed. Username, password or email cannot be empty'}, 401
+        # username length restriction
         if len(username) < 4 or len(username) > 12:
             return {'message': 'The length of username should between 4 and 12.'},401
+        # password length restriction
         if len(password) < 8 or len(password) > 32:
             return {'message': 'The length of password should between 8 and 32'}, 401
+        # password symbol restriction
         if not (re.search('[a-z]', password) or re.search('[A-Z]', password)):
             return {'message': 'The password should contain at least one letter'}, 401
         try:
@@ -237,13 +238,13 @@ class UserGetCollectionByID(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's collection")
     def get(self, user_id):
-        # Get review
+        # Is user existed
         if not User.is_user_exists_by_id(user_id):
             return {'message': "Resource not found"}, 404
         result = Collection.get_user_collection(user_id)
         return {'list': result}, 200
 
-
+# Api: Get user's dashboard tag
 @api.route('/<int:user_id>/dashboard_tags')
 class UserDashboardTag(Resource):
     @api.response(200, 'Success')
@@ -252,22 +253,26 @@ class UserDashboardTag(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's dashboard tag")
     def get(self, user_id):
+        # is user existed
         if not User.is_user_exists_by_id(user_id):
             return {'message': 'Resource not found'}, 404
+        # Get each tag number
         collection_num = Collection.get_num_collection(user_id)
         readhistory_num = Collection.get_num_read_collection(user_id, Collection.get_readcollection_id(user_id))
         myreviews_num = Review.get_user_num_review(user_id)
         target, finish_book, finish_num, finish_flag = Goal.get_goal_record(user_id, int(datetime.now().year), int(datetime.now().month))
+        # Format finish ratio
         if target != 0:
             finish_ratio = "%.2f%%" % (float(finish_num) / float(target) * 100)
         else:
-            finish_ratio = "--";
+            finish_ratio = "--"
         return {'collections_num': collection_num,
                 'ReadHistory_num': readhistory_num,
                 'MonthlyGoal_num': finish_ratio,
                 'MyReview_num': myreviews_num
                 }, 200
 
+# Api: Search user
 @api.route('/search_page')
 class SearchPage(Resource):
     @api.response(200, 'Success')
@@ -284,7 +289,7 @@ class SearchPage(Resource):
         return {
                 'result': result
                 }, 200
-
+# Api: get user's goal
 @api.route('/<int:user_id>/goal')
 class UserMonthlyGoal(Resource):
     @api.response(200, 'Success')
@@ -293,7 +298,6 @@ class UserMonthlyGoal(Resource):
     @api.response(500, 'Internal server error')
     @api.doc(description="Get user's monthly goal")
     def get(self, user_id):
-        # Collection.get_read_history_by_date(user_id,int(datetime.now().year), int(datetime.now().month))
         if not User.is_user_exists_by_id(user_id):
             return {'message': 'Resource not found'}, 404
         return {'monthly goal': Goal.get_goal(user_id)}, 200

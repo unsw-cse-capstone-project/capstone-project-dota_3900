@@ -67,10 +67,6 @@ class Review:
     # Delete existed review
     @staticmethod
     def delete_review(user_id, book_id):
-        # review_list = Review.get_book_user_review(user_id, book_id)
-        # # If review does not exist
-        # if (review_list == []):
-        #     return False
         # SQL
         conn = connect_sys_db()
         query = 'DELETE FROM review_rate WHERE book_id = \'{book_id}\' AND user_id = \'{user_id}\'' \
@@ -94,9 +90,7 @@ class Review:
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            # Timestamp -> datetime
-            # ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-            #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
+            # Add book's title and cover to result list
             book = Book(ds[index]['book_id'])
             ds[index]['book_title'] = book.get_info().title
             ds[index]['book_cover_url'] = book.get_info().book_cover_url
@@ -116,9 +110,6 @@ class Review:
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            # Timestamp -> datetime
-            # ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-            #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
 
@@ -136,13 +127,10 @@ class Review:
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            # Timestamp -> datetime
-            # ds[index]['review_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-            #                                          time.localtime(ds[index]['review_time'] / 1000 - 28800))
             result.append(ds[index])
         return result
 
-    # Get certain book's review posted by certain user
+    # Is certain review posted by certain user existed
     @staticmethod
     def is_review_exist_by_both_id(user_id, book_id):
         # SQL
@@ -237,6 +225,7 @@ class Review:
         reviews = Review.get_book_review(book_id)
         reviews_num = len(reviews)
         if page_num == curr_page:
+            # If last page number is different with other page
             if last_page_num != 0:
                 index_from = reviews_num - last_page_num + 1
                 index_to = reviews_num
@@ -248,6 +237,7 @@ class Review:
             index_to = review_each_page * (curr_page)
         return Review.get_book_review_from_to(book_id, index_from - 1, index_to - 1)
 
+    # Get total number of review posted by certain user
     @staticmethod
     def get_user_num_review(user_id):
         conn = connect_sys_db()

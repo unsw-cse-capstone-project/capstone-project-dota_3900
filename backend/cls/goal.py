@@ -23,7 +23,7 @@ class Goal:
         else:
             return True
 
-    # Is monthly goal already exist
+    # Is monthly goal with certain goal number already existed
     @staticmethod
     def is_goal_exists_by_goal(user_id, year, month, goal):
         # SQL
@@ -68,8 +68,10 @@ class Goal:
         with mysql(conn) as cursor:
             cursor.execute(query)
 
+    # Get certain user's all monthly goal
     @staticmethod
     def get_goal(user_id):
+        # SQL
         conn = connect_sys_db()
         query = "SELECT * FROM monthly_goal WHERE user_id = \'{user_id}\'".format(
             user_id=user_id
@@ -82,8 +84,10 @@ class Goal:
             result.append(ds[index])
         return result
 
+    # Get certain user's monthly goal in certain month
     @staticmethod
     def get_goal_by_date(user_id, year, month):
+        # SQL
         conn = connect_sys_db()
         query = "SELECT * FROM monthly_goal WHERE (user_id = \'{user_id}\' AND year = \'{year}\' AND month = \'{month}\')".format(
             user_id=user_id,
@@ -98,8 +102,10 @@ class Goal:
             result.append(ds[index])
         return result
 
+    # Whether user has reached the goal of certain month
     @staticmethod
     def get_goal_record(user_id, year, month):
+        # SQL
         conn = connect_sys_db()
         query = "SELECT goal FROM monthly_goal WHERE (user_id = \'{user_id}\' AND year = \'{year}\' AND month = \'{month}\')".format(
             user_id=user_id,
@@ -108,9 +114,10 @@ class Goal:
         )
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
-            target = 0;
+            target = 0
         else:
             target = int(db_result.iloc[0].goal)
+        # Get all book read by user in that month
         finish_book = Collection.get_read_history_by_date(user_id, year, month)
         finish_num = len(finish_book)
         if finish_num >= target:
@@ -119,6 +126,7 @@ class Goal:
             finish_flag = False
         return target, finish_book, finish_num, finish_flag
 
+    # How many times that user has reached the goal
     @staticmethod
     def get_goal_finish_num(user_id):
         conn = connect_sys_db()
@@ -128,11 +136,10 @@ class Goal:
         db_result = read_sql(sql=query, con=conn)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
-        ans = 0;
+        ans = 0
         for index in ds:
-            # print(ds)
+            # Get goal record from above function
             target, finish_book, finish_num, finish_flag = Goal.get_goal_record(user_id, ds[index]['year'],ds[index]['month'])
             if finish_flag:
                 ans += 1
-            # print(finish_num)
         return ans

@@ -44,6 +44,7 @@ class Collection:
         )
         db_result = read_sql(sql=query, con=conn)
         user_id = db_result.iloc[0].user_id
+
         # SQL
         query = "SELECT * FROM collects WHERE collection_id = \'{collection_id}\'".format(
             collection_id=self._id
@@ -52,14 +53,11 @@ class Collection:
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
+
         for index in ds:
-            # Timestamp -> datetime
-            # ds[index]['collect_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-            #                                           time.localtime(ds[index]['collect_time'] / 1000 - 28800))
             finish_date = Collection.get_book_read_date(user_id, ds[index]['book_id'])
             # post finish_time if finish
             if finish_date != 0:
-                # ds[index]['finish_time'] = time.strftime('%Y-%m-%d %H:%M:%S')
                 ds[index]['finish_time'] = finish_date
             result.append(ds[index])
         return result
@@ -127,7 +125,6 @@ class Collection:
             id=self._id
         )
         db_result = read_sql(sql=query, con=conn)
-        # print(db_result.iloc[0].collection_name)
         return db_result.iloc[0].collection_name
 
     @staticmethod
@@ -200,11 +197,9 @@ class Collection:
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            # Timestamp -> datetime
             if ds[index]['name'] == "Read":
                 continue
-            # ds[index]['creation_time'] = time.strftime('%Y-%m-%d %H:%M:%S',
-            #                                            time.localtime(ds[index]['creation_time'] / 1000 - 28800))
+            # Add book's number and number of read book in collection to result
             ds[index]['book_num'] = Collection.get_num_book_collection(int(ds[index]['id']))
             ds[index]['finished_num'] = Collection.get_num_read_collection(user_id, int(ds[index]['id']))
             result.append(ds[index])
@@ -250,12 +245,6 @@ class Collection:
     # Mark certain book as read
     @staticmethod
     def mark_as_read(user_id, book_id, date):
-        # # Is user exist
-        # if not User.is_user_exists_by_id(user_id):
-        #     return False
-        # # Is book exist
-        # if not Book.is_book_exists_by_id(book_id):
-        #     return False
         read_collection_id = Collection.get_readcollection_id(user_id)
         date = date + "-10 10:00:00"
         print(date)
@@ -267,7 +256,6 @@ class Collection:
             # collect_time="2020-06-29 06:06:18.423409"
             collect_time=date
         )
-        # print(datetime.datetime.utcnow())
         with mysql(conn) as cursor:
             cursor.execute(query)
 
@@ -333,6 +321,7 @@ class Collection:
             book_id=book_id
         )
         db_result = read_sql(sql=query, con=conn)
+        # This book is existed in this collection
         if db_result.empty:
             return 0
         json_str = db_result.to_json(orient='index')
@@ -353,6 +342,7 @@ class Collection:
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num) - 1
 
+    # Get book added history
     @staticmethod
     def get_recent_added_books(user_id):
         conn = connect_sys_db()
@@ -362,20 +352,20 @@ class Collection:
             user_id=user_id
         )
         db_result = read_sql(sql=query, con=conn)
-        # print(db_result)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
         for index in ds:
             book = Book(ds[index]['book_id'])
             book_info = book.get_info()
+            # Add book's title and cover_url to result
             ds[index]['title'] = book_info.title
             ds[index]['book_cover_url'] = book_info.book_cover_url
             result.append(ds[index])
         return result
 
-    @staticmethod
     # Delete existed collection
+    @staticmethod
     def delete_collection(collection_id):
         # SQL
         conn = connect_sys_db()
@@ -385,8 +375,8 @@ class Collection:
         with mysql(conn) as cursor:
             cursor.execute(query)
 
-    @staticmethod
     # Get list of books in collection
+    @staticmethod
     def get_read_history(user_id):
         collection_id = Collection.get_readcollection_id(user_id)
         # SQL
@@ -400,32 +390,33 @@ class Collection:
         result = []
         for index in ds:
             finish_date = Collection.get_book_read_date(user_id, ds[index]['book_id'])
+            # Add book's finish_time and title and cover_url to result
             ds[index]['finish_time'] = finish_date
             book = Book(ds[index]['book_id'])
             ds[index]['book_title'] = book.get_info().title
             ds[index]['book_cover_url'] = book.get_info().book_cover_url
 
+            # Reformat result need for front-end
             # timeArray = time.strptime(finish_date, "%Y-%m-%d %H:%M:%S")
-            date = datetime.datetime.fromtimestamp(int(finish_date)/1000)
+            date = datetime.datetime.fromtimestamp(int(finish_date) / 1000)
             target, finish_num, finish_flag = Collection.get_tag(user_id, date.year, date.month)
-            ds[index]['tag'] = {'target': target,'finish_num': finish_num, 'finish_flag': finish_flag}
+            ds[index]['tag'] = {'target': target, 'finish_num': finish_num, 'finish_flag': finish_flag}
             result.append(ds[index])
         return result
 
     @staticmethod
-    # Get list of books in collection
+    # Get list of books read in certain month
     def get_read_history_by_date(user_id, year, month):
+        # set default start date
         start_date = str(year) + "-" + str(month) + "-01 00:00:00"
+        # set default finish date
         if month is 12:
             finish_date = str(year) + "-" + str(1) + "-01 00:00:00"
         else:
             finish_date = str(year) + "-" + str(month + 1) + "-01 00:00:00"
-        # print(start_date)
-        # print(finish_date)
-        start_timestamp = int(time.mktime(time.strptime(start_date, "%Y-%m-%d %H:%M:%S")))*1000
-        finish_timestamp = int(time.mktime(time.strptime(finish_date, "%Y-%m-%d %H:%M:%S")))*1000
-        # print(start_timestamp)
-        # print(finish_timestamp)
+        # date -> timestamp
+        start_timestamp = int(time.mktime(time.strptime(start_date, "%Y-%m-%d %H:%M:%S"))) * 1000
+        finish_timestamp = int(time.mktime(time.strptime(finish_date, "%Y-%m-%d %H:%M:%S"))) * 1000
         collection_id = Collection.get_readcollection_id(user_id)
         # SQL
         conn = connect_sys_db()
@@ -438,24 +429,26 @@ class Collection:
         result = []
         for index in ds:
             finish_date = Collection.get_book_read_date(user_id, ds[index]['book_id'])
+            # Compare finish time to make sure whether this book is finished in this month
             if start_timestamp <= finish_date < finish_timestamp:
                 ds[index]['finish_time'] = finish_date
                 book = Book(ds[index]['book_id'])
                 ds[index]['book_title'] = book.get_info().title
                 ds[index]['book_cover_url'] = book.get_info().book_cover_url
                 result.append(ds[index])
-        # return result
         return result
 
+    # Copy certain collection as my own collection
     @staticmethod
     def copy_collection(source_id, target_id):
+        # Get collection object
         source_collection = Collection(source_id)
         target_collection = Collection(target_id)
         source_book = source_collection.get_book_in_collection()
         for book in source_book:
-            print(book)
             target_collection.add_book_to_collection(book['book_id'])
 
+    # Get the tag need for front-end
     @staticmethod
     def get_tag(user_id, year, month):
         conn = connect_sys_db()
@@ -466,7 +459,7 @@ class Collection:
         )
         db_result = read_sql(sql=query, con=conn)
         if db_result.empty:
-            target = 0;
+            target = 0
         else:
             target = int(db_result.iloc[0].goal)
         finish_book = Collection.get_read_history_by_date(user_id, year, month)
