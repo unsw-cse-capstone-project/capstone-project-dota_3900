@@ -47,9 +47,26 @@ Coding:
     3. User search √
 ------------Wk07-----------
 Other:
-    1. Prepare demoB
+    1. Prepare demoB √
 Coding:
-    1. Book search filter by categories
-    2. Monthly goal
-    3. Combine Pull & Push
-    4. user's homepage dashboard tag
+    1. Book search filter by categories √
+    2. Monthly goal √
+    3. Combine Pull & Push √
+    4. user's homepage dashboard tag √
+------------WK08----------
+Other:
+    1. Retrorespective B √
+Coding:
+    1. Recommend by author √
+    2. Recommend by category √
+    3. Recommend by published_date √
+    4. Improving search pagination algorithm √
+    5. Code format
+------------WK09---------
+Other:
+    1. Backend instruction pdf
+Coding:
+    1. Code format
+    2. test and debug
+
+
