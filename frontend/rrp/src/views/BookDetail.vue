@@ -105,6 +105,19 @@
 					</router-link>
 				</ul>
 			</div>
+			
+			<div class="content-bar animation-fadein-top delay_06s">
+				<div class="title">「 Yesterday Once More」</div>
+				<ul class="book_list">
+					<router-link v-for="book in booksRecommendbyPD" :key="book.book_id" :to="{name: 'Book', query: {id: book.book_id}}">
+						<li>
+							<img :src="book.book_cover_url">
+							<span><b>{{book.title}}</b></span>
+							<span style="margin-top: 0.1875rem; color: gray;">{{book.author.replace(/\[\'/, '').replace(/\'\]/, '').split("', '").join(", ")}}</span>
+						</li>
+					</router-link>
+				</ul>
+			</div>
 		</main>
 
 		<AddBookForm :myAccountID="myAccount.user_id" :toMoveBookID="toAddBookID" :toMoveBookName="toAddBookName"></AddBookForm>
@@ -169,6 +182,7 @@
 				
 				booksRecommendbyCategory: [],
 				booksRecommendbyAuthor: [],
+				booksRecommendbyPD: [],
 			}
 		},
 		components: {
@@ -349,6 +363,20 @@
 				}).then((res) => {
 					if(res.data.message === undefined){
 						this.booksRecommendbyCategory = res.data.books
+					}
+				}).catch((err) => {
+					console.log(error.response.data.message)
+				})
+				
+				this.axios({
+					method: 'Get',
+					url: `${API_URL}/recommend/recommend_by_publishedDate`,
+					params: { 
+						book_id: this.$route.query.id
+					}
+				}).then((res) => {
+					if(res.data.message === undefined){
+						this.booksRecommendbyPD = res.data.books
 					}
 				}).catch((err) => {
 					console.log(error.response.data.message)
