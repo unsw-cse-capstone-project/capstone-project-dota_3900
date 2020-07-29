@@ -10,6 +10,22 @@ from lib.sql_linker import connect_sys_db, mysql
 
 
 class Review:
+    # -------------------------------------- Help Func -------------------------------------
+    # Is certain review posted by certain user existed
+    @staticmethod
+    def is_review_exist_by_both_id(user_id, book_id):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT user_id, username, book_id, rating, review_content, review_time FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\') ORDER BY review_time DESC".format(
+            user_id=user_id,
+            book_id=book_id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return False
+        else:
+            return True
+    # -------------------------------------------------------------------------------------
 
     # Post new review
     @staticmethod
@@ -130,21 +146,6 @@ class Review:
             result.append(ds[index])
         return result
 
-    # Is certain review posted by certain user existed
-    @staticmethod
-    def is_review_exist_by_both_id(user_id, book_id):
-        # SQL
-        conn = connect_sys_db()
-        query = "SELECT user_id, username, book_id, rating, review_content, review_time FROM review_rate WHERE (user_id = \'{user_id}\' AND book_id = \'{book_id}\') ORDER BY review_time DESC".format(
-            user_id=user_id,
-            book_id=book_id
-        )
-        db_result = read_sql(sql=query, con=conn)
-        if db_result.empty:
-            return False
-        else:
-            return True
-
     # Get reivew from index_from to index_to
     @staticmethod
     def get_book_review_from_to(book_id, index_from, index_to):
@@ -242,12 +243,7 @@ class Review:
     def get_user_num_review(user_id):
         conn = connect_sys_db()
         query = "SELECT count(*) as num FROM review_rate WHERE user_id = \'{user_id}\'".format(
-            user_id = user_id
+            user_id=user_id
         )
         db_result = read_sql(sql=query, con=conn)
         return int(db_result.iloc[0].num)
-
-
-
-
-

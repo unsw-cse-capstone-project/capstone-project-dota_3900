@@ -25,23 +25,7 @@ class Book:
             info = db_result.iloc[0]
             return info
 
-    # Search result of input content
-    @staticmethod
-    def book_search(input):
-        # SQL
-        conn = connect_sys_db()
-        query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
-            input=input
-        )
-        db_result = read_sql(sql=query, con=conn)
-        json_str = db_result.to_json(orient='index')
-        ds = json.loads(json_str)
-        result = []
-        for index in ds:
-            ds[index]['average'] = Book.get_book_average_rating(ds[index]['id'])
-            result.append(ds[index])
-        return result
-
+    # -------------------------------------- Help Func -------------------------------------
     # Is book exist by book_id
     @staticmethod
     def is_book_exists_by_id(id):
@@ -70,6 +54,24 @@ class Book:
             return False
         else:
             return True
+    # -----------------------------------------------------------------------------------
+
+    # Search result of input content
+    @staticmethod
+    def book_search(input):
+        # SQL
+        conn = connect_sys_db()
+        query = "SELECT id, authors, title ,ISBN13, book_cover_url, description, publisher, published_date, categories FROM books WHERE title like \'%{input}%\' or authors like \'%{input}%\' or ISBN13 like \'%{input}%\'".format(
+            input=input
+        )
+        db_result = read_sql(sql=query, con=conn)
+        json_str = db_result.to_json(orient='index')
+        ds = json.loads(json_str)
+        result = []
+        for index in ds:
+            ds[index]['average'] = Book.get_book_average_rating(ds[index]['id'])
+            result.append(ds[index])
+        return result
 
     # Length of search result of input content
     @staticmethod
@@ -230,14 +232,15 @@ class Book:
         db_result.insert(6, 'popular',
                          db_result.collect_time * 0.1 + db_result.read_time * 0.2 + db_result.avg_rating * 0.3 + db_result.google_rating * 0.4)
         # Sort dataframe by popular
-        db_result = db_result.sort_values(by=['popular'],ascending=False)
+        db_result = db_result.sort_values(by=['popular'], ascending=False)
         # Get first ten books in the list
         db_result = db_result.head(10)
         json_str = db_result.to_json(orient='index')
         ds = json.loads(json_str)
         result = []
         for index in ds:
-            result.append({'id':ds[index]['id'], 'title':ds[index]['title'], 'book_cover_url': ds[index]['book_cover_url']})
+            result.append(
+                {'id': ds[index]['id'], 'title': ds[index]['title'], 'book_cover_url': ds[index]['book_cover_url']})
         return result
 
     # Get list of categories sort by number of books with this category

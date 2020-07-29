@@ -82,35 +82,7 @@ class User:
         db_result = read_sql(sql=query, con=conn)
         return db_result.iloc[0].username
 
-    # Register a new user
-    @staticmethod
-    def register_account(username, password, admin, email):
-        # If username already existed
-        if User.is_user_exists_by_username(username):
-            return False, 'This username has already been registered'
-        # SQL
-        conn = connect_sys_db()
-        query = 'SELECT email FROM users WHERE email = \'{email}\''.format(
-            email=email
-        )
-        db_result = read_sql(sql=query, con=conn)
-        # If email address already been registered
-        if not db_result.empty:
-            return False, 'This email has already been registered'
-        # SQL
-        query = 'INSERT INTO users VALUES(0, \'{username}\',' \
-                'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\', \'{email}\')' \
-            .format(
-            username=username,
-            password=password,
-            admin=admin,
-            email=email,
-            key=SECRET_KEY
-        )
-        with mysql(conn) as cursor:
-            cursor.execute(query)
-        return True, ''
-
+    #-------------------------------------- Help Func -------------------------------------
     # Is user existed by id
     @staticmethod
     def is_user_exists_by_id(id):
@@ -152,6 +124,36 @@ class User:
             return False
         else:
             return True
+    # -------------------------------------------------------------------------------------
+
+    # Register a new user
+    @staticmethod
+    def register_account(username, password, admin, email):
+        # If username already existed
+        if User.is_user_exists_by_username(username):
+            return False, 'This username has already been registered'
+        # SQL
+        conn = connect_sys_db()
+        query = 'SELECT email FROM users WHERE email = \'{email}\''.format(
+            email=email
+        )
+        db_result = read_sql(sql=query, con=conn)
+        # If email address already been registered
+        if not db_result.empty:
+            return False, 'This email has already been registered'
+        # SQL
+        query = 'INSERT INTO users VALUES(0, \'{username}\',' \
+                'HEX(AES_ENCRYPT(\'{password}\', \'{key}\')), \'{admin}\', \'{email}\')' \
+            .format(
+            username=username,
+            password=password,
+            admin=admin,
+            email=email,
+            key=SECRET_KEY
+        )
+        with mysql(conn) as cursor:
+            cursor.execute(query)
+        return True, ''
 
     # Regex search content
     @staticmethod

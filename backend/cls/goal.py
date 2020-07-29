@@ -7,6 +7,7 @@ from lib.sql_linker import connect_sys_db, mysql
 
 class Goal:
 
+    # -------------------------------------- Help Func -------------------------------------
     # Is monthly goal already exist
     @staticmethod
     def is_goal_exists(user_id, year, month):
@@ -39,6 +40,7 @@ class Goal:
             return False
         else:
             return True
+    # -------------------------------------------------------------------------------------
 
     # Set monthly goal
     @staticmethod

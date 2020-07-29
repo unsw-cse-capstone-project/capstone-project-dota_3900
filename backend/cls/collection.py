@@ -127,16 +127,7 @@ class Collection:
         db_result = read_sql(sql=query, con=conn)
         return db_result.iloc[0].collection_name
 
-    @staticmethod
-    def get_collection_id_by_name(user_id, collection_name):
-        conn = connect_sys_db()
-        query = "SELECT id FROM collections WHERE (user_id = \'{user_id}\' AND name = \'{collection_name}\')".format(
-            user_id=user_id,
-            collection_name=collection_name
-        )
-        db_result = read_sql(sql=query, con=conn)
-        return db_result.iloc[0].id
-
+    # -------------------------------------- Help Func -------------------------------------
     # Is collection existed by user_id and collection_id
     @staticmethod
     def is_collection_exists_by_both_id(user_id, collection_id):
@@ -180,6 +171,17 @@ class Collection:
             return False
         else:
             return True
+    # -----------------------------------------------------------------------------------
+
+    @staticmethod
+    def get_collection_id_by_name(user_id, collection_name):
+        conn = connect_sys_db()
+        query = "SELECT id FROM collections WHERE (user_id = \'{user_id}\' AND name = \'{collection_name}\')".format(
+            user_id=user_id,
+            collection_name=collection_name
+        )
+        db_result = read_sql(sql=query, con=conn)
+        return db_result.iloc[0].id
 
     # Get all collection of user
     @staticmethod
