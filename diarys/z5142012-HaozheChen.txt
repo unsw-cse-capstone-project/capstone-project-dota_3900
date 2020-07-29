@@ -64,9 +64,11 @@ Coding:
     5. Code format
 ------------WK09---------
 Other:
-    1. Backend instruction pdf
+    1. Backend instruction pdf √
+    2. Final report √
+    3. Final demo √
 Coding:
-    1. Code format
-    2. test and debug
+    1. Code format √
+    2. test and debug √
 
 
