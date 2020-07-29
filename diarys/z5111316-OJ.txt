@@ -29,5 +29,8 @@ flexibility week
 wk7
 1. write query for filtering from search result.
 2. create new table for monthly reading goal.
-3. write query for counting read and collect time of a book.
+3. write query for counting how many time a book has been read/collect.
+
+wk8
+1. clean up unnecessary sql file, er diagram update.
  
