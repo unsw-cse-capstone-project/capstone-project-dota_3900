@@ -59,6 +59,7 @@
 			ReviewRatingForm
 		},
 		methods: {
+			// translate timeStamp to datetime
 			timeStamp2datetime(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);
@@ -73,6 +74,8 @@
 				if (second < 10) second = '0' + second
 				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
 			},
+			
+			// get all reviews
 			getReviews(){
 				this.axios.get(`${API_URL}/user/${this.$route.query.id}/reviews`).then((res) => {
 					this.reviews = res.data.list
@@ -83,9 +86,13 @@
 					console.log(error.response.data.message)
 				})
 			},
+			
+			// determine whether is my dashboard
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
+			
+			// delete current user's review
 			deleteReview(bookID, bookName) {
 				if(confirm(`Are you sure to remove your review and rating from \'${bookName}\'?`)){
 					this.axios({

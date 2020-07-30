@@ -67,6 +67,8 @@
 					alert(error.response.data.message)
 				})
 			},
+			
+			// get all current user's collections
 			getMyCollections(){
 				this.axios({
 					method: 'get',

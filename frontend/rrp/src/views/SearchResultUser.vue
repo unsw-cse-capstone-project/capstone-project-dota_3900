@@ -53,6 +53,7 @@
 			}
 		},
 		methods: {
+			// get all search results
 			getSearchResult(){
 				if(this.$route.query.content === undefined || this.$route.query.content === ''){
 					this.noResult = true

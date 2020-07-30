@@ -9,6 +9,7 @@
 </template>
 
 <script>
+	// 404 page
 	import Header from '../components/common/Header.vue'
 	import Footer from '../components/common/Footer.vue'
 	import NotFound from '../components/common/NotFound.vue'

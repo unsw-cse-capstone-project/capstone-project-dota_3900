@@ -76,6 +76,8 @@
 					}
 				})
 			},
+			
+			// get current year-month, and display this value as default
 			getcurYearMonth(){
 				let datetime = new Date();
 				datetime.setTime((new Date()).getTime());

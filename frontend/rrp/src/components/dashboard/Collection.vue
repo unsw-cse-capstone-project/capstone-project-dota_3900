@@ -131,6 +131,7 @@
 			CopyCollectionForm,
 		},
 		methods: {
+			// mark a book as read
 			markAsRead() {
 				this.axios({
 					method: 'post',
@@ -148,6 +149,8 @@
 					console.log(error.response.data.message)
 				})
 			},
+			
+			// mark a book as unread
 			markAsUnread() {
 				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
 					this.axios({
@@ -167,6 +170,8 @@
 					})
 				}
 			},
+			
+			// count books the user has read
 			countReadBooks(books){
 				let count = 0
 				for(let i = 0; i < books.length; i++){
@@ -176,9 +181,13 @@
 				}
 				return count
 			},
+			
+			// determine whether is my dashboard
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
+			
+			// get all collections and collection details
 			getCollections() {
 				let userID = this.$route.query.id
 				this.axios({
@@ -212,6 +221,8 @@
 					console.log(error.response.data.message)
 				})
 			},
+			
+			// translate timeStamp to datetime
 			timeStamp2datetime(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);
@@ -226,6 +237,8 @@
 				if (second < 10) second = '0' + second
 				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
 			},
+			
+			// translate timeStamp to year-month-day format
 			timeStamp2yearMonthDay(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);
@@ -234,6 +247,8 @@
 				let date = datetime.getDate()
 				return year + "-" + month + "-" + date
 			},
+			
+			// translate timeStamp to year-month format
 			timeStamp2yearMonth(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);
@@ -241,6 +256,8 @@
 				let month = datetime.getMonth() + 1
 				return year + "-" + month
 			},
+			
+			// fold the collection
 			closeBookList(collectionID) {
 				let bookList = document.getElementById('collection' + collectionID)
 				if (bookList.style.height !== "auto") {
@@ -253,16 +270,20 @@
 					bookList.style.opacity = "0";
 				}
 			},
+			
 			openNewCollectionForm() {
 				let newCollectionForm = document.getElementById('newCollectionForm')
 				newCollectionForm.style.display = 'block'
 			},
+			
 			openModifyCollectionNameForm(collectionID, collectionName) {
 				let modifyCollectionNameForm = document.getElementById('modifyCollectionNameForm')
 				this.collectionID2Modify = collectionID
 				this.collectionName2Modify = collectionName
 				modifyCollectionNameForm.style.display = 'block'
 			},
+			
+			// delete a collection for current user
 			deleteCollection(collectionID, collectionName) {
 				if (confirm(`Are you sure to delete the collection: ${collectionName}\nYou cannot undo this operation.`)) {
 					this.axios.delete(`${API_URL}/collection?collection_id=${collectionID}`, {
@@ -281,6 +302,8 @@
 
 				}
 			},
+			
+			// get 10 recently added books and their details
 			getRecentlyAddedBooks() {
 				let userID = this.$route.query.id
 				this.axios({
@@ -295,6 +318,8 @@
 					console.log(error.response.data.message)
 				})
 			},
+			
+			// remove a book from collection
 			removeBookFromCollection(collectionID, CollectionName, bookID, bookName){
 				if(confirm(`Are you sure to remove \'${bookName}\' from \'${CollectionName}\' collection?`)){
 					this.axios({
@@ -319,6 +344,8 @@
 					})
 				}
 			},
+			
+			
 			openCollectionMoveBookForm(curCollectionID, bookID, bookName){
 				this.toMoveBookID = bookID
 				this.toMoveBookName = bookName
@@ -326,12 +353,16 @@
 				let collectionMoveBookForm = document.getElementById('collectionMoveBookForm')
 				collectionMoveBookForm.style.display = 'block'
 			},
+			
+			
 			openCollectionAddBookForm(bookID, bookName){
 				this.toAddBookID = bookID
 				this.toAddBookName = bookName
 				let collectionAddBookForm = document.getElementById('addBookForm')
 				collectionAddBookForm.style.display = 'block'
 			},
+			
+			
 			openCopyCollectionFrom(collection_id){
 				this.toCopyCollectionID = collection_id
 				let copyCollectionForm  = document.getElementById('copyCollectionForm')

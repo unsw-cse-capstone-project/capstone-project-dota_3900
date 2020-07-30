@@ -101,6 +101,7 @@
 			UpdateMonthlyGoalForm,
 		},
 		methods: {
+			// get all monthly_goal infos for current dashboard belonger
 			getInfo(){
 				this.axios({
 					method: 'get',
@@ -114,6 +115,8 @@
 					console.log(error.response.data.message)
 				})
 			},
+			
+			// translate timeStamp to year-month-day format
 			timeStamp2yearMonthDay(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);
@@ -122,6 +125,7 @@
 				let date = datetime.getDate()
 				return year + "-" + month + "-" + date
 			},
+			
 			openUpdateMonthlyGoalForm(){
 				let updateMonthlyGoalForm = document.getElementById('updateMonthlyGoalForm')
 				updateMonthlyGoalForm.style.display = 'block'

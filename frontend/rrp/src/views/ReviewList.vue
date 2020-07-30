@@ -131,6 +131,7 @@
 			StarBar
 		},
 		methods: {
+			// get current book details
 			getBookDetails() {
 				let bookID = this.$route.query.id
 				this.axios({
@@ -149,6 +150,8 @@
 					this.pageNotFound = true
 				})
 			},
+			
+			// get all reviews from users who has reviewed and rated this book
 			getReviews(){
 				let bookID = this.$route.query.id
 				let page = this.$route.query.page
@@ -167,6 +170,8 @@
 					this.pageNotFound = true
 				})
 			},
+			
+			// translate timestamp to datetime
 			timeStamp2datetime(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);
@@ -181,6 +186,7 @@
 				if (second < 10) second = '0' + second
 				return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second
 			},
+			
 			isCurrentPage(num){
 				return num == this.curPageNum
 			},

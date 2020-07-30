@@ -196,6 +196,7 @@
 			MarkReadForm,
 		},
 		methods: {
+			// get current book detail
 			getBookDetails() {
 				let bookID = this.$route.query.id
 				this.axios({
@@ -214,6 +215,8 @@
 					this.pageNotFound = true
 				})
 			},
+			
+			// get full version of description
 			showAllText() {
 				let desc = document.getElementById('desc')
 				let more = document.getElementById('view-more')
@@ -223,12 +226,15 @@
 					more.style.display = 'none'
 				}
 			},
+			
 			openAddBookForm(bookID, bookName) {
 				this.toAddBookID = bookID
 				this.toAddBookName = bookName
 				let addBookForm = document.getElementById('addBookForm')
 				addBookForm.style.display = 'block'
 			},
+			
+			// get current account's info'
 			getAccountsInfo() {
 				// get my info (if exists)
 				if (this.$store.state.token) {
@@ -261,6 +267,8 @@
 					})
 				}
 			},
+			
+			// get user-book related info
 			getBookStatus() {
 				if (this.$store.state.token) {
 					this.axios({
@@ -280,6 +288,8 @@
 					})
 				}
 			},
+			
+			// mark this book as unread.
 			markAsUnread() {
 				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
 					this.axios({
@@ -302,6 +312,7 @@
 					})
 				}
 			},
+			
 			openAddReviewForm(method){
 				this.reviewRatingMethod = method
 				this.$refs['reviewRatingForm'].review = this.myReview
@@ -309,12 +320,15 @@
 				let reviewRatingForm = document.getElementById('reviewRatingForm')
 				reviewRatingForm.style.display = 'block'
 			},
+			
 			openMarkReadForm(bookID, bookName){
 				this.toMarkReadBookID = bookID
 				this.toMarkReadBookName = bookName
 				let reviewRatingForm = document.getElementById('markReadForm')
 				reviewRatingForm.style.display = 'block'
 			},
+			
+			// delete current user's review
 			deleteReview(bookID, bookName) {
 				if(confirm(`Are you sure to remove your review and rating from \'${bookName}\'?`)){
 					this.axios({
@@ -339,6 +353,9 @@
 					})
 				}
 			},
+			
+			// get recommend books according various conditions
+			// There are 3 sections for recommend books: recommend by author, category and publish_date(yesterday once more)
 			getRecommendBooks(){
 				this.axios({
 					method: 'Get',

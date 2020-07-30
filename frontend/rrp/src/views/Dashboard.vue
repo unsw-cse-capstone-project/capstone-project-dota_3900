@@ -74,6 +74,7 @@
 			MonthlyGoal,
 		},
 		methods: {
+			// get current account info
 			getAccountsInfo() {
 				// if there is no user id in query -> 404
 				if (this.$route.query.id === undefined) {
@@ -108,6 +109,8 @@
 					})
 				}
 			},
+			
+			// determine whether this dashboard is belong to current user
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},

@@ -10,6 +10,8 @@ import BookReviews from '../views/ReviewList.vue'
 
 Vue.use(VueRouter)
 
+// Router settings
+
   const routes = [
   {
     path: '/',

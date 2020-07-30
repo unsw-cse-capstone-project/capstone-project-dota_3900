@@ -68,17 +68,23 @@
 			UpdatePasswordForm,
 		},
 		methods: {
+			// determine whether cuurent dashboard is current user's dashboard
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
+			
+			
 			openUpdateEmailForm(){
 				let updateEmailForm = document.getElementById('updateEmailForm')
 				updateEmailForm.style.display = 'block'
 			},
+			
 			openUpdatePasswordForm(){
 				let updateEmailForm = document.getElementById('updatePasswordForm')
 				updateEmailForm.style.display = 'block'
 			},
+			
+			// get tags which are the small numbers on the navi button
 			getTags(){
 				let userID = this.$route.query.id
 				this.axios.get(`${API_URL}/user/${userID}/dashboard_tags`).then((res) => {

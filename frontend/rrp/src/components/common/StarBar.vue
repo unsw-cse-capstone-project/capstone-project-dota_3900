@@ -15,6 +15,7 @@
 		props: ['rating'],
 		
 		methods:{
+			// draw stars to visualize the rating
 			drawStar(curStar){
 				if(this.rating - curStar >= -0.3){
 					return "/icon/star.png"

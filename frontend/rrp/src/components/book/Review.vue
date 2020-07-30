@@ -24,6 +24,7 @@
 			StarBar,
 		},
 		methods:{
+			// translate timeStamp to datetime
 			timeStamp2datetime(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);

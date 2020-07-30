@@ -65,6 +65,7 @@ export default {
 		}
 	},
 	methods:{
+		// Executed while user choose to search a book(press the button)
 		goToBookSearchPage(){
 			if(this.searchContent !== ''){
 				this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1}})
@@ -73,6 +74,8 @@ export default {
 				alert('Search content cannot be empty.')
 			}
 		},
+		
+		// Executed while user choose to search a user(press the button)
 		goToUserSearchPage(){
 			if(this.searchContent !== ''){
 				this.$router.push({name: 'UserSearchResult', query: {content: this.searchContent}})
@@ -81,6 +84,8 @@ export default {
 				alert('Search content cannot be empty.')
 			}
 		},
+		
+		// get popular books and display them in frontpage
 		getPopularBooks(){
 			this.axios({
 				method: 'get',
@@ -91,6 +96,8 @@ export default {
 				console.log(error.response.data.message)
 			})
 		},
+		
+		// get popular categories and display them in frontpage with links
 		getPopularCategories(){
 			this.axios({
 				method: 'get',
@@ -101,6 +108,8 @@ export default {
 				console.log(error.response.data.message)
 			})
 		},
+		
+		// a helper function
 		goToSearchPage(category){
 			this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1, category: category}})
 		}
@@ -110,6 +119,7 @@ export default {
 		this.getPopularCategories()
 	},
 	watch: {
+		// if this.searchmode has changed, the placeholder of searcharea will also be changed
 		searchMode(){
 			let searchArea = document.getElementById('HomePageSearchArea')
 			if(this.searchMode === 'books'){

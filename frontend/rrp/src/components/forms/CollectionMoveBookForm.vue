@@ -69,6 +69,7 @@
 				this.$parent.getRecentlyAddedBooks()
 			},
 			
+			// get all current user's collections
 			getMyCollections(){
 				this.axios({
 					method: 'get',

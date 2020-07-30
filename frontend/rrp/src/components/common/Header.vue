@@ -74,6 +74,8 @@
 					this.$router.push({name: 'Home'})
 			  }
 			},
+			
+			// get current_account info
 			getAccountInfo(){
 				if(this.$store.state.token){
 					this.axios({
@@ -93,6 +95,7 @@
 					})
 				}
 			},
+			
 			clearAccountInfo(){
 				this.account = {
 					user_id: '',
@@ -101,6 +104,8 @@
 					admin: ''
 				}
 			},
+			
+			// Execute when search button is pressed
 			goToBookSearchPage(){
 				if(this.searchContent !== ''){
 					this.$router.push({name: 'SearchResult', query: {content: this.searchContent, page: 1}})

@@ -118,6 +118,7 @@
 			MarkReadForm
 		},
 		computed: {
+			// these variables are tools to consturct the index(page) bar
 			indexs: function() {
 				let indexs = [];
 				for(let i = this.curPageNum - 4; i <= this.curPageNum + 4; i++){
@@ -171,6 +172,7 @@
 			}
 		},
 		methods: {
+			// get current user info
 			getUserInfo() {
 				if (this.$store.state.token) {
 					this.axios({
@@ -187,6 +189,8 @@
 					})
 				}
 			},
+			
+			// get all search results
 			getSearchResult() {
 				let content = this.$route.query.content
 				let page = this.$route.query.page
@@ -239,21 +243,30 @@
 					this.pageNotFound = true
 				})
 			},
+			
+			// process the data format to ordinary string
 			plainCategories(categories) {
 				return categories.replace(/\[\'/, '').replace(/\'\]/, '')
 			},
+			
 			plainAuthors(authors) {
 				return authors.replace(/\[\'/, '').replace(/\'\]/, '').split("', '").join(", ")
 			},
+			
+			// determine whether [num] is equal to current page number
 			isCurrentPage(num){
 				return num == this.curPageNum
 			},
+			
+
 			openMarkReadForm(bookID, bookName){
 				this.toMarkReadBookID = bookID
 				this.toMarkReadBookName = bookName
 				let reviewRatingForm = document.getElementById('markReadForm')
 				reviewRatingForm.style.display = 'block'
 			},
+			
+			// mark a book as unread for current user
 			markAsUnread(bookID) {
 				if (confirm('Are you sure to mark this book as Unread?\nYour review and ratings for this book(if exist) will be removed.')) {
 					this.axios({
@@ -273,12 +286,16 @@
 					})
 				}
 			},
+			
+
 			openAddBookForm(bookID, bookName) {
 				this.toAddBookID = bookID
 				this.toAddBookName = bookName
 				let addBookForm = document.getElementById('addBookForm')
 				addBookForm.style.display = 'block'
 			},
+			
+			// apply the filter, refresh the pages then display all new search results
 			applyFilter(){
 				let query  = {}
 				query.content = this.$route.query.content

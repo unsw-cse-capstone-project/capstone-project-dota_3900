@@ -75,9 +75,12 @@
 			}
 		},
 		methods:{
+			// determine whether current dashboard is current user's dashboard
 			isMyDashboard() {
 				return this.myAccount.user_id === this.account.user_id ? true : false
 			},
+			
+			// get all read histories
 			getReadHistory() {
 				this.axios({
 					method: 'get',
@@ -110,6 +113,8 @@
 					console.log(err.response.data.message)
 				})
 			},
+			
+			// translate timeStamp to year-month format
 			timeStamp2yearMonth(timeStamp) {
 				let datetime = new Date();
 				datetime.setTime(timeStamp);
@@ -117,6 +122,8 @@
 				let month = datetime.getMonth() + 1
 				return year + "-" + month
 			},
+			
+			// determine whether current user has read book in current month
 			hasBookInCurMonth(){
 				let datetime = new Date();
 				datetime.setTime((new Date()).getTime());
@@ -130,10 +137,13 @@
 					this.hasBookFlag = false
 				}
 			},
+			
 			translateMonthToText(month){
 				let monthText = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 				return monthText[month - 1]
 			},
+			
+			// get tags: year-month, number-of-book has read
 			getTags(year, month){
 				for(let i = 0; i < this.timeline.length; i++){
 					this.axios({
