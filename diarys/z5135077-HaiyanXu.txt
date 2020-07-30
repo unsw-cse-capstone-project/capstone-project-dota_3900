@@ -19,7 +19,6 @@ Wk3
 Wk4
 1. Introduced the accpetance creteria of the user story in sprint 1.
 2. Arrange daily meeting and follow up the progress.
-3. 
 2. Prepare for demo A on Tuesday, planned to test all functionality for sprint1 after it completed.
 
 Wk5
