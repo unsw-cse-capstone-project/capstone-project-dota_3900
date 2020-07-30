@@ -82,6 +82,25 @@ Fixed bug: review cannot display line feed and single/double qoute normally.
 Now modify review-rating form can display old review-rating.
 
 
+Week5:
+Frontend: fixed bug - Mark book as read error message cannot display normally
+Frontend: finished part of user-read-history page
+Frontend: fixed bugs on modify-password/email form
 
+Week6
+Frontend: fixed bugs in user-collection, add delete review button in book detail page.
+Frontend: book review page finished, user-searching page finished
+Frontend: Finished monthly goal page
 
+Week7:
+Frontend: Finished basic recommendation
+Frontend: Update homepage - popular books and categories, fixed Book searching result page-split bug
+Frontend: fixed minor css bugs
+Project almost finished in this week.
+
+Week8:
+Frontend: add recommend by publish date - yesterday once more
+
+Week9:
+Add lots of comments to improve the readability, although the code itself is easy to understand
 
