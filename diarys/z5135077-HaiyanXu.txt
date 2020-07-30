@@ -19,7 +19,6 @@ Wk3
 Wk4
 1. Introduced the accpetance creteria of the user story in sprint 1.
 2. Arrange daily meeting and follow up the progress.
-3. 
 2. Prepare for demo A on Tuesday, planned to test all functionality for sprint1 after it completed.
 
 Wk5
@@ -30,3 +29,19 @@ Wk5
 Wk6
 1. Arrange retrospective meeting on monday and submit the retrospective meeting document.
 2. Click the jira user story "done" once the user story are complected and been fully tested.
+
+Wk7
+1. Prepare for demoB
+2. Write retrospective B report and have group meeting after demoB
+3. Check functionality
+4. Help to design the recommendation algorithnm.
+
+Wk8
+1. All user story had been finished and need to test the functionality on cloud server.
+2. Start on writing report.
+3. Communicated with backend. frontend and database developer to discuss the challenge we met
+4. Help to test the user manaual for setting up the envrionment.
+
+Wk9
+1. Check the functionality match with user story ornot, if user story have anything misleading, change the word.
+2. Writing the report
