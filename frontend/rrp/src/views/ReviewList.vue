@@ -34,21 +34,21 @@
 					
 					
 					<div class="pages-bar" v-if="reviewList.length > 0">
-						<router-link v-if="lastPage >= 1" :to="{name: 'BookReviews', query: {content: $route.query.id, page: lastPage}}">
+						<router-link v-if="lastPage >= 1" :to="{name: 'BookReviews', query: {id: $route.query.id, page: lastPage}}">
 							<div><< previous page</div>
 						</router-link>
-						<router-link :to="{name: 'BookReviews', query: {content: $route.query.id, page: 1}}">
+						<router-link :to="{name: 'BookReviews', query: {id: $route.query.id, page: 1}}">
 							<li :class="{'selected': isCurrentPage(1)}">1</li>
 						</router-link>
 						<span v-if="curPageNum > 6">...</span>
-						<router-link v-for="(n, key) in indexs" :key="key" :to="{name: 'BookReviews', query: {content: $route.query.id, page: n}}">
+						<router-link v-for="(n, key) in indexs" :key="key" :to="{name: 'BookReviews', query: {id: $route.query.id, page: n}}">
 							<li :class="{'selected': isCurrentPage(n)}">{{n}}</li>
 						</router-link>
 						<span v-if="curPageNum < totalPageNum - 5">...</span>
-						<router-link :to="{name: 'BookReviews', query: {content: $route.query.id, page: totalPageNum}}">
+						<router-link :to="{name: 'BookReviews', query: {id: $route.query.id, page: totalPageNum}}">
 							<li v-if="totalPageNum != 1" :class="{'selected': isCurrentPage(totalPageNum)}">{{totalPageNum}}</li>
 						</router-link>
-						<router-link v-if="nextPage <= totalPageNum" :to="{name: 'BookReviews', query: {content: $route.query.id, page: nextPage}}">
+						<router-link v-if="nextPage <= totalPageNum" :to="{name: 'BookReviews', query: {id: $route.query.id, page: nextPage}}">
 							<div>next page >></div>
 						</router-link>
 					</div>
