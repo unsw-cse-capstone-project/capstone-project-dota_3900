@@ -114,7 +114,8 @@ class BookGetDetailByID(Resource):
                     'language': detail.language,
                     'avg_rating': avg_rating,
                     'num_rated': num_rated,
-                    'review_preview': review_preview
+                    'review_preview': review_preview,
+                    'read_times': int(book.get_read_times())
                     }, 200
 
 

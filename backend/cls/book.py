@@ -25,6 +25,20 @@ class Book:
             info = db_result.iloc[0]
             return info
 
+    # Get how many times this book has been read
+    def get_read_times(self):
+        # SQL
+        conn = connect_sys_db()
+        query = "select books.id, count(*) as read_time from books join collects on " \
+                "books.id = collects.book_id join collections on collects.collection_id = collections.id where " \
+                "collections.name = 'read' and books.id = \'{book_id}\' group by books.id".format(
+            book_id=self._id
+        )
+        db_result = read_sql(sql=query, con=conn)
+        if db_result.empty:
+            return 0
+        return db_result.iloc[0].read_time
+
     # -------------------------------------- Help Func -------------------------------------
     # Is book exist by book_id
     @staticmethod
@@ -54,6 +68,7 @@ class Book:
             return False
         else:
             return True
+
     # -----------------------------------------------------------------------------------
 
     # Search result of input content
