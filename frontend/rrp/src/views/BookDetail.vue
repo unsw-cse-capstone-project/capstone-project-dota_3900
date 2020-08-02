@@ -41,6 +41,10 @@
 							<span>Category: </span>
 							<span>{{book.categories}}</span>
 						</li>
+						<li>
+							<span>Number of user have read: </span>
+							<span>{{book.read_times}} user(s)</span>
+						</li>
 					</ul>
 					<div class="rating-bar">
 						<span>Rating: </span>
@@ -168,7 +172,8 @@
 					"language": '',
 					"avg_rating": '',
 					"num_rated": '',
-					"review_preview": []
+					"review_preview": [],
+					"read_times": undefined,
 				},
 				pageNotFound: false,
 
@@ -287,6 +292,7 @@
 						console.log(error.response.data.message)
 					})
 				}
+				this.getBookDetails()
 			},
 			
 			// mark this book as unread.
@@ -402,7 +408,6 @@
 		},
 		created: function() {
 			this.getAccountsInfo()
-			this.getBookDetails()
 			this.getBookStatus()
 			this.getRecommendBooks()
 		},
