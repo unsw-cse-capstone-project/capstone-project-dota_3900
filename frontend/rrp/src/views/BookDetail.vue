@@ -42,7 +42,7 @@
 							<span>{{book.categories}}</span>
 						</li>
 						<li>
-							<span>Number of user have read: </span>
+							<span>Number of users have read: </span>
 							<span>{{book.read_times}} user(s)</span>
 						</li>
 					</ul>
@@ -85,7 +85,7 @@
 			</div>
 
 			<div class="content-bar animation-fadein-top delay_06s">
-				<div class="title">「 Recommend Books by Author」</div>
+				<div class="title">「 Recommend Books based on Author」</div>
 				<ul class="book_list">
 					<router-link v-for="book in booksRecommendbyAuthor" :key="book.book_id" :to="{name: 'Book', query: {id: book.book_id}}">
 						<li>
@@ -98,7 +98,7 @@
 			</div>
 			
 			<div class="content-bar animation-fadein-top delay_06s">
-				<div class="title">「 Recommend Books by Category」</div>
+				<div class="title">「 Recommend Books based on Category」</div>
 				<ul class="book_list">
 					<router-link v-for="book in booksRecommendbyCategory" :key="book.book_id" :to="{name: 'Book', query: {id: book.book_id}}">
 						<li>
