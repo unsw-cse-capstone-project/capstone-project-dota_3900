@@ -11,7 +11,7 @@
 				</div>
 				<div class="row">
 					<span>Password:</span>
-					<input type="password" placeholder="Enter password (8 - 32 characters)" v-model="account.password">
+					<input type="password" placeholder="Enter password (8 - 32 characters, at least one letter)" v-model="account.password">
 				</div>
 				<div class="row">
 					<span>Confirm Password:</span>
